@@ -1,13 +1,72 @@
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>client</title>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.jsx"></script>
-  </body>
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <title>JWT Authentication Demo</title>
+
+    <link rel="stylesheet" href="style.css">
+
+</head>
+
+<body>
+
+<h1>JWT Authentication Demo</h1>
+
+<div class="container">
+
+    <h2>Register</h2>
+
+    <input id="registerUsername" placeholder="Username">
+
+    <input id="registerEmail" placeholder="Email">
+
+    <input
+        id="registerPassword"
+        type="password"
+        placeholder="Password">
+
+    <button onclick="register()">
+        Register
+    </button>
+
+</div>
+
+<div class="container">
+
+    <h2>Login</h2>
+
+    <input id="loginEmail" placeholder="Email">
+
+    <input
+        id="loginPassword"
+        type="password"
+        placeholder="Password">
+
+    <button onclick="login()">
+
+        Login
+
+    </button>
+
+</div>
+
+<div class="container">
+
+    <h2>Profile</h2>
+
+    <button onclick="getProfile()">
+
+        Get Profile
+
+    </button>
+
+</div>
+
+<pre id="output"></pre>
+
+<script src="script.js"></script>
+
+</body>
+
 </html>
