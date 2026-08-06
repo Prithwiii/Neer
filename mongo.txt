@@ -1,0 +1,3 @@
+mongo_username: neer_team1_dev
+mongo_pw: KoSZcdYTxlvfIaoS
+mongo_connection_string: mongodb+srv://<db_username>:<db_password>@neer.0ezmvw1.mongodb.net/?appName=Neer
