@@ -20,6 +20,12 @@ const userSchema = new mongoose.Schema(
         type: String,
         required: true
     }
+,
+    role: {
+        type: String,
+        enum: ["staff", "resident", "committee"],
+        default: "resident"
+    }
 },
 {
     timestamps: true
