@@ -9,6 +9,7 @@ export const registerUser = async(req, res) => {
     try{
 
         const {username, email, password} = req.body;
+        const role = req.body.role || "resident";
 
         const existingUser = await User.findOne({email});
 
@@ -24,13 +25,15 @@ export const registerUser = async(req, res) => {
         const user = await User.create({
             username,
             email,
-            password: hashedPassword
+            password: hashedPassword,
+            role
         });
 
         res.status(201).json({
             _id: user._id,
             username: user.username,
             email: user.email,
+            role: user.role,
             token: generateToken(user._id)
         });
     }
@@ -75,6 +78,7 @@ export const loginUser = async(req, res) => {
             _id: user._id,
             username: user.username,
             email: user.email,
+            role: user.role,
             token: generateToken(user._id)
         });
     }

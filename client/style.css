@@ -30,10 +30,19 @@ button{
 
 }
 
+.hidden {
+
+    display: none;
+
+}
+
 pre{
 
     background:#eee;
 
     padding:15px;
 
+}
+.hidden {
+  display: none;
 }
