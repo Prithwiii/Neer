@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 
 const PROPOSAL_API = "http://localhost:5000/api/proposals";
 
@@ -17,13 +17,7 @@ function Dashboard({ token, onLogout, role }) {
   const [type, setType] = useState("Budget Approval");
   const [message, setMessage] = useState("");
 
-  useEffect(() => {
-    if (!token) return;
-    loadProposals();
-    loadProfile();
-  }, [token]);
-
-  const loadProposals = async () => {
+  const loadProposals = useCallback(async () => {
     const response = await fetch(PROPOSAL_API, {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -35,16 +29,24 @@ function Dashboard({ token, onLogout, role }) {
       return;
     }
     setProposals(data);
-  };
+  }, [token]);
 
-  const loadProfile = async () => {
-    const res = await fetch("http://localhost:5000/api/auth/profile", {
-      headers: { Authorization: `Bearer ${token}` },
-    });
-    if (!res.ok) return;
-    const user = await res.json();
-    setProfile(user);
-  };
+  useEffect(() => {
+    if (!token) return;
+
+    const loadInitialData = async () => {
+      await loadProposals();
+
+      const res = await fetch("http://localhost:5000/api/auth/profile", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      if (!res.ok) return;
+      const user = await res.json();
+      setProfile(user);
+    };
+
+    loadInitialData();
+  }, [token, loadProposals]);
 
   const createProposal = async (event) => {
     event.preventDefault();
