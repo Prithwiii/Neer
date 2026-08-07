@@ -5,7 +5,8 @@ import {
     getBooks,
     createBook,
     borrowBook,
-    returnBook
+    returnBook,
+    deleteBook
 } from "../controller/bookController.js";
 
 import protect from "../middleware/authMiddleware.js";
@@ -20,5 +21,6 @@ router.get("/:id", getBook);
 router.post("/", protect, createBook);
 router.post("/:id/borrow", protect, borrowBook);
 router.post("/:id/return", protect, returnBook);
+router.delete("/:id", protect, deleteBook);
 
 export default router;
