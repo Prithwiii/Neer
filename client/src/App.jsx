@@ -4,6 +4,8 @@ import Auth from "./pages/Auth";
 import StaffDashboard from "./pages/StaffDashboard";
 import ResidentDashboard from "./pages/ResidentDashboard";
 import CommitteeDashboard from "./pages/CommitteeDashboard";
+import Books from "./pages/Books";
+import CreateBook from "./pages/CreateBook";
 import "./App.css";
 
 function App() {
@@ -20,6 +22,7 @@ function App() {
   const handleLogout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("role");
+    localStorage.removeItem("userId");
     setToken(null);
     setRole(null);
   };
@@ -27,8 +30,12 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Navigate to="/proposals" replace />} />
+
+        <Route path="/" element={<Navigate to="/proposals" replace />} />       
+
         <Route path="/login" element={<Auth token={token} onLogin={handleLogin} />} />
+
+
         <Route
           path="/proposals"
           element={
@@ -45,6 +52,14 @@ function App() {
             )
           }
         />
+
+
+        <Route path="/books" element={<Books />} /> 
+        <Route path="/books/create" element = {
+          token ? (<CreateBook token={token} />
+          ) : ( <Navigate to="/login" replace />
+          ) } /> 
+
         <Route path="*" element={<Navigate to="/login" replace />} />
       </Routes>
     </BrowserRouter>

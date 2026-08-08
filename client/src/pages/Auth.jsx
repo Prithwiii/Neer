@@ -30,6 +30,7 @@ function Auth({ token, onLogin }) {
     if (data.token) {
       localStorage.setItem("token", data.token);
       if (data.role) localStorage.setItem("role", data.role);
+      if (data._id) localStorage.setItem("userId", data._id);
       onLogin(data.token, data.role);
     }
   };
@@ -50,6 +51,7 @@ function Auth({ token, onLogin }) {
     if (data.token) {
       localStorage.setItem("token", data.token);
       if (data.role) localStorage.setItem("role", data.role);
+      if (data._id) localStorage.setItem("userId", data._id);
       onLogin(data.token, data.role);
     }
   };
