@@ -12,7 +12,7 @@ export const getBooks = async() => {
 }
 
 //GET one book
-export const getBook = async() => {
+export const getBook = async(id) => {
     const response = await fetch(`${API_URL}/${id}`);
 
     if(!response.ok) {
@@ -23,7 +23,7 @@ export const getBook = async() => {
 };
 
 //POST/create a book
-export const createBook = async() => {
+export const createBook = async(bookData, token) => {
     const response = await fetch(API_URL, {
         method: "POST",
         headers: {

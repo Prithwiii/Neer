@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 
 import {
     getBooks,
@@ -94,30 +95,34 @@ const Books = () => {
 
 
     return (
-        <div>
-
-            <h1>Available Books</h1>
-
-            {error && (
-                <p>{error}</p>
-            )}
-
-            <div className="books-grid">
-
-                {books.map((book) => (
-                    <BookCard
-                        key={book._id}
-                        book={book}
-                        isAuthenticated={!!token}
-                        onBorrow={handleBorrow}
-                        onReturn={handleReturn}
-                        onDelete={handleDelete}
-                    />
-                ))}
-
+        <>
+            <div>
+                <Link to="/books/create">
+                    Create book listing
+                </Link>
             </div>
 
-        </div>
+            <div>
+                <h1>Available Books</h1>
+
+                {error && (
+                    <p>{error}</p>
+                )}
+
+                <div className="books-grid">
+                    {books.map((book) => (
+                        <BookCard
+                            key={book._id}
+                            book={book}
+                            isAuthenticated={!!token}
+                            onBorrow={handleBorrow}
+                            onReturn={handleReturn}
+                            onDelete={handleDelete}
+                        />
+                    ))}
+                </div>
+            </div>
+        </>
     );
 };
 

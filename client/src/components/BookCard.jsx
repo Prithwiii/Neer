@@ -40,7 +40,7 @@ const BookCard = ({
 
             <p>
                 <strong>Owner:</strong>{" "}
-                {book.owner?.name || "Unknown"}
+                {book.owner?.username || "Unknown"}
             </p>
 
 
