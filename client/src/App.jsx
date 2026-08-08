@@ -4,6 +4,7 @@ import Auth from "./pages/Auth";
 import StaffDashboard from "./pages/StaffDashboard";
 import ResidentDashboard from "./pages/ResidentDashboard";
 import CommitteeDashboard from "./pages/CommitteeDashboard";
+import Booking from "./pages/Booking";
 import "./App.css";
 
 function App() {
@@ -40,6 +41,16 @@ function App() {
               ) : (
                 <ResidentDashboard token={token} onLogout={handleLogout} role={role} />
               )
+            ) : (
+              <Navigate to="/login" replace />
+            )
+          }
+        />
+        <Route
+          path="/bookings"
+          element={
+            token ? (
+              <Booking token={token} onLogout={handleLogout} role={role} />
             ) : (
               <Navigate to="/login" replace />
             )

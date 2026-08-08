@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
+import { Link } from "react-router-dom";
 
 const PROPOSAL_API = "http://localhost:5000/api/proposals";
 
@@ -104,6 +105,11 @@ function Dashboard({ token, onLogout, role }) {
           Logout
         </button>
       </div>
+
+      <nav className="top-nav">
+        <Link to="/proposals">Proposals</Link>
+        <Link to="/bookings">Bookings</Link>
+      </nav>
 
       <div className="dashboard-menu">
         {dashboardOptions
