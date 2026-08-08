@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 function StaffDashboard({ token, onLogout }) {
   const [profile, setProfile] = React.useState(null);
@@ -24,6 +25,11 @@ function StaffDashboard({ token, onLogout }) {
         </div>
         <button className="secondary" onClick={onLogout}>Logout</button>
       </div>
+
+      <nav className="top-nav">
+        <Link to="/proposals">Proposals</Link>
+        <Link to="/bookings">Bookings</Link>
+      </nav>
 
       <div className="dashboard-panel">
         <div className="panel-card">
