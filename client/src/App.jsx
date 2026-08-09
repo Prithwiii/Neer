@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { useState } from "react";
+import Noticeboard from "./pages/Noticeboard";
 import Auth from "./pages/Auth";
 import StaffDashboard from "./pages/StaffDashboard";
 import ResidentDashboard from "./pages/ResidentDashboard";
@@ -16,6 +17,7 @@ function App() {
   const handleLogin = (newToken, newRole) => {
     setToken(newToken);
     setRole(newRole || null);
+
     if (newToken) localStorage.setItem("token", newToken);
     if (newRole) localStorage.setItem("role", newRole);
   };
@@ -24,6 +26,7 @@ function App() {
     localStorage.removeItem("token");
     localStorage.removeItem("role");
     localStorage.removeItem("userId");
+
     setToken(null);
     setRole(null);
   };
@@ -32,38 +35,61 @@ function App() {
     <BrowserRouter>
       <Routes>
 
-        <Route path="/" element={<Navigate to="/proposals" replace />} />       
+        <Route
+          path="/"
+          element={<Navigate to="/proposals" replace />}
+        />
 
-        <Route path="/login" element={<Auth token={token} onLogin={handleLogin} />} />
-
+        <Route
+          path="/login"
+          element={<Auth token={token} onLogin={handleLogin} />}
+        />
 
         <Route
           path="/proposals"
           element={
             token ? (
               role === "staff" ? (
-                <StaffDashboard token={token} onLogout={handleLogout} />
+                <StaffDashboard
+                  token={token}
+                  onLogout={handleLogout}
+                />
               ) : role === "committee" ? (
-                <CommitteeDashboard token={token} onLogout={handleLogout} role={role} />
+                <CommitteeDashboard
+                  token={token}
+                  onLogout={handleLogout}
+                  role={role}
+                />
               ) : (
-                <ResidentDashboard token={token} onLogout={handleLogout} role={role} />
+                <ResidentDashboard
+                  token={token}
+                  onLogout={handleLogout}
+                  role={role}
+                />
               )
             ) : (
               <Navigate to="/login" replace />
             )
           }
         />
+
         <Route
           path="/bookings"
           element={
             token ? (
-              <Booking token={token} onLogout={handleLogout} role={role} />
+              <Booking
+                token={token}
+                onLogout={handleLogout}
+                role={role}
+              />
             ) : (
               <Navigate to="/login" replace />
             )
           }
         />
+
         <Route path="/books" element={<Books />} />
+
         <Route
           path="/books/create"
           element={
@@ -74,7 +100,24 @@ function App() {
             )
           }
         />
-        <Route path="*" element={<Navigate to="/login" replace />} />
+
+        {/* Noticeboard */}
+        <Route
+          path="/noticeboard"
+          element={
+            token ? (
+              <Noticeboard />
+            ) : (
+              <Navigate to="/login" replace />
+            )
+          }
+        />
+
+        <Route
+          path="*"
+          element={<Navigate to="/login" replace />}
+        />
+
       </Routes>
     </BrowserRouter>
   );
