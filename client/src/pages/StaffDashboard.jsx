@@ -29,6 +29,7 @@ function StaffDashboard({ token, onLogout }) {
       <nav className="top-nav">
         <Link to="/proposals">Proposals</Link>
         <Link to="/bookings">Bookings</Link>
+        <Link to="/books">Library</Link>
       </nav>
 
       <div className="dashboard-panel">

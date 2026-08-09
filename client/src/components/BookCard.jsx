@@ -8,7 +8,6 @@ const BookCard = ({
 
     const userId = localStorage.getItem("userId");
 
-
     const isOwner =
         userId &&
         book.owner?._id === userId;
@@ -17,100 +16,74 @@ const BookCard = ({
         userId &&
         book.borrowedBy?._id === userId;
 
-
-    const formatDate = (date) => {
-        if (!date) return "";
-
-        return new Date(date).toLocaleDateString();
-    };
-
-
     return (
         <div className="book-card">
 
-            <h2>{book.title}</h2>
+            <h3>{book.title}</h3>
 
             <p>
-                <strong>Author:</strong> {book.author}
+                <strong>Author:</strong>{" "}
+                {book.author}
             </p>
-
-            {book.description && (
-                <p>{book.description}</p>
-            )}
 
             <p>
                 <strong>Owner:</strong>{" "}
                 {book.owner?.username || "Unknown"}
             </p>
 
+            <p>
+                <strong>Status:</strong>{" "}
+                {book.available
+                    ? "Available"
+                    : "Borrowed"}
+            </p>
 
-            {book.available ? (
-
-                <>
-                    <p>Available</p>
-
-                    {isAuthenticated ? (
-
-                        isOwner ? (
-                            <>
-                                <p>You own this book</p>
-
-                                <button
-                                    onClick={() => onDelete(book._id)}
-                                >
-                                    Delete
-                                </button>
-                            </>
-                        ) : (
-                            <button
-                                onClick={() => onBorrow(book._id)}
-                            >
-                                Borrow
-                            </button>
-                        )
-
-                    ) : (
-
-                        <p>Log in to borrow</p>
-
-                    )}
-                </>
-
-            ) : (
-
-                <>
-                    <p>Currently borrowed</p>
-
-                    {book.returnDate && (
-                        <p>
-                            <strong>Return date:</strong>{" "}
-                            {formatDate(book.returnDate)}
-                        </p>
-                    )}
-
-
-                    {isBorrower && (
-                        <p>You are borrowing this book.</p>
-                    )}
-
-
-                    {isAuthenticated &&
-                        (isOwner || isBorrower) && (
-                            <button
-                                onClick={() => onReturn(book._id)}
-                            >
-                                Returned
-                            </button>
-                        )
-                    }
-
-                </>
-
+            {!book.available && book.borrowedBy && (
+                <p>
+                    <strong>Borrowed by:</strong>{" "}
+                    {book.borrowedBy.username}
+                </p>
             )}
+
+            {!book.available && book.returnDate && (
+                <p>
+                    <strong>Return date:</strong>{" "}
+                    {new Date(book.returnDate).toLocaleDateString()}
+                </p>
+            )}
+
+            <div className="book-actions">
+
+                {isAuthenticated && book.available && (
+                    <button
+                        onClick={() => onBorrow(book._id)}
+                    >
+                        Borrow
+                    </button>
+                )}
+
+                {isAuthenticated && !book.available && isBorrower && (
+                    <button
+                        className="secondary"
+                        onClick={() => onReturn(book._id)}
+                    >
+                        Return
+                    </button>
+                )}
+
+                {isAuthenticated && isOwner && book.available && (
+                    <button
+                        className="secondary"
+                        onClick={() => onDelete(book._id)}
+                    >
+                        Delete
+                    </button>
+                )}
+
+            </div>
 
         </div>
     );
 };
-
 
 export default BookCard;
