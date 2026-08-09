@@ -110,6 +110,7 @@ function Dashboard({ token, onLogout, role }) {
         <Link to="/proposals">Proposals</Link>
         <Link to="/bookings">Bookings</Link>
         <Link to="/noticeboard">Noticeboard</Link>
+        <Link to="/books">Library</Link>
       </nav>
 
       <div className="dashboard-menu">

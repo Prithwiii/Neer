@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import {
     getBooks,
@@ -10,20 +10,19 @@ import {
 
 import BookCard from "../components/BookCard";
 
-
 const Books = () => {
 
     const [books, setBooks] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
 
-
     const token = localStorage.getItem("token");
-
+    const navigate = useNavigate();
 
     const fetchBooks = async () => {
         try {
             setLoading(true);
+            setError("");
 
             const data = await getBooks();
 
@@ -35,11 +34,9 @@ const Books = () => {
         }
     };
 
-
     useEffect(() => {
         fetchBooks();
     }, []);
-
 
     const handleBorrow = async (bookId) => {
         if (!token) {
@@ -49,13 +46,11 @@ const Books = () => {
 
         try {
             await borrowBook(bookId, token);
-
             await fetchBooks();
         } catch (error) {
             setError(error.message);
         }
     };
-
 
     const handleReturn = async (bookId) => {
         if (!token) {
@@ -65,18 +60,11 @@ const Books = () => {
 
         try {
             await returnBook(bookId, token);
-
             await fetchBooks();
         } catch (error) {
             setError(error.message);
         }
     };
-
-
-    if (loading) {
-        return <p>Loading books...</p>;
-    }
-
 
     const handleDelete = async (bookId) => {
         if (!token) {
@@ -86,45 +74,93 @@ const Books = () => {
 
         try {
             await deleteBook(bookId, token);
-
             await fetchBooks();
         } catch (error) {
             setError(error.message);
         }
     };
 
+    const handleLogout = () => {
+        localStorage.removeItem("token");
+        localStorage.removeItem("role");
+        localStorage.removeItem("userId");
+
+        navigate("/login");
+    };
+
+    if (loading) {
+        return (
+            <div className="dashboard-page">
+                <p>Loading books...</p>
+            </div>
+        );
+    }
 
     return (
-        <>
-            <div>
-                <Link to="/books/create">
-                    Create book listing
-                </Link>
+        <div className="dashboard-page">
+
+            <div className="dashboard-header">
+                <div>
+                    <h1>Library</h1>
+                    <p>
+                        Browse books available for borrowing.
+                    </p>
+                </div>
+
+                <button onClick={handleLogout}>
+                    Logout
+                </button>
             </div>
 
-            <div>
-                <h1>Available Books</h1>
+            <nav className="top-nav">
+                <Link to="/proposals">Proposals</Link>
+                <Link to="/bookings">Bookings</Link>
+                <Link to="/noticeboard">Noticeboard</Link>
+                <Link to="/books">Library</Link>
+            </nav>
+
+            <div className="panel-card">
+
+                <div className="library-header">
+                    <h2>Available Books</h2>
+
+                    {token && (
+                        <Link
+                            to="/books/create"
+                            className="create-book-link"
+                        >
+                            Create book listing
+                        </Link>
+                    )}
+                </div>
 
                 {error && (
-                    <p>{error}</p>
+                    <p className="form-message">
+                        {error}
+                    </p>
                 )}
 
-                <div className="books-grid">
-                    {books.map((book) => (
-                        <BookCard
-                            key={book._id}
-                            book={book}
-                            isAuthenticated={!!token}
-                            onBorrow={handleBorrow}
-                            onReturn={handleReturn}
-                            onDelete={handleDelete}
-                        />
-                    ))}
-                </div>
+                {books.length === 0 ? (
+                    <p>No books are currently listed.</p>
+                ) : (
+                    <div className="books-grid">
+                        {books.map((book) => (
+                            <BookCard
+                                key={book._id}
+                                book={book}
+                                isAuthenticated={!!token}
+                                onBorrow={handleBorrow}
+                                onReturn={handleReturn}
+                                onDelete={handleDelete}
+                            />
+                        ))}
+                    </div>
+                )}
+
             </div>
-        </>
+
+        </div>
     );
 };
-
 
 export default Books;
