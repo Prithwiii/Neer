@@ -73,3 +73,12 @@ button.secondary { background:#fff; color:#000; }
 .confirm-box { border:1px solid var(--border); padding:10px 12px; background:var(--code-bg); margin-top:10px; }
 .confirm-box button { margin-right:8px; }
 @media (max-width: 700px) { .bill-card-row { flex-direction:column; } .bill-actions { width:100%; } }
+
+
+.resources-grid { display:grid; grid-template-columns: repeat(3, 1fr); gap:12px; }
+.resource-card { border:1px solid var(--border); padding:12px; background:var(--surface); }
+.resource-card h3 { margin-top:0; margin-bottom:6px; }
+.resource-card p { margin:4px 0; }
+.resource-actions { display:flex; gap:8px; margin-top:10px; }
+.resource-actions button { flex:1; }
+@media (max-width: 700px) { .resources-grid { grid-template-columns: 1fr; } }

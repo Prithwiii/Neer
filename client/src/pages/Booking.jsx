@@ -21,6 +21,8 @@ function Booking({ token, onLogout, role }) {
   const [newName, setNewName] = useState("");
   const [newCategory, setNewCategory] = useState("space");
   const [newDescription, setNewDescription] = useState("");
+  const [editingResourceId, setEditingResourceId] = useState(null);
+  const [deleteResourceId, setDeleteResourceId] = useState(null);
 
   const loadResources = useCallback(async () => {
     const response = await fetch(RESOURCE_API, {
@@ -117,12 +119,17 @@ function Booking({ token, onLogout, role }) {
     loadAvailability();
   };
 
-  const addResource = async (event) => {
+  const submitResource = async (event) => {
     event.preventDefault();
     setMessage("");
 
-    const response = await fetch(RESOURCE_API, {
-      method: "POST",
+    const url = editingResourceId
+      ? `${RESOURCE_API}/${editingResourceId}`
+      : RESOURCE_API;
+    const methodType = editingResourceId ? "PUT" : "POST";
+
+    const response = await fetch(url, {
+      method: methodType,
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
@@ -137,14 +144,52 @@ function Booking({ token, onLogout, role }) {
     const data = await response.json();
 
     if (!response.ok) {
-      setMessage(data.message || "Could not add resource");
+      setMessage(data.message || "Could not save space or facility");
       return;
     }
 
+    setMessage(editingResourceId ? `${data.name} updated` : `${data.name} added`);
+    setEditingResourceId(null);
     setNewName("");
+    setNewCategory("space");
     setNewDescription("");
-    setMessage(`${data.name} added`);
     loadResources();
+  };
+
+  const startEditResource = (resource) => {
+    setMessage("");
+    setEditingResourceId(resource._id);
+    setNewName(resource.name);
+    setNewCategory(resource.category);
+    setNewDescription(resource.description || "");
+  };
+
+  const cancelEditResource = () => {
+    setEditingResourceId(null);
+    setNewName("");
+    setNewCategory("space");
+    setNewDescription("");
+  };
+
+  const deleteResource = async (id) => {
+    setMessage("");
+
+    const response = await fetch(`${RESOURCE_API}/${id}`, {
+      method: "DELETE",
+      headers: { Authorization: `Bearer ${token}` },
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      setMessage(data.message || "Could not delete space or facility");
+      return;
+    }
+
+    setDeleteResourceId(null);
+    loadResources();
+    loadMyBookings();
+    loadAvailability();
   };
 
   const now = new Date();
@@ -353,8 +398,8 @@ function Booking({ token, onLogout, role }) {
 
         {activeTab === "manage" && role === "committee" && (
           <div className="panel-card">
-            <h2>Add a Space or Facility</h2>
-            <form onSubmit={addResource} className="booking-form">
+            <h2>{editingResourceId ? "Edit Space or Facility" : "Add a Space or Facility"}</h2>
+            <form onSubmit={submitResource} className="booking-form">
               <input
                 type="text"
                 placeholder="Name"
@@ -375,10 +420,64 @@ function Booking({ token, onLogout, role }) {
                 value={newDescription}
                 onChange={(e) => setNewDescription(e.target.value)}
               />
-              <button className="primary" type="submit">
-                Add
-              </button>
+              <div className="bill-actions">
+                <button className="primary" type="submit">
+                  {editingResourceId ? "Save Changes" : "Add"}
+                </button>
+                {editingResourceId && (
+                  <button type="button" className="secondary" onClick={cancelEditResource}>
+                    Cancel
+                  </button>
+                )}
+              </div>
             </form>
+
+            <h2>Existing Spaces &amp; Facilities</h2>
+            {resources.length === 0 ? (
+              <p>No spaces or facilities yet.</p>
+            ) : (
+              <div className="resources-grid">
+                {resources.map((r) => (
+                  <div key={r._id} className="resource-card">
+                    <h3>{r.name}</h3>
+                    <p>{r.category === "space" ? "Common Space" : "Facility"}</p>
+                    {r.description && <p>{r.description}</p>}
+
+                    <div className="resource-actions">
+                      <button type="button" onClick={() => startEditResource(r)}>
+                        Edit
+                      </button>
+                      <button
+                        type="button"
+                        className="secondary"
+                        onClick={() => setDeleteResourceId(r._id)}
+                      >
+                        Delete
+                      </button>
+                    </div>
+
+                    {deleteResourceId === r._id && (
+                      <div className="confirm-box">
+                        <p>
+                          Delete "{r.name}"? Any active bookings for it will
+                          be cancelled. This cannot be undone.
+                        </p>
+                        <button type="button" onClick={() => deleteResource(r._id)}>
+                          Yes, Delete
+                        </button>
+                        <button
+                          type="button"
+                          className="secondary"
+                          onClick={() => setDeleteResourceId(null)}
+                        >
+                          Cancel
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         )}
       </div>
