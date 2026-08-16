@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { Navigate } from "react-router-dom";
+import API_URL from "../config/api";
 
-const API = "http://localhost:5000/api/auth";
+// const API = "http://localhost:5000/api/auth";
 
 function Auth({ token, onLogin }) {
   const [mode, setMode] = useState("login");
@@ -17,7 +18,8 @@ function Auth({ token, onLogin }) {
 
   const handleRegister = async (event) => {
     event.preventDefault();
-    const response = await fetch(API + "/register", {
+    // const response = await fetch(API + "/register", {
+    const response = await fetch(`${API_URL}/api/auth/register`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -37,7 +39,8 @@ function Auth({ token, onLogin }) {
 
   const handleLogin = async (event) => {
     event.preventDefault();
-    const response = await fetch(API + "/login", {
+    // const response = await fetch(API + "/login", {
+    const response = await fetch(`${API_URL}/api/auth/login`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
