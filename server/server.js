@@ -15,6 +15,8 @@ import noticeRoutes from "./routes/noticeRoutes.js";
 import intercomRoutes from "./routes/intercomRoutes.js";
 import billRoutes from "./routes/billRoutes.js";
 import buildingLayoutRoutes from "./routes/buildingLayoutRoutes.js";
+import garageRoutes from "./routes/garageRoutes.js";
+import garageBookingRoutes from "./routes/garageBookingRoutes.js";
 
 connectDB();
 
@@ -27,6 +29,8 @@ app.use("/api/notices", noticeRoutes);
 app.use("/api/intercom", intercomRoutes);
 app.use("/api/bills", billRoutes);
 app.use("/api/building-layout", buildingLayoutRoutes);
+app.use("/api/garages", garageRoutes);
+app.use("/api/garage-bookings", garageBookingRoutes);
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
