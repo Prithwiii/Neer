@@ -99,25 +99,10 @@ const Books = () => {
     return (
         <div className="dashboard-page">
 
-            <div className="dashboard-header">
-                <div>
-                    <h1>Library</h1>
-                    <p>
-                        Browse books available for borrowing.
-                    </p>
-                </div>
-
-                <button onClick={handleLogout}>
-                    Logout
-                </button>
+            <div>
+                <h3>Browse books available for borrowing.</h3>
+                <p></p>
             </div>
-
-            <nav className="top-nav">
-                <Link to="/proposals">Proposals</Link>
-                <Link to="/bookings">Bookings</Link>
-                <Link to="/noticeboard">Noticeboard</Link>
-                <Link to="/books">Library</Link>
-            </nav>
 
             <div className="panel-card">
 

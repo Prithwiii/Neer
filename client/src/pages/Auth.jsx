@@ -13,7 +13,8 @@ function Auth({ token, onLogin }) {
   const [message, setMessage] = useState("");
 
   if (token) {
-    return <Navigate to="/proposals" replace />;
+    // return <Navigate to="/proposals" replace />;
+    return <Navigate to="/dashboard" replace />;
   }
 
   const handleRegister = async (event) => {
