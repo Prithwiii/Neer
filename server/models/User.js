@@ -26,6 +26,16 @@ const userSchema = new mongoose.Schema(
         enum: ["staff", "resident", "committee"],
         default: "resident"
     }
+,
+    intercomEnabled: {
+        type: Boolean,
+        default: false
+    }
+,
+    intercomAccess: {
+        type: Boolean,
+        default: false
+    }
 },
 {
     timestamps: true
