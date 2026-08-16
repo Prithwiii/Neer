@@ -104,8 +104,6 @@ const Books = () => {
                 <p></p>
             </div>
 
-
-
             <div className="panel-card">
 
                 <div className="library-header">
