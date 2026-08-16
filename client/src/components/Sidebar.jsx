@@ -37,6 +37,10 @@ function Sidebar({ open, onClose }) {
             Bookings
           </Link>
 
+          <Link to="/bills" onClick={onClose}>
+            Bill Payments
+          </Link>
+
           <Link to="/books" onClick={onClose}>
             Library
           </Link>

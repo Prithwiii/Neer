@@ -30,6 +30,33 @@ button.secondary { background:#fff; color:#000; }
 .book-actions {display: flex;gap: 8px;margin-top: 16px;}
 .book-actions button {flex: 1;}
 @media (max-width: 700px) {.books-grid {grid-template-columns: 1fr;}}
+.month-nav { display:flex; align-items:center; justify-content:center; gap:16px; margin-bottom:16px; }
+.bills-summary { margin-bottom:16px; }
+.bills-summary-grid { display:flex; flex-wrap:wrap; gap:16px; margin:12px 0; }
+.progress-bar { width:100%; height:10px; border:1px solid var(--border); background:var(--code-bg); }
+.progress-bar-fill { height:100%; background:#000; }
+.bill-card { border:1px solid var(--border); padding:12px 16px; margin-bottom:10px; background:var(--surface); }
+.bill-card.paid { opacity:0.75; }
+.bill-card-row { display:flex; justify-content:space-between; align-items:flex-start; gap:12px; }
+.bill-info { display:flex; align-items:flex-start; gap:10px; flex:1; }
+.bill-info input[type="checkbox"] { margin-top:4px; width:18px; height:18px; }
+.bill-name { font-weight:bold; margin:0 0 4px; }
+.bill-name.paid-text { text-decoration:line-through; }
+.bill-actions { display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
+.status-badge { border:1px solid #000; padding:2px 8px; font-size:0.85em; white-space:nowrap; }
+.status-badge.paid { background:#e6f4ea; }
+.status-badge.pending { background:#fff8e1; }
+.status-badge.overdue { background:#fdecea; }
+.confirm-box { border:1px solid var(--border); padding:10px 12px; background:var(--code-bg); margin-top:10px; }
+.confirm-box button { margin-right:8px; }
+@media (max-width: 700px) { .bill-card-row { flex-direction:column; } .bill-actions { width:100%; } }
+.resources-grid { display:grid; grid-template-columns: repeat(3, 1fr); gap:12px; }
+.resource-card { border:1px solid var(--border); padding:12px; background:var(--surface); }
+.resource-card h3 { margin-top:0; margin-bottom:6px; }
+.resource-card p { margin:4px 0; }
+.resource-actions { display:flex; gap:8px; margin-top:10px; }
+.resource-actions button { flex:1; }
+@media (max-width: 700px) { .resources-grid { grid-template-columns: 1fr; } }
 
 .app-layout {min-height: 100vh;}
 .app-content {padding: 24px;}

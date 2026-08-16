@@ -9,6 +9,7 @@ import CommitteeDashboard from "./pages/CommitteeDashboard";
 import Booking from "./pages/Booking";
 import Books from "./pages/Books";
 import CreateBook from "./pages/CreateBook";
+import BillPayments from "./pages/BillPayments";
 import DashboardHome from "./pages/DashboardHome";
 
 import DashboardLayout from "./layouts/DashboardLayout";
@@ -117,7 +118,21 @@ function App() {
             )
           }
         />
-    
+
+        <Route
+          path="/bills"
+          element={
+            token ? (
+              <BillPayments
+                token={token}
+                onLogout={handleLogout}
+                role={role}
+              />
+            ) : (
+              <Navigate to="/login" replace />
+            )
+          }
+        />
 
         {/* Noticeboard */}
         <Route
