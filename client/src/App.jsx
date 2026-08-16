@@ -10,6 +10,7 @@ import Booking from "./pages/Booking";
 import Books from "./pages/Books";
 import CreateBook from "./pages/CreateBook";
 import DashboardHome from "./pages/DashboardHome";
+import BillPayments from "./pages/BillPayments";
 
 import DashboardLayout from "./layouts/DashboardLayout";
 
@@ -117,7 +118,34 @@ function App() {
             )
           }
         />
-    
+
+        <Route
+          path="/bills"
+          element={
+            token ? (
+              <BillPayments
+                token={token}
+                onLogout={handleLogout}
+                role={role}
+              />
+            ) : (
+              <Navigate to="/login" replace />
+            )
+          }
+        />
+
+        <Route path="/books" element={<Books />} />
+
+        <Route
+          path="/books/create"
+          element={
+            token ? (
+              <CreateBook token={token} />
+            ) : (
+              <Navigate to="/login" replace />
+            )
+          }
+        />
 
         {/* Noticeboard */}
         <Route
