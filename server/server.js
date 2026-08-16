@@ -6,6 +6,7 @@ dns.setServers(["8.8.8.8", "8.8.4.4"]);
 import dotenv from "dotenv";
 dotenv.config();
 
+
 import connectDB from "./config/db.js";
 import app from "./app.js";
 import proposalRoutes from "./routes/proposalRoutes.js";
