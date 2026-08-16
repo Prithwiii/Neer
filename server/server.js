@@ -12,6 +12,8 @@ import proposalRoutes from "./routes/proposalRoutes.js";
 import resourceRoutes from "./routes/resourceRoutes.js";
 import bookingRoutes from "./routes/bookingRoutes.js";
 import noticeRoutes from "./routes/noticeRoutes.js";
+import garageRoutes from "./routes/garageRoutes.js";
+import garageBookingRoutes from "./routes/garageBookingRoutes.js";
 
 connectDB();
 
@@ -21,6 +23,8 @@ app.use("/api/proposals", proposalRoutes);
 app.use("/api/resources", resourceRoutes);
 app.use("/api/bookings", bookingRoutes);
 app.use("/api/notices", noticeRoutes);
+app.use("/api/garages", garageRoutes);
+app.use("/api/garage-bookings", garageBookingRoutes);
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
