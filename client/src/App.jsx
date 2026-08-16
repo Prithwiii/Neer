@@ -8,6 +8,7 @@ import CommitteeDashboard from "./pages/CommitteeDashboard";
 import Booking from "./pages/Booking";
 import Books from "./pages/Books";
 import CreateBook from "./pages/CreateBook";
+import BillPayments from "./pages/BillPayments";
 import "./App.css";
 
 function App() {
@@ -78,6 +79,21 @@ function App() {
           element={
             token ? (
               <Booking
+                token={token}
+                onLogout={handleLogout}
+                role={role}
+              />
+            ) : (
+              <Navigate to="/login" replace />
+            )
+          }
+        />
+
+        <Route
+          path="/bills"
+          element={
+            token ? (
+              <BillPayments
                 token={token}
                 onLogout={handleLogout}
                 role={role}
