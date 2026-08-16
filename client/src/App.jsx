@@ -10,6 +10,7 @@ import Booking from "./pages/Booking";
 import Books from "./pages/Books";
 import CreateBook from "./pages/CreateBook";
 import DashboardHome from "./pages/DashboardHome";
+import Maintenance from "./pages/Maintenance";
 
 import DashboardLayout from "./layouts/DashboardLayout";
 
@@ -72,6 +73,8 @@ function App() {
             path="/books/create"
             element={<CreateBook token={token} />}
           />
+
+          <Route path="/maintenance" element={<Maintenance />} />
         </Route>
 
 {/* ------------------------- */}
