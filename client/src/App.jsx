@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { useState } from "react";
+
 import Noticeboard from "./pages/Noticeboard";
 import Auth from "./pages/Auth";
 import StaffDashboard from "./pages/StaffDashboard";
@@ -8,6 +9,10 @@ import CommitteeDashboard from "./pages/CommitteeDashboard";
 import Booking from "./pages/Booking";
 import Books from "./pages/Books";
 import CreateBook from "./pages/CreateBook";
+import DashboardHome from "./pages/DashboardHome";
+
+import DashboardLayout from "./layouts/DashboardLayout";
+
 import "./App.css";
 
 function App() {
@@ -37,14 +42,39 @@ function App() {
 
         <Route
           path="/"
-          element={<Navigate to="/proposals" replace />}
+          // element={<Navigate to="/proposal" replace />}
+          element={<Navigate to="/dashboard" replace />}
         />
-
+{/* ------------------------ */}
         <Route
           path="/login"
           element={<Auth token={token} onLogin={handleLogin} />}
         />
 
+        <Route
+          element = { token ? (
+            <DashboardLayout
+              token = {token}
+              onLogout={handleLogout}
+            />
+          ) : (
+            <Navigate to ="/login" replace />
+          )}
+        >
+          <Route
+            path = "/dashboard"
+            element = { <DashboardHome role = {role}/>
+            } />
+
+          <Route path="/books" element={<Books />} />
+
+          <Route
+            path="/books/create"
+            element={<CreateBook token={token} />}
+          />
+        </Route>
+
+{/* ------------------------- */}
         <Route
           path="/proposals"
           element={
@@ -87,19 +117,7 @@ function App() {
             )
           }
         />
-
-        <Route path="/books" element={<Books />} />
-
-        <Route
-          path="/books/create"
-          element={
-            token ? (
-              <CreateBook token={token} />
-            ) : (
-              <Navigate to="/login" replace />
-            )
-          }
-        />
+    
 
         {/* Noticeboard */}
         <Route

@@ -30,3 +30,24 @@ button.secondary { background:#fff; color:#000; }
 .book-actions {display: flex;gap: 8px;margin-top: 16px;}
 .book-actions button {flex: 1;}
 @media (max-width: 700px) {.books-grid {grid-template-columns: 1fr;}}
+
+.app-layout {min-height: 100vh;}
+.app-content {padding: 24px;}
+/* Navbar */
+.navbar {height: 64px;display: flex;align-items: center;justify-content: space-between;color:#222; padding: 0 20px;background: #ffffff;border-bottom: 1px solid #ddd;}
+.navbar-left, .navbar-right {display: flex;align-items: center;gap: 16px;}
+.menu-button {border: none;background: transparent;color:#222;font-size: 24px;cursor: pointer;padding: 4px 8px;}
+.navbar-brand {font-size: 22px;font-weight: bold;}
+.navbar-page {font-size: 16px;color: #666;}
+.navbar-username {font-weight: 500;}
+/* Sidebar */
+.sidebar {position: fixed;top: 0;left: -280px;width: 280px;height: 100vh;background: #ffffff;border-right: 1px solid #ddd;z-index: 1000;transition: left 0.2s ease;}
+.sidebar-open {left: 0;}
+.sidebar-header {height: 64px;display: flex;align-items: center;justify-content: space-between;padding: 0 20px;border-bottom: 1px solid #ddd;}
+.sidebar-header h2 {margin: 0;}
+.sidebar-close {border: none;background: none;font-size: 28px;cursor: pointer;}
+.sidebar-nav {display: flex;flex-direction: column;padding: 16px 0;}
+.sidebar-nav a {padding: 12px 20px;text-decoration: none;color: inherit;}
+.sidebar-nav a:hover {background: #f0f0f0;}
+/* Dark overlay */
+.sidebar-overlay {position: fixed;inset: 0;background: rgba(0, 0, 0, 0.35);z-index: 999;}
