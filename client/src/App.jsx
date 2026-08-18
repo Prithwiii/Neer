@@ -18,6 +18,7 @@ import DashboardHome from "./pages/DashboardHome";
 import BillPayments from "./pages/BillPayments";
 import BuildingLayout from "./pages/BuildingLayout";
 import ManageBuildingLayout from "./pages/ManageBuildingLayout";
+import IntercomAccess from "./pages/IntercomAccess";
 
 import DashboardLayout from "./layouts/DashboardLayout";
 
@@ -95,6 +96,11 @@ function App() {
           <Route
             path="/intercom"
             element={<Intercom/>}
+          />
+
+          <Route
+            path="/intercom-access"
+            element={<IntercomAccess/>}
           />
           
         </Route>
@@ -241,6 +247,7 @@ function App() {
           path="*"
           element={<Navigate to="/login" replace />}
         />
+
 
       </Routes>
     </BrowserRouter>

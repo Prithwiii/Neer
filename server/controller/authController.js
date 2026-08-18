@@ -88,6 +88,8 @@ export const loginUser = async(req, res) => {
             email: user.email,
             role: user.role,
             flatNumber: user.flatNumber || null,
+            intercomEnabled: user.intercomEnabled,
+            intercomAccess: user.intercomAccess,
             token: generateToken(user._id)
         });
     }

@@ -2,7 +2,7 @@ import User from "../models/User.js";
 
 export const getIntercomResidents = async (req, res) => {
     try {
-        if (req.user.type !== "staff" || !req.user.intercomAccess) {
+        if (req.user.role !== "staff" || !req.user.intercomAccess) {
             return res.status(403).json({
                 message: "You do not have permission to initiate intercom calls",
             });
@@ -22,7 +22,7 @@ export const getIntercomResidents = async (req, res) => {
 
 export const updateIntercomAccess = async (req, res) => {
     try {
-        if (req.user.type !== "committee") {
+        if (req.user.role !== "committee") {
             return res.status(403).json({
                 message: "Only committee members can manage intercom access",
             });
@@ -46,17 +46,17 @@ export const updateIntercomAccess = async (req, res) => {
             });
         }
 
-        if (user.type === "resident") {
+        if (user.role === "resident") {
             user.intercomEnabled = Boolean(intercomEnabled);
             user.intercomAccess = false;
         } 
-        else if (user.type === "staff") {
+        else if (user.role === "staff") {
             user.intercomAccess = Boolean(intercomAccess);
             user.intercomEnabled = false;
         }
-        else if (user.type === "committee") {
-            user.intercomAccess = true;
-            user.intercomEnabled = true;
+        else if (user.role === "committee") {
+            user.intercomAccess = Boolean(intercomAccess);
+            user.intercomEnabled = Boolean(intercomEnabled);
         }
 
         await user.save();
@@ -66,7 +66,7 @@ export const updateIntercomAccess = async (req, res) => {
                 _id: user._id,
                 username: user.username,
                 email: user.email,
-                type: user.type,
+                type: user.role,
                 intercomEnabled: user.intercomEnabled,
                 intercomAccess: user.intercomAccess,
             },
@@ -76,5 +76,46 @@ export const updateIntercomAccess = async (req, res) => {
         return res.status(500).json({
             message: "Server error while updating intercom permissions",
         });
+    }
+};
+
+export const getIntercomUser = async (req, res) => {
+    try {
+        if (req.user.role !== "committee") {
+            return res.status(403).json({
+                message: "Only committee members can manage intercom access",
+            });
+        }
+        const {email} = req.query;
+
+        if (!email) {
+            return res.status(400).json({
+                message: "Email is required",
+            });
+        }
+
+        const user = await User.findOne({
+            email: email.toLowerCase().trim(),
+        }).select(
+            "_id username email type intercomEnabled intercomAccess"
+        );
+
+        if (!user) {
+            return res.status(404).json({
+                message: "User not found",
+            });
+        }
+
+        return res.json({
+            user,
+        });
+
+    } catch (error) {
+        console.error("Get intercom user error:", error);
+
+        return res.status(500).json({
+            message: "Server error",
+        });
+
     }
 };
