@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import API_URL from "../config/api";
 
 function StaffDashboard({ onLogout }) {
   return (

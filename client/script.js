@@ -1,7 +1,10 @@
 console.log("Script loaded");
+import API_URL from "./src/config/api";
 
-const API = "http://localhost:5000/api/auth";
-const PROPOSAL_API = "http://localhost:5000/api/proposals";
+// const API = "http://localhost:5000/api/auth";
+// const PROPOSAL_API = "http://localhost:5000/api/proposals";
+const API = `${API_URL}/api/auth`;
+const PROPOSAL_API = `${API_URL}/api/proposals`;
 
 const output = document.getElementById("output");
 const proposalSection = document.getElementById("proposalSection");

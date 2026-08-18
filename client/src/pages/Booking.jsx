@@ -1,8 +1,11 @@
 import { useState, useEffect, useCallback } from "react";
 import { Link } from "react-router-dom";
+import API_URL from "../config/api";
 
-const RESOURCE_API = "http://localhost:5000/api/resources";
-const BOOKING_API = "http://localhost:5000/api/bookings";
+// const RESOURCE_API = "http://localhost:5000/api/resources";
+// const BOOKING_API = "http://localhost:5000/api/bookings";
+const RESOURCE_API = `${API_URL}/api/resources`;
+const BOOKING_API = `${API_URL}/api/bookings`;
 
 function Booking({ token, onLogout, role }) {
   const [resources, setResources] = useState([]);

@@ -1,7 +1,9 @@
 import { useState, useEffect, useCallback } from "react";
 import { Link } from "react-router-dom";
+import API_URL from "../config/api";
 
-const BILL_API = "http://localhost:5000/api/bills";
+// const BILL_API = "http://localhost:5000/api/bills";
+const BILL_API = `${API_URL}/api/bills`;
 
 const CATEGORIES = [
   "Electricity",

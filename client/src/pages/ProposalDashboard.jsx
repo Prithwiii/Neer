@@ -1,7 +1,9 @@
 import { useState, useEffect, useCallback } from "react";
 import { Link } from "react-router-dom";
+import API_URL from "../config/api";
 
-const PROPOSAL_API = "http://localhost:5000/api/proposals";
+// const PROPOSAL_API = "http://localhost:5001/api/proposals";
+const PROPOSAL_API = `${API_URL}/api/proposals`;
 
 const dashboardOptions = [
   { key: "create", label: "Create Proposal" },
