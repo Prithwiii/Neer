@@ -91,6 +91,12 @@ function App() {
             path="/building-layout/manage"
             element={<ManageBuildingLayout token={token} role={role} />}
           />
+
+          <Route
+            path="/intercom"
+            element={<Intercom/>}
+          />
+          
         </Route>
 
 {/* ------------------------- */}
