@@ -1,4 +1,4 @@
-import DashboardCore from "./Dashboard";
+import DashboardCore from "./ProposalDashboard";
 
 function CommitteeDashboard(props) {
   return <DashboardCore {...props} role="committee" />;

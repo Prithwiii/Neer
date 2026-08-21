@@ -2,12 +2,16 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { useState } from "react";
 
 import Noticeboard from "./pages/Noticeboard";
+import Complaints from "./pages/Complaints";
+import ComplaintSubmit from "./pages/ComplaintSubmit";
 import Auth from "./pages/Auth";
 import StaffDashboard from "./pages/StaffDashboard";
 import ResidentDashboard from "./pages/ResidentDashboard";
 import CommitteeDashboard from "./pages/CommitteeDashboard";
 import Booking from "./pages/Booking";
 import Garages from "./pages/Garages";
+import GarageBookingPage from "./pages/GarageBookingPage";
+import MyGarageBookings from "./pages/MyGarageBookings";
 import Books from "./pages/Books";
 import CreateBook from "./pages/CreateBook";
 import DashboardHome from "./pages/DashboardHome";
@@ -163,6 +167,20 @@ function App() {
           }
         />
 
+        <Route
+          path="/garages/book/:garageId"
+          element={
+            token ? <GarageBookingPage token={token} onLogout={handleLogout} /> : <Navigate to="/login" replace />
+          }
+        />
+
+        <Route
+          path="/garages/my-bookings"
+          element={
+            token ? <MyGarageBookings token={token} onLogout={handleLogout} /> : <Navigate to="/login" replace />
+          }
+        />
+
         <Route path="/books" element={<Books />} />
 
         <Route
@@ -185,6 +203,31 @@ function App() {
             ) : (
               <Navigate to="/login" replace />
             )
+          }
+        />
+
+        <Route
+          path="/complaints"
+          element={
+            token ? (
+              <Complaints token={token} onLogout={handleLogout} role={role} />
+            ) : (
+              <Navigate to="/login" replace />
+            )
+          }
+        />
+
+        <Route
+          path="/complaints/my-flat"
+          element={
+            token && role !== "staff" ? <Complaints token={token} onLogout={handleLogout} role={role} view="my-flat" /> : <Navigate to={token ? "/complaints" : "/login"} replace />
+          }
+        />
+
+        <Route
+          path="/complaints/submit"
+          element={
+            token && role !== "staff" ? <ComplaintSubmit token={token} onLogout={handleLogout} /> : <Navigate to={token ? "/complaints" : "/login"} replace />
           }
         />
 

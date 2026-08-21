@@ -8,9 +8,8 @@ const dashboardOptions = [
   { key: "vote", label: "Vote Proposal" },
 ];
 
-function Dashboard({ token, onLogout, role }) {
+function ProposalDashboard({ token, onLogout, role }) {
   const [proposals, setProposals] = useState([]);
-  const [profile, setProfile] = useState(null);
   const defaultPanel = role === "resident" ? "vote" : "create";
   const [activePanel, setActivePanel] = useState(defaultPanel);
   const [title, setTitle] = useState("");
@@ -37,13 +36,6 @@ function Dashboard({ token, onLogout, role }) {
 
     const loadInitialData = async () => {
       await loadProposals();
-
-      const res = await fetch("http://localhost:5000/api/auth/profile", {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      if (!res.ok) return;
-      const user = await res.json();
-      setProfile(user);
     };
 
     loadInitialData();
@@ -96,10 +88,8 @@ function Dashboard({ token, onLogout, role }) {
     <div className="dashboard-page">
       <div className="dashboard-header">
         <div>
-          <h1>Committee Dashboard</h1>
-          <p>
-            {profile ? `${profile.username} — ${profile.role}` : "Choose an action below to manage proposals."}
-          </p>
+          <h1>Proposal Dashboard</h1>
+          <p>Choose an action below to manage proposals.</p>
         </div>
         <button className="secondary" onClick={onLogout}>
           Logout
@@ -113,6 +103,7 @@ function Dashboard({ token, onLogout, role }) {
         <Link to="/garages">Garages</Link>
         <Link to="/noticeboard">Noticeboard</Link>
         <Link to="/books">Library</Link>
+        <Link to="/dashboard">Dashboard</Link>
       </nav>
 
       <div className="dashboard-menu">
@@ -135,7 +126,7 @@ function Dashboard({ token, onLogout, role }) {
 
       <div className="dashboard-panel">
         {activePanel === "create" ? (
-          <div className="panel-card">
+          <div className="panel-card" id="create-proposal">
             <h2>Create Proposal</h2>
             <form onSubmit={createProposal} className="proposal-form">
               <input
@@ -159,7 +150,7 @@ function Dashboard({ token, onLogout, role }) {
             </form>
           </div>
         ) : (
-          <div className="panel-card">
+          <div className="panel-card" id="vote-proposals">
             <h2>Vote for Proposal</h2>
             {proposals.length === 0 ? (
               <p>No proposals available yet.</p>
@@ -190,4 +181,4 @@ function Dashboard({ token, onLogout, role }) {
   );
 }
 
-export default Dashboard;
+export default ProposalDashboard;

@@ -25,6 +25,16 @@ const userSchema = new mongoose.Schema(
         type: String,
         enum: ["staff", "resident", "committee"],
         default: "resident"
+    },
+
+    flatNumber: {
+        type: String,
+        trim: true,
+        uppercase: true,
+        required: function () {
+            return this.role !== "staff";
+        },
+        match: [/^\d+-[A-Z]$/, "Flat number must use the format 10-A"]
     }
 ,
     intercomEnabled: {
