@@ -10,6 +10,7 @@ function Auth({ token, onLogin }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [roleSelect, setRoleSelect] = useState("resident");
+  const [flatNumber, setFlatNumber] = useState("");
   const [message, setMessage] = useState("");
 
   if (token) {
@@ -25,7 +26,7 @@ function Auth({ token, onLogin }) {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ username, email, password, role: roleSelect }),
+      body: JSON.stringify({ username, email, password, role: roleSelect, flatNumber }),
     });
 
     const data = await response.json();
@@ -75,11 +76,21 @@ function Auth({ token, onLogin }) {
             onChange={(e) => setUsername(e.target.value)}
             placeholder="Username"
           />
-            <select value={roleSelect} onChange={(e) => setRoleSelect(e.target.value)}>
+            <select value={roleSelect} onChange={(e) => { setRoleSelect(e.target.value); if (e.target.value === "staff") setFlatNumber(""); }}>
               <option value="resident">Resident</option>
               <option value="committee">Committee Member</option>
               <option value="staff">Staff</option>
             </select>
+          {roleSelect !== "staff" && (
+            <input
+              value={flatNumber}
+              onChange={(e) => setFlatNumber(e.target.value.toUpperCase())}
+              placeholder="Flat number (e.g. 10-A)"
+              pattern="[0-9]+-[A-Z]"
+              title="Use the format 10-A"
+              required
+            />
+          )}
           <input
             value={email}
             onChange={(e) => setEmail(e.target.value)}

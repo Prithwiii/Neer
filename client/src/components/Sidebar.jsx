@@ -37,6 +37,10 @@ function Sidebar({ open, onClose }) {
             Bookings
           </Link>
 
+          <Link to="/garages" onClick={onClose}>
+            Garages
+          </Link>
+
           <Link to="/bills" onClick={onClose}>
             Bill Payments
           </Link>
@@ -47,6 +51,10 @@ function Sidebar({ open, onClose }) {
 
           <Link to="/noticeboard" onClick={onClose}>
             Noticeboard
+          </Link>
+
+          <Link to="/complaints" onClick={onClose}>
+            Complaints
           </Link>
 
           {/* add new features here later */}
