@@ -5,11 +5,9 @@ import protect from "../middleware/authMiddleware.js";
 
 const router = express.Router();
 
-// List garages, with optional ?status=available|unavailable to filter by current booking state
+// List garages that are not currently reserved.
 router.get("/", protect, async (req, res) => {
   try {
-    const { availableOnly, status } = req.query;
-
     const garages = await Garage.find().sort({ name: 1 });
 
     const now = new Date();
@@ -19,7 +17,6 @@ router.get("/", protect, async (req, res) => {
         const overlapping = await GarageBooking.find({
           garage: g._id,
           status: "confirmed",
-          startDate: { $lte: now },
           endDate: { $gt: now },
         }).sort({ endDate: 1 });
 
@@ -40,17 +37,7 @@ router.get("/", protect, async (req, res) => {
       })
     );
 
-    let filtered = result;
-
-    if (status === "available") {
-      filtered = result.filter((r) => r.isFree);
-    } else if (status === "unavailable") {
-      filtered = result.filter((r) => !r.isFree);
-    } else if (availableOnly === "true") {
-      filtered = result.filter((r) => r.isFree);
-    }
-
-    res.json(filtered);
+    res.json(result.filter((r) => r.isFree));
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
