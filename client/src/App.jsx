@@ -7,6 +7,7 @@ import StaffDashboard from "./pages/StaffDashboard";
 import ResidentDashboard from "./pages/ResidentDashboard";
 import CommitteeDashboard from "./pages/CommitteeDashboard";
 import Booking from "./pages/Booking";
+import Garages from "./pages/Garages";
 import Books from "./pages/Books";
 import CreateBook from "./pages/CreateBook";
 import BillPayments from "./pages/BillPayments";
@@ -118,6 +119,19 @@ function App() {
             )
           }
         />
+
+        <Route
+          path="/garages"
+          element={
+            token ? (
+              <Garages token={token} onLogout={handleLogout} role={role} />
+            ) : (
+              <Navigate to="/login" replace />
+            )
+          }
+        />
+
+        <Route path="/books" element={<Books />} />
 
         <Route
           path="/bills"

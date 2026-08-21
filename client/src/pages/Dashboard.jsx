@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { Link } from "react-router-dom";
 
-const PROPOSAL_API = "http://localhost:5001/api/proposals";
+const PROPOSAL_API = "http://localhost:5000/api/proposals";
 
 const dashboardOptions = [
   { key: "create", label: "Create Proposal" },
@@ -109,6 +109,7 @@ function Dashboard({ token, onLogout, role }) {
       <nav className="top-nav">
         <Link to="/proposals">Proposals</Link>
         <Link to="/bookings">Bookings</Link>
+        <Link to="/garages">Garages</Link>
         <Link to="/bills">Bill Payments</Link>
         <Link to="/noticeboard">Noticeboard</Link>
         <Link to="/books">Library</Link>
