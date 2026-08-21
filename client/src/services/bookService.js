@@ -1,8 +1,10 @@
-const API_URL = "http://localhost:5000/api/books";
+import API_URL from "../config/api";
+
+// const API_URL = "http://localhost:5000/api/books";
 
 //GET all books
 export const getBooks = async() => {
-    const response = await fetch(API_URL);
+    const response = await fetch(`${API_URL}/api/books`);
 
     if(!response.ok) {
         throw new Error("Failed to fetch books");
@@ -13,7 +15,7 @@ export const getBooks = async() => {
 
 //GET one book
 export const getBook = async(id) => {
-    const response = await fetch(`${API_URL}/${id}`);
+    const response = await fetch(`${API_URL}/api/books/${id}`);
 
     if(!response.ok) {
         throw new Error("Failed to fetch book");
@@ -24,7 +26,7 @@ export const getBook = async(id) => {
 
 //POST/create a book
 export const createBook = async(bookData, token) => {
-    const response = await fetch(API_URL, {
+    const response = await fetch(`${API_URL}/api/books`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -42,7 +44,7 @@ export const createBook = async(bookData, token) => {
 //POST/borrow a book
 export const borrowBook = async (bookId, token) => {
     const response = await fetch(
-        `${API_URL}/${bookId}/borrow`,
+        `${API_URL}/api/books/${bookId}/borrow`,
         {
             method: "POST",
             headers: {
@@ -61,7 +63,7 @@ export const borrowBook = async (bookId, token) => {
 //PUT/return book
 export const returnBook = async (bookId, token) => {
     const response = await fetch(
-        `${API_URL}/${bookId}/return`,
+        `${API_URL}/api/books/${bookId}/return`,
         {
             method: "PUT",
             headers: {
@@ -80,7 +82,7 @@ export const returnBook = async (bookId, token) => {
 //DELETE book
 export const deleteBook = async (bookId, token) => {
     const response = await fetch(
-        `${API_URL}/${bookId}`,
+        `${API_URL}/api/books/${bookId}`,
         {
             method: "DELETE",
             headers: {
