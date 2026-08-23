@@ -10,7 +10,6 @@ import Booking from "./pages/Booking";
 import Books from "./pages/Books";
 import CreateBook from "./pages/CreateBook";
 import DashboardHome from "./pages/DashboardHome";
-import Maintenance from "./pages/Maintenance";
 import Chat from "./pages/Chat";
 import Alerts from "./pages/Alerts";
 import { disconnectSocket } from "./services/socket";
@@ -78,8 +77,6 @@ function App() {
             path="/books/create"
             element={<CreateBook token={token} />}
           />
-
-          <Route path="/maintenance" element={<Maintenance />} />
 
           <Route path="/chat" element={<Chat />} />
 

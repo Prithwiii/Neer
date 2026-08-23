@@ -45,10 +45,6 @@ function Sidebar({ open, onClose }) {
             Noticeboard
           </Link>
 
-          <Link to="/maintenance" onClick={onClose}>
-            Maintenance
-          </Link>
-
           <Link to="/chat" onClick={onClose}>
             Chat
           </Link>
