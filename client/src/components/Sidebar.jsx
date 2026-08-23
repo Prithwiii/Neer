@@ -130,6 +130,14 @@ function Sidebar({ open, role, onClose }) {
             Maintenance
           </Link>
 
+          <Link to="/chat" onClick={onClose}>
+            Chat
+          </Link>
+
+          <Link to="/alerts" onClick={onClose}>
+            Alerts
+          </Link>
+
           {/* add new features here later */}
         </nav>
       </aside>

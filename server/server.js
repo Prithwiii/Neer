@@ -7,8 +7,6 @@ import dotenv from "dotenv";
 dotenv.config();
 
 import http from "http";
-import {Server} from "socket.io";
-
 import connectDB from "./config/db.js";
 import app from "./app.js";
 
@@ -26,9 +24,11 @@ import househelpRoutes from "./routes/househelpRoutes.js";
 import familyExpenseRoutes from "./routes/familyExpenseRoutes.js";
 import lostFoundRoutes from "./routes/lostFoundRoutes.js";
 import cameraRoutes from "./routes/cameraRoutes.js";
-
-import {setIO} from "./config/socket.js";
 import maintenanceRoutes from "./routes/maintenanceRoutes.js";
+import messageRoutes from "./routes/messageRoutes.js";
+import alertRoutes from "./routes/alertRoutes.js";
+
+import { initSocket } from "./config/socket.js";
 
 connectDB();
 
@@ -49,36 +49,19 @@ app.use("/api/househelp", househelpRoutes);
 app.use("/api/family-expenses", familyExpenseRoutes);
 app.use("/api/lost-found", lostFoundRoutes);
 app.use("/api/cameras", cameraRoutes);
+app.use("/api/messages", messageRoutes);
+app.use("/api/alerts", alertRoutes);
 
-// app.listen(PORT, () => {
-//   console.log(`Server running on port ${PORT}`);
-// });
-
+// Wrap the Express app in a raw HTTP server so Socket.io can attach
+// to the same port instead of needing a separate one.
 const httpServer = http.createServer(app);
+const io = initSocket(httpServer);
 
-const io = new Server(httpServer, {
-  cors: {
-    origin: "http://localhost:5173",
-    methods: ["GET", "POST"],
-  },
-});
+// Exposes the io instance to REST controllers (e.g. alertController)
+// via req.app.get("io"), so a plain HTTP POST can still broadcast
+// in real time to every connected socket.
+app.set("io", io);
 
-setIO(io);
-
-io.on("connection", (socket) => {
-  console.log("Socket connected:", socket.id);
-
-  socket.on("register", (userId) => {
-    socket.join(`user-${userId}`);
-
-    console.log(`User ${userId} registered for intercom`);
-  });
-
-  socket.on("disconnect", () => {
-    console.log("Socket disconnected:", socket.id);
-  });
-});
-
-httpServer.listen(PORT, () => { 
+httpServer.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
