@@ -11,6 +11,9 @@ import Books from "./pages/Books";
 import CreateBook from "./pages/CreateBook";
 import DashboardHome from "./pages/DashboardHome";
 import Maintenance from "./pages/Maintenance";
+import Chat from "./pages/Chat";
+import Alerts from "./pages/Alerts";
+import { disconnectSocket } from "./services/socket";
 
 import DashboardLayout from "./layouts/DashboardLayout";
 
@@ -32,6 +35,8 @@ function App() {
     localStorage.removeItem("token");
     localStorage.removeItem("role");
     localStorage.removeItem("userId");
+
+    disconnectSocket();
 
     setToken(null);
     setRole(null);
@@ -75,6 +80,10 @@ function App() {
           />
 
           <Route path="/maintenance" element={<Maintenance />} />
+
+          <Route path="/chat" element={<Chat />} />
+
+          <Route path="/alerts" element={<Alerts role={role} />} />
         </Route>
 
 {/* ------------------------- */}
