@@ -1,4 +1,4 @@
-import DashboardCore from "./Dashboard";
+import DashboardCore from "./ProposalDashboard";
 
 function ResidentDashboard(props) {
   return <DashboardCore {...props} role="resident" />;

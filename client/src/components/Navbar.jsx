@@ -7,9 +7,15 @@ function Navbar({ profile, onLogout, onMenuClick }) {
     "/dashboard": "Dashboard",
     "/proposals": "Proposals",
     "/bookings": "Bookings",
+    "/garages": "Garages",
+    "/garages/book": "Book Garage",
+    "/garages/my-bookings": "My Garage Bookings",
     "/books": "Library",
     "/books/create": "Create Book",
     "/noticeboard": "Noticeboard",
+    "/complaints": "Complaints",
+    "/complaints/submit": "Submit Complaint",
+    "/complaints/my-flat": "Complaints Against My Flat",
     "/intercom": "Intercom",
     "/building-layout": "Building Layout",
     "/building-layout/manage": "Manage Building Layout",
@@ -36,7 +42,7 @@ function Navbar({ profile, onLogout, onMenuClick }) {
 
       <div className="navbar-right">
         <span className="navbar-username">
-          {profile ? profile.username : "User"}
+          {profile ? `${profile.username}${profile.flatNumber ? ` : ${profile.flatNumber}` : ""}` : "User"}
         </span>
 
         <button

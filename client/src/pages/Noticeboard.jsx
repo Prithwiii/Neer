@@ -16,7 +16,7 @@ function Noticeboard() {
     const fetchNotices = async () => {
         try {
             const response = await fetch(
-                "http://localhost:5001/api/notices",
+                "http://localhost:5000/api/notices",
                 {
                     headers: {
                         Authorization: `Bearer ${token}`
@@ -50,7 +50,7 @@ function Noticeboard() {
 
         try {
             const response = await fetch(
-                "http://localhost:5001/api/notices",
+                "http://localhost:5000/api/notices",
                 {
                     method: "POST",
                     headers: {
