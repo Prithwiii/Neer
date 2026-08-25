@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 
-function Sidebar({ open, onClose }) {
+function Sidebar({ open, role, onClose }) {
   return (
     <>
       {open && (
@@ -44,6 +44,16 @@ function Sidebar({ open, onClose }) {
           <Link to="/noticeboard" onClick={onClose}>
             Noticeboard
           </Link>
+
+          <Link to="/building-layout" onClick={onClose}>
+            Building Layout
+          </Link>
+
+          {role === "committee" && (
+            <Link to="/building-layout/manage" onClick={onClose}>
+              Manage Building Layout
+            </Link>
+          )}
 
           {/* add new features here later */}
         </nav>

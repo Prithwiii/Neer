@@ -82,3 +82,68 @@ button.secondary { background:#fff; color:#000; }
 .resource-actions { display:flex; gap:8px; margin-top:10px; }
 .resource-actions button { flex:1; }
 @media (max-width: 700px) { .resources-grid { grid-template-columns: 1fr; } }
+
+
+/* Building layout */
+/* the floor plan needs more room than the standard 900px dashboard page */
+.dashboard-page.layout-page { max-width: 1060px; }
+.layout-workspace { display:grid; grid-template-columns: 84px minmax(0, 1fr) 260px; gap:16px; align-items:start; }
+.layout-main { min-width:0; }
+.layout-side { min-width:0; }
+/* Floor selector, drawn as a slim elevation of the building */
+.floor-stack { border:1px solid var(--border); background:var(--surface); }
+.floor-stack-title { margin:0; padding:8px; border-bottom:1px solid var(--border); font-weight:bold; text-align:center; }
+.floor-stack-levels { display:flex; flex-direction:column; }
+.floor-stack-level { display:flex; align-items:center; justify-content:space-between; gap:6px; padding:8px 10px; border:none; border-bottom:1px solid var(--border); background:var(--surface); color:var(--text); cursor:pointer; }
+.floor-stack-level:last-child { border-bottom:none; }
+.floor-stack-level:hover { background:var(--code-bg); }
+.floor-stack-level.active { background:#000; color:#fff; }
+.floor-stack-key { font-weight:bold; }
+.floor-stack-count { font-size:0.8em; opacity:0.7; }
+/* Floor plan */
+.floor-plan-bar { display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap; margin-bottom:8px; }
+.floor-plan-bar h3 { margin:0; }
+.floor-plan-zoom { display:flex; align-items:center; gap:6px; }
+.floor-plan-zoom button { padding:4px 10px; }
+.floor-plan-zoom-value { min-width:48px; text-align:center; font-size:0.9em; }
+.floor-plan-viewport { border:1px solid var(--border); background:var(--code-bg); overflow:auto; }
+.floor-plan-surface { position:relative; aspect-ratio: 3 / 2; }
+.floor-plan-surface.placing, .floor-plan-surface.placing .plan-marker { cursor:crosshair; }
+.floor-plan-slab { position:absolute; inset:2%; z-index:0; background:var(--surface); border:2px solid #000; box-shadow: inset 0 0 0 6px var(--surface), inset 0 0 0 7px var(--border); }
+.floor-plan-empty { position:absolute; inset:0; z-index:1; display:flex; align-items:center; justify-content:center; margin:0; padding:16px; text-align:center; }
+.plan-marker { position:absolute; z-index:2; transform:translate(-50%, -50%); display:flex; align-items:center; justify-content:center; overflow:hidden; padding:2px; border:1px solid #000; color:#000; font-size:11px; line-height:1.2; text-align:center; cursor:pointer; }
+.plan-marker-name { overflow:hidden; }
+.plan-marker.selected { z-index:3; outline:3px solid #000; outline-offset:1px; }
+.plan-marker.preview { z-index:4; border-style:dashed; pointer-events:none; }
+.floor-plan-legend { display:flex; flex-wrap:wrap; gap:6px 14px; margin-top:10px; font-size:0.85em; }
+.floor-plan-legend-item { display:flex; align-items:center; gap:6px; }
+.legend-swatch { width:14px; height:14px; border:1px solid #000; }
+.floor-plan-summary { margin:10px 0 0; font-size:0.9em; }
+.location-details h3 { margin:0 0 8px; }
+.location-details p { margin:8px 0 0; }
+/* Category colours, shared by plan markers, badges and the legend */
+.cat-flat { background:#eef2f7; }
+.cat-entrance { background:#e6f4ea; }
+.cat-exit { background:#e8f0fe; }
+.cat-emergency { background:#fdecea; }
+.cat-elevator { background:#ede7f6; }
+.cat-staircase { background:#fdf0e3; }
+.cat-facility { background:#fff8e1; }
+.cat-parking { background:#e0f2f1; }
+.cat-security { background:#fce4ec; }
+.cat-other { background:#f2f2f2; }
+/* Admin form extras */
+.layout-form-grid { display:grid; grid-template-columns: repeat(4, 1fr); gap:8px; }
+.layout-form-grid label { display:flex; flex-direction:column; gap:4px; font-size:0.9em; }
+.allocation-box { border:1px solid var(--border); padding:10px 12px; background:var(--code-bg); }
+.allocation-chips { display:flex; flex-wrap:wrap; gap:8px; margin:8px 0; }
+.allocation-chip { display:inline-flex; align-items:center; gap:6px; padding:2px 8px; border:1px solid #000; background:var(--surface); font-size:0.9em; }
+.allocation-chip button { padding:0 4px; border:none; background:none; color:#000; font-size:1.1em; line-height:1; }
+@media (max-width: 900px) {
+  .layout-workspace { grid-template-columns: 1fr; }
+  .floor-stack-levels { flex-direction:row-reverse; justify-content:flex-end; overflow-x:auto; }
+  .floor-stack-level { flex-direction:column; gap:2px; border-bottom:none; border-right:1px solid var(--border); }
+  .floor-stack-level:last-child { border-right:none; }
+  .layout-form-grid { grid-template-columns: repeat(2, 1fr); }
+  .plan-marker { font-size:10px; }
+}

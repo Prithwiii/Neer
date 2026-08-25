@@ -5,7 +5,7 @@ import Navbar from "../components/Navbar";
 import Sidebar from "../components/Sidebar";
 import API_URL from "../config/api";
 
-function DashboardLayout({ token, onLogout }) {
+function DashboardLayout({ token, role, onLogout }) {
   const [profile, setProfile] = useState(null);
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -50,6 +50,7 @@ function DashboardLayout({ token, onLogout }) {
 
       <Sidebar
         open={menuOpen}
+        role={role}
         onClose={closeMenu}
       />
 
