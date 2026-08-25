@@ -1,4 +1,7 @@
 import User from "../models/User.js";
+import { AccessToken } from "livekit-server-sdk";
+import { getIO } from "../config/socket.js";
+import crypto from "crypto";
 
 export const getIntercomResidents = async (req, res) => {
     try {
@@ -117,5 +120,112 @@ export const getIntercomUser = async (req, res) => {
             message: "Server error",
         });
 
+    }
+};
+
+
+export const startIntercomCall = async (req, res) => {
+    try {
+        // Only staff with intercom access can initiate calls
+        if (
+            req.user.role !== "staff" ||
+            !req.user.intercomAccess
+        ) {
+            return res.status(403).json({
+                message: "You do not have permission to make intercom calls",
+            });
+        }
+
+        const { residentEmail } = req.body;
+
+        if (!residentEmail) {
+            return res.status(400).json({
+                message: "Resident email is required",
+            });
+        }
+
+        // Find resident
+        const resident = await User.findOne({
+            email: residentEmail.toLowerCase().trim(),
+            role: "resident",
+        });
+
+        if (!resident) {
+            return res.status(404).json({
+                message: "Resident not found",
+            });
+        }
+
+        // Resident must have intercom enabled
+        if (!resident.intercomEnabled) {
+            return res.status(403).json({
+                message: "This resident has intercom disabled",
+            });
+        }
+
+        // Create a unique room
+        const roomName = `intercom-${crypto.randomUUID()}`;
+
+        // Staff token
+        const staffToken = new AccessToken(
+            process.env.LIVEKIT_API_KEY,
+            process.env.LIVEKIT_API_SECRET,
+            {
+                identity: req.user._id.toString(),
+            }
+        );
+
+        staffToken.addGrant({
+            roomJoin: true,
+            room: roomName,
+            canPublish: true,
+            canSubscribe: true,
+        });
+
+        // Resident token
+        const residentToken = new AccessToken(
+            process.env.LIVEKIT_API_KEY,
+            process.env.LIVEKIT_API_SECRET,
+            {
+                identity: resident._id.toString(),
+            }
+        );
+
+        residentToken.addGrant({
+            roomJoin: true,
+            room: roomName,
+            canPublish: true,
+            canSubscribe: true,
+        });
+
+        const staffJWT = await staffToken.toJwt();
+        const residentJWT = await residentToken.toJwt();
+
+        // Notify resident
+        const io = getIO();
+
+        io.to(`user-${resident._id.toString()}`).emit(
+            "incoming-intercom-call",
+            {
+                roomName,
+                staffName: req.user.username,
+                token: residentJWT,
+                livekitUrl: process.env.LIVEKIT_URL,
+            }
+        );
+
+        return res.status(200).json({
+            message: "Call initiated",
+            roomName,
+            token: staffJWT,
+            livekitUrl: process.env.LIVEKIT_URL,
+        });
+
+    } catch (error) {
+        console.error("Intercom call error:", error);
+
+        return res.status(500).json({
+            message: "Failed to start intercom call",
+        });
     }
 };

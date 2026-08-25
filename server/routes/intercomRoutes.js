@@ -1,7 +1,7 @@
 import express from "express";
 import { 
-    getIntercomResidents, updateIntercomAccess, getIntercomUser,
-} from "../controller/intercomController.js";
+    getIntercomResidents, updateIntercomAccess, getIntercomUser, startIntercomCall,
+    } from "../controller/intercomController.js";
 import authMiddleware from "../middleware/authMiddleware.js";
 // import { updateIntercomAccess } from "../controller/intercomController.js";
 
@@ -21,6 +21,11 @@ router.get(
     "/user",
     authMiddleware,
     getIntercomUser
+);
+router.post(
+    "/call",
+    authMiddleware,
+    startIntercomCall
 );
 
 export default router;

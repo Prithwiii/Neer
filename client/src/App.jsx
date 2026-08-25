@@ -93,10 +93,10 @@ function App() {
             element={<ManageBuildingLayout token={token} role={role} />}
           />
 
-          <Route
+          {/* <Route
             path="/intercom"
             element={<Intercom/>}
-          />
+          /> */}
 
           <Route
             path="/intercom-access"
