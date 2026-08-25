@@ -8,7 +8,7 @@ export const getIntercomResidents = async (req, res) => {
             });
         }
         const residents = await User.find({
-            type: "resident",
+            role: "resident",
             intercomEnabled: true,
         }).select("_id username email");
 
@@ -60,13 +60,13 @@ export const updateIntercomAccess = async (req, res) => {
         }
 
         await user.save();
-        return res.status(200).jaon({
+        return res.status(200).json({
             message: "Intercom permission updated successfully",
             user: {
                 _id: user._id,
                 username: user.username,
                 email: user.email,
-                type: user.role,
+                role: user.role,
                 intercomEnabled: user.intercomEnabled,
                 intercomAccess: user.intercomAccess,
             },
@@ -97,7 +97,7 @@ export const getIntercomUser = async (req, res) => {
         const user = await User.findOne({
             email: email.toLowerCase().trim(),
         }).select(
-            "_id username email type intercomEnabled intercomAccess"
+            "_id username email role intercomEnabled intercomAccess"
         );
 
         if (!user) {

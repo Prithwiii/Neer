@@ -23,13 +23,16 @@ const IntercomAccess = () => {
         setMessage("");
         setError("");
 
+        setEnabled(false);
+        setAccess(false);
+
         try {
             const data = await getIntercomUser(email);
 
             setUser(data.user);
 
-            setEnabled(data.user.intercomEnabled);
-            setAccess(data.user.intercomAccess);
+            setEnabled(Boolean(data.user.intercomEnabled));
+            setAccess(Boolean(data.user.intercomAccess));
 
         } catch (error) {
             setError(error.message);
@@ -47,12 +50,12 @@ const IntercomAccess = () => {
 
                 intercomEnabled:
                     user.role === "resident" || user.role === "committee"
-                        ? enabled
+                        ? intercomEnabled
                         : false,
 
                 intercomAccess:
                     user.role === "staff" || user.type === "committee"
-                        ? enabled
+                        ? intercomAccess
                         : false,
             });
 
