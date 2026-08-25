@@ -11,6 +11,8 @@ function Navbar({ profile, onLogout, onMenuClick }) {
     "/books/create": "Create Book",
     "/noticeboard": "Noticeboard",
     "/intercom": "Intercom",
+    "/building-layout": "Building Layout",
+    "/building-layout/manage": "Manage Building Layout",
   };
 
   const pageName = pageNames[location.pathname] || "NEER";

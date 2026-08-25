@@ -13,6 +13,7 @@ import resourceRoutes from "./routes/resourceRoutes.js";
 import bookingRoutes from "./routes/bookingRoutes.js";
 import noticeRoutes from "./routes/noticeRoutes.js";
 import billRoutes from "./routes/billRoutes.js";
+import buildingLayoutRoutes from "./routes/buildingLayoutRoutes.js";
 
 connectDB();
 
@@ -23,6 +24,7 @@ app.use("/api/resources", resourceRoutes);
 app.use("/api/bookings", bookingRoutes);
 app.use("/api/notices", noticeRoutes);
 app.use("/api/bills", billRoutes);
+app.use("/api/building-layout", buildingLayoutRoutes);
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);

@@ -11,6 +11,8 @@ import Books from "./pages/Books";
 import CreateBook from "./pages/CreateBook";
 import BillPayments from "./pages/BillPayments";
 import DashboardHome from "./pages/DashboardHome";
+import BuildingLayout from "./pages/BuildingLayout";
+import ManageBuildingLayout from "./pages/ManageBuildingLayout";
 
 import DashboardLayout from "./layouts/DashboardLayout";
 
@@ -56,6 +58,7 @@ function App() {
           element = { token ? (
             <DashboardLayout
               token = {token}
+              role = {role}
               onLogout={handleLogout}
             />
           ) : (
@@ -72,6 +75,16 @@ function App() {
           <Route
             path="/books/create"
             element={<CreateBook token={token} />}
+          />
+
+          <Route
+            path="/building-layout"
+            element={<BuildingLayout token={token} role={role} />}
+          />
+
+          <Route
+            path="/building-layout/manage"
+            element={<ManageBuildingLayout token={token} role={role} />}
           />
         </Route>
 
