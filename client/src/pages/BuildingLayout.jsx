@@ -134,6 +134,12 @@ function BuildingLayout({ token, role }) {
                   </p>
                 )}
 
+                {selected.category === "Flat" && selected.flatNumber && (
+                  <p>
+                    <strong>Flat number:</strong> {selected.flatNumber}
+                  </p>
+                )}
+
                 {selected.category === "Flat" && (
                   <p>
                     <strong>Residents:</strong>{" "}
@@ -141,7 +147,7 @@ function BuildingLayout({ token, role }) {
                       ? selected.residents
                           .map((resident) => resident.username)
                           .join(", ")
-                      : "Not allocated yet"}
+                      : "Nobody yet"}
                   </p>
                 )}
               </div>

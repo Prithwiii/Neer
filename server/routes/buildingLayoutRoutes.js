@@ -6,19 +6,15 @@ import BuildingLocation, {
 } from "../models/BuildingLocation.js";
 import User from "../models/User.js";
 import protect from "../middleware/authMiddleware.js";
+import requireRole from "../middleware/roleMiddleware.js";
 
 const router = express.Router();
 
 // committee members act as the admins for the building layout, matching the
 // noticeboard and space/facility features
-const requireCommittee = (req, res, message) => {
-  if (req.user.role !== "committee") {
-    res.status(403).json({ message });
-    return false;
-  }
+const committeeOnly = [protect, requireRole("committee")];
 
-  return true;
-};
+const FLAT_NUMBER_PATTERN = /^\d+-[A-Z]$/;
 
 const inRange = (value, min) =>
   Number.isFinite(value) && value >= min && value <= 100;
@@ -33,6 +29,10 @@ const readLocationInput = (body) => {
     typeof body.description === "string" ? body.description.trim() : "";
   const openingHours =
     typeof body.openingHours === "string" ? body.openingHours.trim() : "";
+  const flatNumber =
+    typeof body.flatNumber === "string"
+      ? body.flatNumber.trim().toUpperCase()
+      : "";
 
   const x = Number(body.x);
   const y = Number(body.y);
@@ -63,6 +63,10 @@ const readLocationInput = (body) => {
     return { error: "Opening hours must be 60 characters or less" };
   }
 
+  if (flatNumber && !FLAT_NUMBER_PATTERN.test(flatNumber)) {
+    return { error: "Flat number must use the format 10-A" };
+  }
+
   if (!inRange(x, 0) || !inRange(y, 0)) {
     return { error: "Position must be between 0 and 100" };
   }
@@ -78,6 +82,8 @@ const readLocationInput = (body) => {
       category: body.category,
       description,
       openingHours,
+      // a flat number only means something on a flat
+      flatNumber: body.category === "Flat" ? flatNumber : "",
       x: round1(x),
       y: round1(y),
       width: round1(width),
@@ -86,39 +92,41 @@ const readLocationInput = (body) => {
   };
 };
 
-// only flats hold residents, and only real resident accounts can be allocated
-const readResidents = async (body, category) => {
-  if (category !== "Flat") {
-    return { values: [] };
+// Looks up who lives in each flat. Residents are read from User.flatNumber so
+// there is only ever one record of who lives where.
+const withResidents = async (locations) => {
+  const flatNumbers = locations
+    .filter((item) => item.category === "Flat" && item.flatNumber)
+    .map((item) => item.flatNumber);
+
+  if (flatNumbers.length === 0) {
+    return locations.map((item) => ({ ...item, residents: [] }));
   }
 
-  const ids = Array.isArray(body.residents) ? body.residents : [];
-  const uniqueIds = [...new Set(ids.map((id) => String(id)))];
+  // only the username is exposed here, never the email
+  const users = await User.find({
+    flatNumber: { $in: flatNumbers },
+    role: { $ne: "staff" },
+  })
+    .select("username flatNumber")
+    .sort({ username: 1 });
 
-  if (uniqueIds.length === 0) {
-    return { values: [] };
+  const byFlat = new Map();
+  for (const user of users) {
+    const list = byFlat.get(user.flatNumber) || [];
+    list.push({ _id: user._id, username: user.username });
+    byFlat.set(user.flatNumber, list);
   }
 
-  if (uniqueIds.length > 10) {
-    return { error: "A flat can hold at most 10 residents" };
-  }
+  return locations.map((item) => ({
+    ...item,
+    residents: byFlat.get(item.flatNumber) || [],
+  }));
+};
 
-  const validIds = uniqueIds.filter((id) =>
-    mongoose.Types.ObjectId.isValid(id)
-  );
-
-  const residents = await User.find({
-    _id: { $in: validIds },
-    role: "resident",
-  }).select("_id");
-
-  if (residents.length !== uniqueIds.length) {
-    return {
-      error: "One or more selected residents are not valid resident accounts",
-    };
-  }
-
-  return { values: residents.map((resident) => resident._id) };
+const sendLocation = async (res, location, status = 200) => {
+  const [withPeople] = await withResidents([location.toObject()]);
+  res.status(status).json(withPeople);
 };
 
 // Get the building layout, optionally limited to a single floor
@@ -137,12 +145,11 @@ router.get("/", protect, async (req, res) => {
       filter.floor = floor;
     }
 
-    // only the resident's username is exposed, never their email
     const locations = await BuildingLocation.find(filter)
-      .populate("residents", "username")
-      .sort({ floor: 1, category: 1, name: 1 });
+      .sort({ floor: 1, category: 1, name: 1 })
+      .lean();
 
-    res.json(locations);
+    res.json(await withResidents(locations));
   } catch (error) {
     res.status(500).json({
       message: error.message,
@@ -150,21 +157,11 @@ router.get("/", protect, async (req, res) => {
   }
 });
 
-// Get the resident accounts that can be allocated to a flat (committee only)
-router.get("/residents", protect, async (req, res) => {
+// Get the accounts a committee member can move into a flat (committee only)
+router.get("/residents", committeeOnly, async (req, res) => {
   try {
-    if (
-      !requireCommittee(
-        req,
-        res,
-        "Only committee members can view the resident list"
-      )
-    ) {
-      return;
-    }
-
-    const residents = await User.find({ role: "resident" })
-      .select("username email")
+    const residents = await User.find({ role: { $ne: "staff" } })
+      .select("username email flatNumber")
       .sort({ username: 1 });
 
     res.json(residents);
@@ -176,38 +173,17 @@ router.get("/residents", protect, async (req, res) => {
 });
 
 // Add a location to the building layout (committee only)
-router.post("/", protect, async (req, res) => {
+router.post("/", committeeOnly, async (req, res) => {
   try {
-    if (
-      !requireCommittee(
-        req,
-        res,
-        "Only committee members can add building locations"
-      )
-    ) {
-      return;
-    }
-
     const { error, values } = readLocationInput(req.body);
 
     if (error) {
       return res.status(400).json({ message: error });
     }
 
-    const residents = await readResidents(req.body, values.category);
+    const location = await BuildingLocation.create(values);
 
-    if (residents.error) {
-      return res.status(400).json({ message: residents.error });
-    }
-
-    const location = await BuildingLocation.create({
-      ...values,
-      residents: residents.values,
-    });
-
-    await location.populate("residents", "username");
-
-    res.status(201).json(location);
+    await sendLocation(res, location, 201);
   } catch (error) {
     res.status(500).json({
       message: error.message,
@@ -216,18 +192,8 @@ router.post("/", protect, async (req, res) => {
 });
 
 // Edit a location (committee only)
-router.put("/:id", protect, async (req, res) => {
+router.put("/:id", committeeOnly, async (req, res) => {
   try {
-    if (
-      !requireCommittee(
-        req,
-        res,
-        "Only committee members can edit building locations"
-      )
-    ) {
-      return;
-    }
-
     if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
       return res.status(404).json({
         message: "Location not found",
@@ -248,18 +214,10 @@ router.put("/:id", protect, async (req, res) => {
       return res.status(400).json({ message: error });
     }
 
-    const residents = await readResidents(req.body, values.category);
-
-    if (residents.error) {
-      return res.status(400).json({ message: residents.error });
-    }
-
-    location.set({ ...values, residents: residents.values });
+    location.set(values);
     await location.save();
 
-    await location.populate("residents", "username");
-
-    res.json(location);
+    await sendLocation(res, location);
   } catch (error) {
     res.status(500).json({
       message: error.message,
@@ -268,18 +226,8 @@ router.put("/:id", protect, async (req, res) => {
 });
 
 // Move a marker to a new spot on the floor plan (committee only)
-router.put("/:id/position", protect, async (req, res) => {
+router.put("/:id/position", committeeOnly, async (req, res) => {
   try {
-    if (
-      !requireCommittee(
-        req,
-        res,
-        "Only committee members can move building locations"
-      )
-    ) {
-      return;
-    }
-
     if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
       return res.status(404).json({
         message: "Location not found",
@@ -307,9 +255,79 @@ router.put("/:id/position", protect, async (req, res) => {
     location.y = round1(y);
     await location.save();
 
-    await location.populate("residents", "username");
+    await sendLocation(res, location);
+  } catch (error) {
+    res.status(500).json({
+      message: error.message,
+    });
+  }
+});
 
-    res.json(location);
+// Move residents into this flat by updating their flat number (committee only)
+router.put("/:id/residents", committeeOnly, async (req, res) => {
+  try {
+    if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+      return res.status(404).json({
+        message: "Location not found",
+      });
+    }
+
+    const location = await BuildingLocation.findById(req.params.id);
+
+    if (!location) {
+      return res.status(404).json({
+        message: "Location not found",
+      });
+    }
+
+    if (location.category !== "Flat") {
+      return res.status(400).json({
+        message: "Only flats can have residents",
+      });
+    }
+
+    if (!location.flatNumber) {
+      return res.status(400).json({
+        message: "Give this flat a flat number before allocating residents",
+      });
+    }
+
+    const ids = Array.isArray(req.body.residents) ? req.body.residents : [];
+    const uniqueIds = [...new Set(ids.map((id) => String(id)))];
+
+    if (uniqueIds.length === 0) {
+      return res.status(400).json({
+        message: "Select at least one resident to allocate",
+      });
+    }
+
+    if (uniqueIds.length > 10) {
+      return res.status(400).json({
+        message: "A flat can hold at most 10 residents",
+      });
+    }
+
+    const validIds = uniqueIds.filter((id) =>
+      mongoose.Types.ObjectId.isValid(id)
+    );
+
+    const users = await User.find({
+      _id: { $in: validIds },
+      role: { $ne: "staff" },
+    });
+
+    if (users.length !== uniqueIds.length) {
+      return res.status(400).json({
+        message: "One or more selected residents are not valid accounts",
+      });
+    }
+
+    for (const user of users) {
+      user.flatNumber = location.flatNumber;
+      await user.save();
+    }
+
+    await sendLocation(res, location);
   } catch (error) {
     res.status(500).json({
       message: error.message,
@@ -318,18 +336,8 @@ router.put("/:id/position", protect, async (req, res) => {
 });
 
 // Delete a location (committee only)
-router.delete("/:id", protect, async (req, res) => {
+router.delete("/:id", committeeOnly, async (req, res) => {
   try {
-    if (
-      !requireCommittee(
-        req,
-        res,
-        "Only committee members can delete building locations"
-      )
-    ) {
-      return;
-    }
-
     if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
       return res.status(404).json({
         message: "Location not found",

@@ -26,7 +26,7 @@ export const getLocations = async (token) => {
     return data;
 };
 
-//GET the resident accounts a flat can be allocated to (committee only)
+//GET the accounts that can be moved into a flat (committee only)
 export const getAllocatableResidents = async (token) => {
     const response = await fetch(`${LAYOUT_API}/residents`, {
         headers: authHeaders(token)
@@ -87,6 +87,23 @@ export const updateLocationPosition = async (locationId, position, token) => {
 
     if (!response.ok) {
         throw new Error(data.message || "Failed to move the location");
+    }
+
+    return data;
+};
+
+//PUT/allocate residents to a flat by updating their flat number
+export const allocateResidents = async (locationId, residents, token) => {
+    const response = await fetch(`${LAYOUT_API}/${locationId}/residents`, {
+        method: "PUT",
+        headers: jsonHeaders(token),
+        body: JSON.stringify({ residents })
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+        throw new Error(data.message || "Failed to allocate residents");
     }
 
     return data;

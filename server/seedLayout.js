@@ -1,5 +1,9 @@
 console.log("seeding the building layout");
 
+// same DNS override server.js uses, the Atlas SRV lookup fails without it
+import dns from "dns";
+dns.setServers(["8.8.8.8", "8.8.4.4"]);
+
 import dotenv from "dotenv";
 dotenv.config();
 
@@ -208,24 +212,28 @@ const residentialFloor = (floor) => [
     {
         name: `Flat ${floor}A`,
         category: "Flat",
+        flatNumber: `${floor}-A`,
         description: "Corner flat on the north-west side",
         x: 21, y: 26, width: 28, height: 34
     },
     {
         name: `Flat ${floor}B`,
         category: "Flat",
+        flatNumber: `${floor}-B`,
         description: "Corner flat on the north-east side",
         x: 79, y: 26, width: 28, height: 34
     },
     {
         name: `Flat ${floor}C`,
         category: "Flat",
+        flatNumber: `${floor}-C`,
         description: "Corner flat on the south-east side",
         x: 79, y: 74, width: 28, height: 34
     },
     {
         name: `Flat ${floor}D`,
         category: "Flat",
+        flatNumber: `${floor}-D`,
         description: "Corner flat on the south-west side",
         x: 21, y: 74, width: 28, height: 34
     },
@@ -287,6 +295,7 @@ const run = async () => {
 
     let added = 0;
     let skipped = 0;
+    let updated = 0;
 
     for (const item of buildLayout()) {
 
@@ -298,13 +307,20 @@ const run = async () => {
         if (!exists) {
             await BuildingLocation.create(item);
             added++;
+        } else if (item.flatNumber && exists.flatNumber !== item.flatNumber) {
+            // fills in the flat number on layouts seeded before flats were
+            // linked to residents through User.flatNumber
+            exists.flatNumber = item.flatNumber;
+            await exists.save();
+            updated++;
         } else {
             skipped++;
         }
     }
 
     console.log(`Added: ${added} locations`);
-    console.log(`Already existed: ${skipped} locations`);
+    console.log(`Updated: ${updated} locations`);
+    console.log(`Already up to date: ${skipped} locations`);
     console.log("Seeding done.");
     process.exit(0);
 };

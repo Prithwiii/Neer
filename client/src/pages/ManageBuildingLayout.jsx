@@ -14,6 +14,7 @@ import {
   createLocation,
   updateLocation,
   updateLocationPosition,
+  allocateResidents,
   deleteLocation,
 } from "../services/buildingLayoutService";
 
@@ -33,11 +34,11 @@ const emptyForm = {
   category: "Facility",
   description: "",
   openingHours: "",
+  flatNumber: "",
   x: 50,
   y: 50,
   width: 16,
   height: 10,
-  residents: [],
 };
 
 function ManageBuildingLayout({ token, role }) {
@@ -109,10 +110,12 @@ function ManageBuildingLayout({ token, role }) {
     return totals;
   }, {});
 
-  const availableResidents = residents.filter(
-    (resident) =>
-      !form.residents.some((chosen) => chosen._id === resident._id)
-  );
+  // anyone not already living in the selected flat can be moved into it
+  const availableResidents = selected
+    ? residents.filter(
+        (resident) => resident.flatNumber !== selected.flatNumber
+      )
+    : [];
 
   const selectFloor = (nextFloor) => {
     setFloor(nextFloor);
@@ -141,11 +144,11 @@ function ManageBuildingLayout({ token, role }) {
       category: location.category,
       description: location.description || "",
       openingHours: location.openingHours || "",
+      flatNumber: location.flatNumber || "",
       x: location.x,
       y: location.y,
       width: location.width,
       height: location.height,
-      residents: location.residents || [],
     });
     setResidentToAdd("");
     setShowForm(true);
@@ -195,23 +198,33 @@ function ManageBuildingLayout({ token, role }) {
     }
   };
 
-  const addResident = () => {
-    const resident = residents.find((item) => item._id === residentToAdd);
+  // allocating writes the flat's number onto the resident's account, so a
+  // person only ever lives in one flat
+  const allocateResident = async () => {
+    if (!selected || !residentToAdd) return;
 
-    if (!resident) return;
+    setMessage("");
+    setSaving(true);
 
-    setForm((current) => ({
-      ...current,
-      residents: [...current.residents, resident],
-    }));
-    setResidentToAdd("");
-  };
+    try {
+      const saved = await allocateResidents(
+        selected._id,
+        [residentToAdd],
+        token
+      );
 
-  const removeResident = (residentId) => {
-    setForm((current) => ({
-      ...current,
-      residents: current.residents.filter((item) => item._id !== residentId),
-    }));
+      applySaved(saved);
+      setResidentToAdd("");
+      setMessage(`Resident allocated to ${saved.name}`);
+
+      const refreshed = await getAllocatableResidents(token);
+      setResidents(refreshed);
+      await loadLayout();
+    } catch (error) {
+      setMessage(error.message);
+    } finally {
+      setSaving(false);
+    }
   };
 
   const submitForm = async (event) => {
@@ -225,11 +238,11 @@ function ManageBuildingLayout({ token, role }) {
       category: form.category,
       description: form.description,
       openingHours: form.openingHours,
+      flatNumber: form.flatNumber,
       x: Number(form.x),
       y: Number(form.y),
       width: Number(form.width),
       height: Number(form.height),
-      residents: form.residents.map((resident) => resident._id),
     };
 
     try {
@@ -383,13 +396,66 @@ function ManageBuildingLayout({ token, role }) {
 
               {selected.category === "Flat" && (
                 <p>
-                  <strong>Residents:</strong>{" "}
-                  {selected.residents && selected.residents.length > 0
-                    ? selected.residents
-                        .map((resident) => resident.username)
-                        .join(", ")
-                    : "Not allocated yet"}
+                  <strong>Flat number:</strong>{" "}
+                  {selected.flatNumber || "Not set"}
                 </p>
+              )}
+
+              {selected.category === "Flat" && (
+                <div className="allocation-box">
+                  <strong>Residents</strong>
+
+                  {selected.residents && selected.residents.length > 0 ? (
+                    <div className="allocation-chips">
+                      {selected.residents.map((resident) => (
+                        <span key={resident._id} className="allocation-chip">
+                          {resident.username}
+                        </span>
+                      ))}
+                    </div>
+                  ) : (
+                    <p>Nobody lives in this flat yet.</p>
+                  )}
+
+                  {selected.flatNumber ? (
+                    <>
+                      <div className="time-row">
+                        <select
+                          value={residentToAdd}
+                          onChange={(e) => setResidentToAdd(e.target.value)}
+                        >
+                          <option value="">Select a resident</option>
+                          {availableResidents.map((resident) => (
+                            <option key={resident._id} value={resident._id}>
+                              {resident.username}
+                              {resident.flatNumber
+                                ? ` (now in ${resident.flatNumber})`
+                                : ""}
+                            </option>
+                          ))}
+                        </select>
+
+                        <button
+                          type="button"
+                          onClick={allocateResident}
+                          disabled={!residentToAdd || saving}
+                        >
+                          Allocate
+                        </button>
+                      </div>
+
+                      <p>
+                        Allocating sets the resident&apos;s flat number to{" "}
+                        {selected.flatNumber}. To remove somebody, allocate them
+                        to a different flat.
+                      </p>
+                    </>
+                  ) : (
+                    <p>
+                      Give this flat a flat number before allocating residents.
+                    </p>
+                  )}
+                </div>
               )}
 
               <div className="resource-actions">
@@ -457,6 +523,19 @@ function ManageBuildingLayout({ token, role }) {
                 setForm({ ...form, openingHours: e.target.value })
               }
             />
+
+            {form.category === "Flat" && (
+              <input
+                type="text"
+                placeholder="Flat number, e.g. 10-A"
+                maxLength="6"
+                value={form.flatNumber}
+                onChange={(e) =>
+                  setForm({ ...form, flatNumber: e.target.value.toUpperCase() })
+                }
+                required
+              />
+            )}
 
             <p>
               Floor: <strong>{floorLabel(floor)}</strong> (switch floors to add
@@ -528,50 +607,10 @@ function ManageBuildingLayout({ token, role }) {
             </button>
 
             {form.category === "Flat" && (
-              <div className="allocation-box">
-                <strong>Allocated residents</strong>
-
-                {form.residents.length === 0 ? (
-                  <p>No residents allocated to this flat yet.</p>
-                ) : (
-                  <div className="allocation-chips">
-                    {form.residents.map((resident) => (
-                      <span key={resident._id} className="allocation-chip">
-                        {resident.username}
-                        <button
-                          type="button"
-                          onClick={() => removeResident(resident._id)}
-                          aria-label={`Remove ${resident.username}`}
-                        >
-                          ×
-                        </button>
-                      </span>
-                    ))}
-                  </div>
-                )}
-
-                <div className="time-row">
-                  <select
-                    value={residentToAdd}
-                    onChange={(e) => setResidentToAdd(e.target.value)}
-                  >
-                    <option value="">Select a resident</option>
-                    {availableResidents.map((resident) => (
-                      <option key={resident._id} value={resident._id}>
-                        {resident.username} ({resident.email})
-                      </option>
-                    ))}
-                  </select>
-
-                  <button
-                    type="button"
-                    onClick={addResident}
-                    disabled={!residentToAdd}
-                  >
-                    Allocate
-                  </button>
-                </div>
-              </div>
+              <p>
+                Save the flat first, then allocate residents to it from the
+                panel above the plan.
+              </p>
             )}
 
             <div className="bill-actions">
@@ -609,12 +648,12 @@ function ManageBuildingLayout({ token, role }) {
                     </p>
                     {location.category === "Flat" && (
                       <p>
-                        Residents:{" "}
+                        {location.flatNumber || "No flat number"} | Residents:{" "}
                         {location.residents && location.residents.length > 0
                           ? location.residents
                               .map((resident) => resident.username)
                               .join(", ")
-                          : "Not allocated yet"}
+                          : "Nobody yet"}
                       </p>
                     )}
                   </div>
