@@ -96,13 +96,16 @@ const buildingLocationSchema = new mongoose.Schema(
             trim: true
         },
 
-        // residents allocated to this flat, only used when category is "Flat"
-        residents: [
-            {
-                type: mongoose.Schema.Types.ObjectId,
-                ref: "User"
-            }
-        ]
+        // links a flat to the people living in it through User.flatNumber,
+        // e.g. "3-A". Only used when category is "Flat", so the flat's
+        // residents are never stored in two places.
+        flatNumber: {
+            type: String,
+            trim: true,
+            uppercase: true,
+            default: "",
+            match: [/^\d+-[A-Z]$/, "Flat number must use the format 10-A"]
+        }
     },
     {
         timestamps: true
