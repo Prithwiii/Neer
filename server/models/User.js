@@ -36,6 +36,16 @@ const userSchema = new mongoose.Schema(
         },
         match: [/^\d+-[A-Z]$/, "Flat number must use the format 10-A"]
     }
+,
+    intercomEnabled: {
+        type: Boolean,
+        default: false
+    }
+,
+    intercomAccess: {
+        type: Boolean,
+        default: false
+    }
 },
 {
     timestamps: true

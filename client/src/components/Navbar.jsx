@@ -19,6 +19,7 @@ function Navbar({ profile, onLogout, onMenuClick }) {
     "/intercom": "Intercom",
     "/building-layout": "Building Layout",
     "/building-layout/manage": "Manage Building Layout",
+    "/intercom-access": "Intercom Management",
   };
 
   const pageName = pageNames[location.pathname] || "NEER";

@@ -14,10 +14,12 @@ import GarageBookingPage from "./pages/GarageBookingPage";
 import MyGarageBookings from "./pages/MyGarageBookings";
 import Books from "./pages/Books";
 import CreateBook from "./pages/CreateBook";
-import BillPayments from "./pages/BillPayments";
 import DashboardHome from "./pages/DashboardHome";
+import BillPayments from "./pages/BillPayments";
 import BuildingLayout from "./pages/BuildingLayout";
 import ManageBuildingLayout from "./pages/ManageBuildingLayout";
+import IntercomAccess from "./pages/IntercomAccess";
+import Intercom from "./pages/Intercom";
 
 import DashboardLayout from "./layouts/DashboardLayout";
 
@@ -91,6 +93,17 @@ function App() {
             path="/building-layout/manage"
             element={<ManageBuildingLayout token={token} role={role} />}
           />
+
+          <Route
+            path="/intercom"
+            element={<Intercom/>}
+          />
+
+          <Route
+            path="/intercom-access"
+            element={<IntercomAccess/>}
+          />
+          
         </Route>
 
 {/* ------------------------- */}
@@ -138,10 +151,29 @@ function App() {
         />
 
         <Route
+          path="/bills"
+          element={
+            token ? (
+              <BillPayments
+                token={token}
+                onLogout={handleLogout}
+                role={role}
+              />
+            ) : (
+              <Navigate to="/login" replace />
+            )
+          }
+        />
+
+        <Route
           path="/garages"
           element={
             token ? (
-              <Garages token={token} onLogout={handleLogout} role={role} />
+              <Garages
+                token={token}
+                onLogout={handleLogout}
+                role={role}
+              />
             ) : (
               <Navigate to="/login" replace />
             )
@@ -165,14 +197,10 @@ function App() {
         <Route path="/books" element={<Books />} />
 
         <Route
-          path="/bills"
+          path="/books/create"
           element={
             token ? (
-              <BillPayments
-                token={token}
-                onLogout={handleLogout}
-                role={role}
-              />
+              <CreateBook token={token} />
             ) : (
               <Navigate to="/login" replace />
             )
@@ -220,6 +248,7 @@ function App() {
           path="*"
           element={<Navigate to="/login" replace />}
         />
+
 
       </Routes>
     </BrowserRouter>

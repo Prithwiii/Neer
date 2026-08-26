@@ -53,10 +53,6 @@ function Sidebar({ open, role, onClose }) {
             Noticeboard
           </Link>
 
-          <Link to="/complaints" onClick={onClose}>
-            Complaints
-          </Link>
-
           <Link to="/building-layout" onClick={onClose}>
             Building Layout
           </Link>
@@ -66,6 +62,18 @@ function Sidebar({ open, role, onClose }) {
               Manage Building Layout
             </Link>
           )}
+
+          <Link to="/complaints" onClick={onClose}>
+            Complaints
+          </Link>
+
+          <Link to="/intercom-access" onClick={onClose}>
+            Intercom Management
+          </Link>
+
+          <Link to="/intercom" onClick={onClose}>
+            Intercom
+          </Link>
 
           {/* add new features here later */}
         </nav>
