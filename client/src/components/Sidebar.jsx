@@ -71,6 +71,10 @@ function Sidebar({ open, role, onClose }) {
             Intercom Management
           </Link>
 
+          <Link to="/intercom" onClick={onClose}>
+            Intercom
+          </Link>
+
           {/* add new features here later */}
         </nav>
       </aside>

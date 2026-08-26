@@ -13,9 +13,11 @@ const IncomingIntercomCall = ({ call, onClose }) => {
     return (
       <IntercomCall
         callData={{
+          roomName: call.roomName,
           token: call.token,
           livekitUrl: call.livekitUrl,
         }}
+        onEndCall={onClose}
       />
     );
   }

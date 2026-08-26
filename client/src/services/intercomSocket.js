@@ -32,4 +32,4 @@ export const startIntercomCall = async (residentEmail) => {
 
     return data;
      
-}
+};

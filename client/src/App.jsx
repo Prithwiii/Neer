@@ -19,6 +19,7 @@ import BillPayments from "./pages/BillPayments";
 import BuildingLayout from "./pages/BuildingLayout";
 import ManageBuildingLayout from "./pages/ManageBuildingLayout";
 import IntercomAccess from "./pages/IntercomAccess";
+import Intercom from "./pages/Intercom";
 
 import DashboardLayout from "./layouts/DashboardLayout";
 
@@ -93,10 +94,10 @@ function App() {
             element={<ManageBuildingLayout token={token} role={role} />}
           />
 
-          {/* <Route
+          <Route
             path="/intercom"
             element={<Intercom/>}
-          /> */}
+          />
 
           <Route
             path="/intercom-access"

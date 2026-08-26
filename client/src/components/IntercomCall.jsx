@@ -1,8 +1,40 @@
-import { LiveKitRoom, RoomAudioRenderer, } from "@livekit/components-react";
+import { LiveKitRoom, RoomAudioRenderer, 
+         useParticipants, StartAudio, } from "@livekit/components-react";
 
 import "@livekit/components-styles";
 
-const IntercomCall = ({ callData }) => {
+const CallContent = ({onEndCall}) => {
+  const participants = useParticipants();
+
+  console.log("LiveKit participants:", participants);
+
+  return (
+    <>
+      <RoomAudioRenderer/>
+      <StartAudio label = "Enable Call Audio"/>
+      <div>
+        <h2>Intercom Call</h2>
+
+        <p>
+          {participants.length > 1
+          ? "connected"
+          : "waiting for the other user..."}
+        </p>
+
+        <p>
+          Participants: {participants.length}
+        </p>
+
+        <button onClick={onEndCall}>
+          End Call
+        </button>
+
+      </div>
+    </>
+  );
+};
+
+const IntercomCall = ({ callData, onEndCall }) => {
   if (!callData) {
     return null;
   }
@@ -14,13 +46,9 @@ const IntercomCall = ({ callData }) => {
       connect={true}
       audio={true}
       video={false}
+      onDisconnected={onEndCall}
     >
-      <RoomAudioRenderer />
-
-      <div>
-        <h2>Intercom Call</h2>
-        <p>Call active</p>
-      </div>
+      <CallContent onEndCall={onEndCall}/>
     </LiveKitRoom>
   );
 };

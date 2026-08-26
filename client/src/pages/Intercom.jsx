@@ -50,7 +50,12 @@ const Intercom = () => {
             {message && <p>{message}</p>}
 
             {callData && (
-                <IntercomCall callData = {callData}/>
+                <IntercomCall 
+                    callData = {callData}
+                    onEndCall = {() => {setCallData(null);
+                                        setMessage("");
+                    }}
+                />
             )}
         </div>
     );
