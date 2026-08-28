@@ -5,7 +5,8 @@ import IncomingIntercomCall from "../components/IncomingIntercomCall";
 
 import Navbar from "../components/Navbar";
 import Sidebar from "../components/Sidebar";
-import API_URL from "../config/api";
+import API_URL from "../config/api"; //API_URL hoitese http://localhost:{.env file er port number}
+                                     // so etar por /api/page_name kore dilei hobe
 
 function DashboardLayout({ token, role, onLogout }) {
   const [profile, setProfile] = useState(null);
