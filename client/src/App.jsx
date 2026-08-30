@@ -21,6 +21,7 @@ import ManageBuildingLayout from "./pages/ManageBuildingLayout";
 import IntercomAccess from "./pages/IntercomAccess";
 import Intercom from "./pages/Intercom";
 import ContactDirectory from "./pages/ContactDirectory";
+import Flats from "./pages/Flats"
 
 import DashboardLayout from "./layouts/DashboardLayout";
 
@@ -103,6 +104,11 @@ function App() {
           <Route
             path="/intercom-access"
             element={<IntercomAccess/>}
+          />
+
+          <Route
+            path="/flats"
+            element={<Flats/>}
           />
           
         </Route>

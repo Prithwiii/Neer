@@ -105,6 +105,12 @@ const buildingLocationSchema = new mongoose.Schema(
             uppercase: true,
             default: "",
             match: [/^\d+-[A-Z]$/, "Flat number must use the format 10-A"]
+        },
+
+        state: {
+            type: String,
+            enum: ["For Sale", "To-Let", "Occupied"],
+            default: undefined
         }
     },
     {
