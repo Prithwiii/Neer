@@ -1,7 +1,9 @@
 import { useCallback, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
-const GARAGE_API = "http://localhost:5000/api/garages";
+import API_URL from "../config/api";
+
+const GARAGE_API = `${API_URL}/api/garages`;
 
 function Garages({ token, onLogout }) {
   const [garages, setGarages] = useState([]);

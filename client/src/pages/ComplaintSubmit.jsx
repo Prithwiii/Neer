@@ -1,7 +1,9 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
-const COMPLAINT_API = "http://localhost:5000/api/complaints";
+import API_URL from "../config/api";
+
+const COMPLAINT_API = `${API_URL}/api/complaints`;
 
 function ComplaintSubmit({ token, onLogout }) {
   const navigate = useNavigate();

@@ -67,6 +67,10 @@ function Sidebar({ open, role, onClose }) {
             Complaints
           </Link>
 
+          <Link to="/contacts" onClick={onClose}>
+            Contact Directory
+          </Link>
+
           <Link to="/intercom-access" onClick={onClose}>
             Intercom Management
           </Link>
