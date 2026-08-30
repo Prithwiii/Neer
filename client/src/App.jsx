@@ -104,13 +104,13 @@ function App() {
             path="/intercom-access"
             element={<IntercomAccess/>}
           />
-
-          <Route
-            path="/contacts/:type?"
-            element={<ContactDirectory token={token} />}
-          />
           
         </Route>
+
+        <Route
+          path="/contacts/:type?"
+          element={<ContactDirectory token={token} />}
+        />
 
 {/* ------------------------- */}
         <Route

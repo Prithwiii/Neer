@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 
 import API_URL from "../config/api";
@@ -35,12 +35,20 @@ const fallbackContacts = {
 
 function ContactDirectory({ token }) {
   const { type } = useParams();
-  const [contacts, setContacts] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const fallbackList = useMemo(
+    () => (type ? fallbackContacts[type] || [] : Object.values(fallbackContacts).flat()),
+    [type]
+  );
+  const [liveContacts, setLiveContacts] = useState([]);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
   useEffect(() => {
-    if (!token) return;
+    if (!token) {
+      return;
+    }
+
+    let isMounted = true;
 
     const loadContacts = async () => {
       setLoading(true);
@@ -62,19 +70,31 @@ function ContactDirectory({ token }) {
         }
 
         const data = await response.json();
-        const normalizedContacts = Array.isArray(data) && data.length > 0 ? data : (type ? fallbackContacts[type] || [] : Object.values(fallbackContacts).flat());
-        setContacts(normalizedContacts);
-      } catch (err) {
-        const fallbackList = type ? fallbackContacts[type] || [] : Object.values(fallbackContacts).flat();
-        setContacts(fallbackList);
-        setError("");
+        const nextContacts = Array.isArray(data) && data.length > 0 ? data : fallbackList;
+
+        if (isMounted) {
+          setLiveContacts(nextContacts);
+        }
+      } catch {
+        if (isMounted) {
+          setLiveContacts(fallbackList);
+          setError("");
+        }
       } finally {
-        setLoading(false);
+        if (isMounted) {
+          setLoading(false);
+        }
       }
     };
 
     loadContacts();
-  }, [token, type]);
+
+    return () => {
+      isMounted = false;
+    };
+  }, [fallbackList, token, type]);
+
+  const contacts = token ? (liveContacts.length > 0 ? liveContacts : fallbackList) : fallbackList;
 
   const selectedType = type || "";
 
@@ -86,6 +106,9 @@ function ContactDirectory({ token }) {
             <p className="eyebrow">Directory</p>
             <h1>Contact Directory</h1>
           </div>
+          <Link to="/dashboard" className="secondary-link">
+            ← Dashboard
+          </Link>
         </div>
 
         <div className="contact-directory-grid">
@@ -108,9 +131,14 @@ function ContactDirectory({ token }) {
           <p className="eyebrow">Directory</p>
           <h1>{categoryLabels[selectedType] || "Contact List"}</h1>
         </div>
-        <Link to="/contacts" className="secondary-link">
-          ← Back to directory
-        </Link>
+        <div className="header-actions">
+          <Link to="/dashboard" className="secondary-link">
+            ← Dashboard
+          </Link>
+          <Link to="/contacts" className="secondary-link">
+            Back to directory
+          </Link>
+        </div>
       </div>
 
       {loading && <p>Loading contacts...</p>}
