@@ -213,6 +213,7 @@ const residentialFloor = (floor) => [
         name: `Flat ${floor}A`,
         category: "Flat",
         flatNumber: `${floor}-A`,
+        state: "For Sale",
         description: "Corner flat on the north-west side",
         x: 21, y: 26, width: 28, height: 34
     },
@@ -220,6 +221,7 @@ const residentialFloor = (floor) => [
         name: `Flat ${floor}B`,
         category: "Flat",
         flatNumber: `${floor}-B`,
+        state: "For Sale",
         description: "Corner flat on the north-east side",
         x: 79, y: 26, width: 28, height: 34
     },
@@ -227,6 +229,7 @@ const residentialFloor = (floor) => [
         name: `Flat ${floor}C`,
         category: "Flat",
         flatNumber: `${floor}-C`,
+        state: "For Sale",
         description: "Corner flat on the south-east side",
         x: 79, y: 74, width: 28, height: 34
     },
@@ -234,6 +237,7 @@ const residentialFloor = (floor) => [
         name: `Flat ${floor}D`,
         category: "Flat",
         flatNumber: `${floor}-D`,
+        state: "For Sale",
         description: "Corner flat on the south-west side",
         x: 21, y: 74, width: 28, height: 34
     },
@@ -304,15 +308,41 @@ const run = async () => {
             floor: item.floor
         });
 
+        // if (!exists) {
+        //     await BuildingLocation.create(item);
+        //     added++;
+        // } else if (item.flatNumber && exists.flatNumber !== item.flatNumber) {
+        //     // fills in the flat number on layouts seeded before flats were
+        //     // linked to residents through User.flatNumber
+        //     exists.flatNumber = item.flatNumber;
+        //     await exists.save();
+        //     updated++;
+        // } else {
+        //     skipped++;
+        // }
+
         if (!exists) {
             await BuildingLocation.create(item);
             added++;
-        } else if (item.flatNumber && exists.flatNumber !== item.flatNumber) {
-            // fills in the flat number on layouts seeded before flats were
-            // linked to residents through User.flatNumber
-            exists.flatNumber = item.flatNumber;
-            await exists.save();
-            updated++;
+        } else if (item.category === "Flat") {
+            let changed = false;
+
+            if (exists.flatNumber !== item.flatNumber) {
+                exists.flatNumber = item.flatNumber;
+                changed = true;
+            }
+            
+            if (!exists.state) {
+                exists.state = item.state;
+                changed = true
+            }
+
+            if (changed) {
+                await exists.save();
+                updated++;
+            } else {
+                skipped++;
+            }
         } else {
             skipped++;
         }

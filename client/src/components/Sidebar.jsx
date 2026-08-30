@@ -79,6 +79,10 @@ function Sidebar({ open, role, onClose }) {
             Intercom
           </Link>
 
+          <Link to="/flats" onClick={onClose}>
+            Flats
+          </Link>
+
           {/* add new features here later */}
         </nav>
       </aside>
