@@ -20,6 +20,7 @@ import BuildingLayout from "./pages/BuildingLayout";
 import ManageBuildingLayout from "./pages/ManageBuildingLayout";
 import IntercomAccess from "./pages/IntercomAccess";
 import Intercom from "./pages/Intercom";
+import ContactDirectory from "./pages/ContactDirectory";
 
 import DashboardLayout from "./layouts/DashboardLayout";
 
@@ -105,6 +106,11 @@ function App() {
           />
           
         </Route>
+
+        <Route
+          path="/contacts/:type?"
+          element={<ContactDirectory token={token} />}
+        />
 
 {/* ------------------------- */}
         <Route

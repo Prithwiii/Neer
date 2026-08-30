@@ -1,7 +1,9 @@
 import { useCallback, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
-const GARAGE_BOOKING_API = "http://localhost:5000/api/garage-bookings";
+import API_URL from "../config/api";
+
+const GARAGE_BOOKING_API = `${API_URL}/api/garage-bookings`;
 
 function MyGarageBookings({ token, onLogout }) {
   const [bookings, setBookings] = useState([]);
