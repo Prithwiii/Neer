@@ -83,6 +83,10 @@ function Sidebar({ open, role, onClose }) {
             Flats
           </Link>
 
+          <Link to="/househelp" onClick={onClose}>
+            Househelp Postings
+          </Link>
+
           {/* add new features here later */}
         </nav>
       </aside>

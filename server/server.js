@@ -22,6 +22,7 @@ import buildingLayoutRoutes from "./routes/buildingLayoutRoutes.js";
 import garageRoutes from "./routes/garageRoutes.js";
 import garageBookingRoutes from "./routes/garageBookingRoutes.js";
 import flatRoutes from "./routes/flatRoutes.js";
+import househelpRoutes from "./routes/househelpRoutes.js";
 
 import {setIO} from "./config/socket.js";
 
@@ -39,6 +40,7 @@ app.use("/api/building-layout", buildingLayoutRoutes);
 app.use("/api/garages", garageRoutes);
 app.use("/api/garage-bookings", garageBookingRoutes);
 app.use("/api/flats", flatRoutes);
+app.use("/api/househelp", househelpRoutes);
 
 // app.listen(PORT, () => {
 //   console.log(`Server running on port ${PORT}`);

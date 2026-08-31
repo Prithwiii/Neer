@@ -22,6 +22,8 @@ import IntercomAccess from "./pages/IntercomAccess";
 import Intercom from "./pages/Intercom";
 import ContactDirectory from "./pages/ContactDirectory";
 import Flats from "./pages/Flats"
+import HousehelpPostings from "./pages/HousehelpPostings";
+import CreateHousehelpPosting from "./pages/CreateHousehelpPosting";
 
 import DashboardLayout from "./layouts/DashboardLayout";
 
@@ -110,7 +112,17 @@ function App() {
             path="/flats"
             element={<Flats/>}
           />
+
+          <Route
+            path="/househelp"
+            element= {<HousehelpPostings/>}
+          />
           
+          <Route
+            path="/househelp/create"
+            element= {<CreateHousehelpPosting/>}
+          />
+
         </Route>
 
         <Route
