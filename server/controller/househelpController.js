@@ -17,6 +17,8 @@ export const getHousehelpPostings = async (req, res) => {
 
 export const createHousehelpPosting = async(req, res) => {
     try {
+        // console.log("Househelp request body:", req.body);
+
         const {
             residentName,
             flatNumber,
@@ -24,10 +26,20 @@ export const createHousehelpPosting = async(req, res) => {
             mobileNumber,
         } = req.body;
 
+        // console.log("Request body:", req.body);
+        // console.log("req.user:", req.user);
+        // console.log("req.user._id:", req.user?._id);
+        // console.log({
+        //   residentName,
+        //   flatNumber,
+        //   hours,
+        //   mobileNumber,
+        // });
+
         if (!residentName || !flatNumber ||
             !hours || !mobileNumber) {
             return res.status(400).json({
-                message: "All fileds are required",
+                message: "All fields are required",
             });
         }
 
@@ -45,6 +57,7 @@ export const createHousehelpPosting = async(req, res) => {
             console.error("Error creating househelp posting:", error);
             res.status(500).json({
             message: "Failed to create househelp posting",
+            // error: error.message,
             });
     }
 };

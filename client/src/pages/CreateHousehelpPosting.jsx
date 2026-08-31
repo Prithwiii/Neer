@@ -11,7 +11,7 @@ function CreateHousehelpPosting() {
   const [formData, setFormData] = React.useState({
     residentName: "",
     flatNumber: "",
-    preferredHours: "",
+    hours: "",
     mobileNumber: "",
   });
 
@@ -106,8 +106,8 @@ function CreateHousehelpPosting() {
 
           <input
             type="text"
-            name="preferredHours"
-            value={formData.preferredHours}
+            name="hours"
+            value={formData.hours}
             onChange={handleChange}
             required
             className="w-full border rounded px-3 py-2"

@@ -27,14 +27,29 @@ export const getHousehelpPostings = async () => {
 };
 
 export const createHousehelpPosting = async (postingData) => {
-  const response = await fetch(API_URL, {
+  const response = await fetch(HH_URL, {
     method: "POST",
     headers: getAuthHeaders(),
     body: JSON.stringify(postingData),
   });
 
   const data = await response.json();
+//
+//   const text = await response.text();
 
+//   console.log("Status:", response.status);
+//   console.log("Response:", text);
+
+//   let data;
+
+//   try {
+//     data = JSON.parse(text);
+//   } catch {
+//     throw new Error(
+//       `Server returned non-JSON response (${response.status}): ${text}`
+//     );
+//   }
+//
   if (!response.ok) {
     throw new Error(data.message || "Failed to create posting");
   }
@@ -43,7 +58,7 @@ export const createHousehelpPosting = async (postingData) => {
 };
 
 export const closeHousehelpPosting = async (postingId) => {
-  const response = await fetch(`${API_URL}/${postingId}/close`, {
+  const response = await fetch(`${HH_URL}/${postingId}/close`, {
     method: "PATCH",
     headers: getAuthHeaders(),
   });
