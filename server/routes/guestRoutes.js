@@ -4,7 +4,7 @@ import {
     registerGuest,
     validateGuest,
     confirmGuestVisit
-} from "../controllers/guestController.js";
+} from "../controller/guestController.js";
 
 import authMiddleware from "../middleware/authMiddleware.js";
 

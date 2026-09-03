@@ -72,7 +72,10 @@ function Sidebar({ open, role, onClose }) {
           </Link>
 
           {role === "committee" && (
-            <Link to="/building-layout/manage" onClick={onClose}>
+            <Link
+              to="/building-layout/manage"
+              onClick={onClose}
+            >
               Manage Building Layout
             </Link>
           )}
@@ -102,21 +105,21 @@ function Sidebar({ open, role, onClose }) {
           </Link>
 
           {role === "staff" && (
-              <>
-                  <Link
-                      to="/guest-registration"
-                      className="..."
-                  >
-                      Register Guest
-                  </Link>
+            <>
+              <Link
+                to="/guest-registration"
+                onClick={onClose}
+              >
+                Register Guest
+              </Link>
 
-                  <Link
-                      to="/guest-validation"
-                      className="..."
-                  >
-                      Validate Guest
-                  </Link>
-              </>
+              <Link
+                to="/guest-validation"
+                onClick={onClose}
+              >
+                Validate Guest
+              </Link>
+            </>
           )}
 
           {/* add new features here later */}

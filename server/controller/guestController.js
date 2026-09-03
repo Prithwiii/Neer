@@ -61,7 +61,7 @@ export const validateGuest = async (req, res) => {
             guestPhone: guestPhone.trim()
         });
 
-        if (!guest.length) {
+        if (!guests.length) {
             return res.status(404).json({
                 message: "No matching guest registration found."
             });
@@ -74,7 +74,7 @@ export const validateGuest = async (req, res) => {
             );
 
             if (validPasscode) {
-                matchedGuest = guests;
+                matchedGuest = guest;
                 break;
             }
         }
@@ -120,7 +120,7 @@ export const confirmGuestVisit = async (req, res) => {
 
         if(!guest){
             return res.status(404).json({
-                mressage: "Guest registration not found."
+                message: "Guest registration not found."
             });
         }
 
@@ -131,7 +131,7 @@ export const confirmGuestVisit = async (req, res) => {
         }
 
         guest.checkedIn = true;
-        guest.checkedInAt = new Data();
+        guest.checkedInAt = new Date();
 
         await guest.save();
 

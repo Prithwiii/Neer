@@ -21,7 +21,7 @@ import ManageBuildingLayout from "./pages/ManageBuildingLayout";
 import IntercomAccess from "./pages/IntercomAccess";
 import Intercom from "./pages/Intercom";
 import ContactDirectory from "./pages/ContactDirectory";
-import Flats from "./pages/Flats"
+import Flats from "./pages/Flats";
 import HousehelpPostings from "./pages/HousehelpPostings";
 import CreateHousehelpPosting from "./pages/CreateHousehelpPosting";
 import FamilyExpenses from "./pages/FamilyExpenses";
@@ -61,122 +61,51 @@ function App() {
     <BrowserRouter>
       <Routes>
 
+        {/* Root */}
         <Route
           path="/"
-          // element={<Navigate to="/proposal" replace />}
           element={<Navigate to="/dashboard" replace />}
         />
-{/* ------------------------ */}
+
+        {/* Login */}
         <Route
           path="/login"
-          element={<Auth token={token} onLogin={handleLogin} />}
-        />
-
-        <Route
-          element = { token ? (
-            <DashboardLayout
-              token = {token}
-              role = {role}
-              onLogout={handleLogout}
+          element={
+            <Auth
+              token={token}
+              onLogin={handleLogin}
             />
-          ) : (
-            <Navigate to ="/login" replace />
-          )}
-        >
-          <Route
-            path = "/dashboard"
-            element = { <DashboardHome role = {role}/>
-            } />
-
-          <Route path="/books" element={<Books />} />
-
-          <Route
-            path="/books/create"
-            element={<CreateBook token={token} />}
-          />
-
-          <Route
-            path="/building-layout"
-            element={<BuildingLayout token={token} role={role} />}
-          />
-
-          <Route
-            path="/building-layout/manage"
-            element={<ManageBuildingLayout token={token} role={role} />}
-          />
-
-          <Route
-            path="/intercom"
-            element={<Intercom/>}
-          />
-
-          <Route
-            path="/intercom-access"
-            element={<IntercomAccess/>}
-          />
-
-          <Route
-            path="/flats"
-            element={<Flats/>}
-          />
-
-          <Route
-            path="/househelp"
-            element= {<HousehelpPostings/>}
-          />
-          
-          <Route
-            path="/househelp/create"
-            element= {<CreateHousehelpPosting/>}
-          />
-
-          <Route
-            path="/family-expenses"
-            element={<FamilyExpenses token={token} />}
-          />
-
-          <Route
-            path="/family-expenses/:sheetId"
-            element={<FamilyExpenseSheet token={token} />}
-          />
-
-          <Route
-            path="/lost-found"
-            element={<LostFound token={token} />}
-          />
-
-          <Route
-            path="/lost-found/:postId"
-            element={<LostFoundDetail token={token} role={role} />}
-          />
-
-          <Route
-            path="/surveillance"
-            element={<Surveillance token={token} role={role} />}
-          />  
-          
-          <Route  
-            path="/guest-registration"
-            element= {<GuestRegistration/>}
-          />
-
-          <Route
-            path="/guest-validation"
-            element= {<GuestValidation/>}
-          />
-
-        </Route>
-
-        <Route
-          path="/contacts/:type?"
-          element={<ContactDirectory token={token} />}
+          }
         />
 
-{/* ------------------------- */}
+        {/* ================================================= */}
+        {/* AUTHENTICATED PAGES - ALL USE DASHBOARD LAYOUT   */}
+        {/* ================================================= */}
+
         <Route
-          path="/proposals"
           element={
             token ? (
+              <DashboardLayout
+                token={token}
+                role={role}
+                onLogout={handleLogout}
+              />
+            ) : (
+              <Navigate to="/login" replace />
+            )
+          }
+        >
+
+          {/* Dashboard */}
+          <Route
+            path="/dashboard"
+            element={<DashboardHome role={role} />}
+          />
+
+          {/* Proposals */}
+          <Route
+            path="/proposals"
+            element={
               role === "staff" ? (
                 <StaffDashboard
                   token={token}
@@ -195,126 +124,246 @@ function App() {
                   role={role}
                 />
               )
-            ) : (
-              <Navigate to="/login" replace />
-            )
-          }
-        />
+            }
+          />
 
-        <Route
-          path="/bookings"
-          element={
-            token ? (
+          {/* Bookings */}
+          <Route
+            path="/bookings"
+            element={
               <Booking
                 token={token}
                 onLogout={handleLogout}
                 role={role}
               />
-            ) : (
-              <Navigate to="/login" replace />
-            )
-          }
-        />
+            }
+          />
 
-        <Route
-          path="/bills"
-          element={
-            token ? (
+          {/* Bill Payments */}
+          <Route
+            path="/bills"
+            element={
               <BillPayments
                 token={token}
                 onLogout={handleLogout}
                 role={role}
               />
-            ) : (
-              <Navigate to="/login" replace />
-            )
-          }
-        />
+            }
+          />
 
-        <Route
-          path="/garages"
-          element={
-            token ? (
+          {/* Garages */}
+          <Route
+            path="/garages"
+            element={
               <Garages
                 token={token}
                 onLogout={handleLogout}
                 role={role}
               />
-            ) : (
-              <Navigate to="/login" replace />
-            )
-          }
-        />
+            }
+          />
 
-        <Route
-          path="/garages/book/:garageId"
-          element={
-            token ? <GarageBookingPage token={token} onLogout={handleLogout} /> : <Navigate to="/login" replace />
-          }
-        />
+          <Route
+            path="/garages/book/:garageId"
+            element={
+              <GarageBookingPage
+                token={token}
+                onLogout={handleLogout}
+              />
+            }
+          />
 
-        <Route
-          path="/garages/my-bookings"
-          element={
-            token ? <MyGarageBookings token={token} onLogout={handleLogout} /> : <Navigate to="/login" replace />
-          }
-        />
+          <Route
+            path="/garages/my-bookings"
+            element={
+              <MyGarageBookings
+                token={token}
+                onLogout={handleLogout}
+              />
+            }
+          />
 
-        <Route path="/books" element={<Books />} />
+          {/* Library */}
+          <Route
+            path="/books"
+            element={<Books />}
+          />
 
-        <Route
-          path="/books/create"
-          element={
-            token ? (
-              <CreateBook token={token} />
-            ) : (
-              <Navigate to="/login" replace />
-            )
-          }
-        />
+          <Route
+            path="/books/create"
+            element={<CreateBook token={token} />}
+          />
 
-        {/* Noticeboard */}
-        <Route
-          path="/noticeboard"
-          element={
-            token ? (
-              <Noticeboard />
-            ) : (
-              <Navigate to="/login" replace />
-            )
-          }
-        />
+          {/* Noticeboard */}
+          <Route
+            path="/noticeboard"
+            element={<Noticeboard />}
+          />
 
-        <Route
-          path="/complaints"
-          element={
-            token ? (
-              <Complaints token={token} onLogout={handleLogout} role={role} />
-            ) : (
-              <Navigate to="/login" replace />
-            )
-          }
-        />
+          {/* Complaints */}
+          <Route
+            path="/complaints"
+            element={
+              <Complaints
+                token={token}
+                onLogout={handleLogout}
+                role={role}
+              />
+            }
+          />
 
-        <Route
-          path="/complaints/my-flat"
-          element={
-            token && role !== "staff" ? <Complaints token={token} onLogout={handleLogout} role={role} view="my-flat" /> : <Navigate to={token ? "/complaints" : "/login"} replace />
-          }
-        />
+          <Route
+            path="/complaints/my-flat"
+            element={
+              role !== "staff" ? (
+                <Complaints
+                  token={token}
+                  onLogout={handleLogout}
+                  role={role}
+                  view="my-flat"
+                />
+              ) : (
+                <Navigate to="/complaints" replace />
+              )
+            }
+          />
 
-        <Route
-          path="/complaints/submit"
-          element={
-            token && role !== "staff" ? <ComplaintSubmit token={token} onLogout={handleLogout} /> : <Navigate to={token ? "/complaints" : "/login"} replace />
-          }
-        />
+          <Route
+            path="/complaints/submit"
+            element={
+              role !== "staff" ? (
+                <ComplaintSubmit
+                  token={token}
+                  onLogout={handleLogout}
+                />
+              ) : (
+                <Navigate to="/complaints" replace />
+              )
+            }
+          />
 
+          {/* Building Layout */}
+          <Route
+            path="/building-layout"
+            element={
+              <BuildingLayout
+                token={token}
+                role={role}
+              />
+            }
+          />
+
+          {role === "committee" && (
+            <Route
+              path="/building-layout/manage"
+              element={
+                <ManageBuildingLayout
+                  token={token}
+                  role={role}
+                />
+              }
+            />
+          )}
+
+          {/* Contact Directory */}
+          <Route
+            path="/contacts/:type?"
+            element={
+              <ContactDirectory token={token} />
+            }
+          />
+
+          {/* Intercom */}
+          <Route
+            path="/intercom"
+            element={<Intercom />}
+          />
+
+          <Route
+            path="/intercom-access"
+            element={<IntercomAccess />}
+          />
+
+          {/* Flats */}
+          <Route
+            path="/flats"
+            element={<Flats />}
+          />
+
+          {/* Househelp */}
+          <Route
+            path="/househelp"
+            element={<HousehelpPostings />}
+          />
+
+          <Route
+            path="/househelp/create"
+            element={<CreateHousehelpPosting />}
+          />
+
+          {/* Family Expenses */}
+          <Route
+            path="/family-expenses"
+            element={<FamilyExpenses token={token} />}
+          />
+
+          <Route
+            path="/family-expenses/:sheetId"
+            element={<FamilyExpenseSheet token={token} />}
+          />
+
+          {/* Lost & Found */}
+          <Route
+            path="/lost-found"
+            element={<LostFound token={token} />}
+          />
+
+          <Route
+            path="/lost-found/:postId"
+            element={
+              <LostFoundDetail
+                token={token}
+                role={role}
+              />
+            }
+          />
+
+          {/* Surveillance */}
+          <Route
+            path="/surveillance"
+            element={
+              <Surveillance
+                token={token}
+                role={role}
+              />
+            }
+          />
+
+          {/* ================================================= */}
+          {/* GUEST MANAGEMENT                                 */}
+          {/* ================================================= */}
+
+          {role === "staff" && (
+            <>
+              <Route
+                path="/guest-registration"
+                element={<GuestRegistration />}
+              />
+
+              <Route
+                path="/guest-validation"
+                element={<GuestValidation />}
+              />
+            </>
+          )}
+
+        </Route>
+
+        {/* Catch-all */}
         <Route
           path="*"
           element={<Navigate to="/login" replace />}
         />
-
 
       </Routes>
     </BrowserRouter>
