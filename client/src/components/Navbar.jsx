@@ -21,6 +21,7 @@ function Navbar({ profile, onLogout, onMenuClick }) {
     "/building-layout/manage": "Manage Building Layout",
     "/intercom-access": "Intercom Management",
     "/family-expenses": "Family Expenses",
+    "/lost-found": "Lost & Found",
   };
 
   // an exact match wins, otherwise fall back to the longest matching prefix so

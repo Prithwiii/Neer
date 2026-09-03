@@ -59,6 +59,10 @@ function Sidebar({ open, role, onClose }) {
             Noticeboard
           </Link>
 
+          <Link to="/lost-found" onClick={onClose}>
+            Lost &amp; Found
+          </Link>
+
           <Link to="/building-layout" onClick={onClose}>
             Building Layout
           </Link>
