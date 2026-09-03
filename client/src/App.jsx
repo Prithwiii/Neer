@@ -26,6 +26,8 @@ import HousehelpPostings from "./pages/HousehelpPostings";
 import CreateHousehelpPosting from "./pages/CreateHousehelpPosting";
 import FamilyExpenses from "./pages/FamilyExpenses";
 import FamilyExpenseSheet from "./pages/FamilyExpenseSheet";
+import LostFound from "./pages/LostFound";
+import LostFoundDetail from "./pages/LostFoundDetail";
 
 import DashboardLayout from "./layouts/DashboardLayout";
 
@@ -133,6 +135,16 @@ function App() {
           <Route
             path="/family-expenses/:sheetId"
             element={<FamilyExpenseSheet token={token} />}
+          />
+
+          <Route
+            path="/lost-found"
+            element={<LostFound token={token} />}
+          />
+
+          <Route
+            path="/lost-found/:postId"
+            element={<LostFoundDetail token={token} role={role} />}
           />
 
         </Route>

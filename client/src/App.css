@@ -228,3 +228,37 @@ button.secondary { background:#fff; color:#000; }
   .expense-summary-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .sheet-grid { grid-template-columns: minmax(0, 1fr); }
   .category-row { grid-template-columns: 90px minmax(0, 1fr) 80px; }}
+
+/* Lost and found board */
+.lost-found-filters { margin-bottom:16px; }
+.search-row { display:flex; gap:8px; margin-bottom:12px; }
+.search-row input { flex:1; min-width:0; }
+.filter-row { display:flex; flex-wrap:wrap; align-items:flex-end; gap:12px; }
+.filter-row label { display:flex; flex-direction:column; gap:4px; font-size:0.85em; }
+.lost-found-summary { font-size:0.9em; color:#444; }
+.lost-found-grid { display:grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap:12px; }
+.lost-found-card { display:block; border:1px solid var(--border); padding:16px; background:var(--surface); color:var(--text); text-decoration:none; }
+.lost-found-card:hover { border-color:#000; }
+.lost-found-card h3 { margin:0; }
+.lost-found-card p { margin:8px 0 0; }
+.lost-found-card-top { display:flex; align-items:flex-start; justify-content:space-between; gap:12px; }
+.lost-found-card-meta { font-size:0.9em; color:#444; }
+/* clamps a long description to three lines so the cards stay the same height */
+.lost-found-description { display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden; }
+/* Lost or Found marker, kept flat and outlined like the other badges */
+.type-tag { display:inline-block; padding:2px 8px; border:1px solid #000; font-size:0.7em; text-transform:uppercase; letter-spacing:0.06em; vertical-align:middle; }
+.type-lost { background:#fdecea; }
+.type-found { background:#e6f4ea; }
+/* Single post */
+.lost-found-detail p { margin:10px 0; }
+.lost-found-photo { display:block; max-width:100%; max-height:320px; margin-bottom:14px; border:1px solid var(--border); }
+.privacy-hint { font-size:0.85em; color:#666; }
+/* Picture picker, shared by the new post form and the edit form */
+.image-field { display:flex; flex-direction:column; gap:4px; font-size:0.9em; }
+.image-preview { display:flex; align-items:flex-start; gap:10px; }
+.image-preview img { max-width:160px; max-height:120px; border:1px solid var(--border); }
+.type-choice { display:flex; flex-wrap:wrap; gap:16px; }
+.type-choice label { display:flex; align-items:center; gap:6px; font-size:0.9em; }
+@media (max-width: 700px) {
+  .lost-found-grid { grid-template-columns: minmax(0, 1fr); }
+  .filter-row label { flex:1; min-width:130px; }}

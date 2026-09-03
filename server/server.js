@@ -24,6 +24,7 @@ import garageBookingRoutes from "./routes/garageBookingRoutes.js";
 import flatRoutes from "./routes/flatRoutes.js";
 import househelpRoutes from "./routes/househelpRoutes.js";
 import familyExpenseRoutes from "./routes/familyExpenseRoutes.js";
+import lostFoundRoutes from "./routes/lostFoundRoutes.js";
 
 import {setIO} from "./config/socket.js";
 
@@ -43,6 +44,7 @@ app.use("/api/garage-bookings", garageBookingRoutes);
 app.use("/api/flats", flatRoutes);
 app.use("/api/househelp", househelpRoutes);
 app.use("/api/family-expenses", familyExpenseRoutes);
+app.use("/api/lost-found", lostFoundRoutes);
 
 // app.listen(PORT, () => {
 //   console.log(`Server running on port ${PORT}`);
