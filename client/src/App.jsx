@@ -24,6 +24,8 @@ import ContactDirectory from "./pages/ContactDirectory";
 import Flats from "./pages/Flats"
 import HousehelpPostings from "./pages/HousehelpPostings";
 import CreateHousehelpPosting from "./pages/CreateHousehelpPosting";
+import FamilyExpenses from "./pages/FamilyExpenses";
+import FamilyExpenseSheet from "./pages/FamilyExpenseSheet";
 
 import DashboardLayout from "./layouts/DashboardLayout";
 
@@ -121,6 +123,16 @@ function App() {
           <Route
             path="/househelp/create"
             element= {<CreateHousehelpPosting/>}
+          />
+
+          <Route
+            path="/family-expenses"
+            element={<FamilyExpenses token={token} />}
+          />
+
+          <Route
+            path="/family-expenses/:sheetId"
+            element={<FamilyExpenseSheet token={token} />}
           />
 
         </Route>

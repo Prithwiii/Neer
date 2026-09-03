@@ -176,3 +176,55 @@ button.secondary { background:#fff; color:#000; }
 .pagination button {padding: 5px 9px; cursor: pointer;}
 .pagination button:disabled {cursor: default; opacity: 0.5;}
 .pagination span {white-space: nowrap;}
+
+/* Family expense tracker */
+.sheet-grid { display:grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap:12px; }
+.sheet-card { display:block; border:1px solid var(--border); padding:16px; background:var(--surface); color:var(--text); text-decoration:none; }
+.sheet-card:hover { border-color:#000; }
+.sheet-card h3 { margin:0; }
+.sheet-card p { margin:8px 0 0; }
+.sheet-card-top { display:flex; align-items:flex-start; justify-content:space-between; gap:12px; }
+.sheet-card-meta { font-size:0.9em; color:#444; }
+/* the sheet itself is a little wider than a standard 900px dashboard page */
+.dashboard-page.family-page { max-width: 1060px; }
+.family-workspace { display:grid; grid-template-columns: minmax(0, 1fr) 300px; gap:16px; align-items:start; }
+.expense-summary h2 { margin:0 0 12px; }
+.expense-summary h3 { margin:0 0 10px; font-size:1em; }
+.expense-summary-grid { display:grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap:12px; }
+.expense-stat { border:1px solid var(--border); padding:10px 12px; background:var(--code-bg); }
+.expense-stat strong { display:block; font-size:1.15em; margin-top:4px; }
+.expense-stat-label { font-size:0.85em; color:#444; }
+.category-breakdown { margin-top:16px; }
+.category-row { display:grid; grid-template-columns: 100px minmax(0, 1fr) 90px; align-items:center; gap:10px; margin-bottom:6px; font-size:0.9em; }
+.category-bar { display:block; height:14px; border:1px solid var(--border); background:var(--code-bg); }
+.category-bar-fill { display:block; height:100%; border:1px solid #000; }
+.category-row-amount { text-align:right; }
+/* Expense table */
+.expense-table-container { width:100%; overflow-x:auto; }
+.expense-table { width:100%; min-width:560px; border-collapse:collapse; }
+.expense-table th, .expense-table td { padding:10px 12px; text-align:left; border-bottom:1px solid var(--border); vertical-align:top; }
+.expense-table th { font-size:0.85em; text-transform:uppercase; letter-spacing:0.05em; color:#444; }
+.expense-table .align-right { text-align:right; }
+/* the date, category and buttons each stay on one line */
+.expense-table .no-wrap { white-space:nowrap; }
+.expense-table .bill-actions { display:inline-flex; flex-wrap:nowrap; gap:6px; }
+.expense-table button { padding:4px 10px; font-size:0.9em; }
+.expense-note { display:block; margin-top:4px; font-size:0.85em; color:#666; }
+/* Family members panel */
+.family-members h3 { margin:0 0 10px; }
+.family-members h4 { margin:0 0 8px; font-size:0.95em; }
+.member-list { list-style:none; margin:0; padding:0; }
+.member-row { display:flex; align-items:center; justify-content:space-between; gap:8px; padding:8px 0; border-bottom:1px solid var(--border); font-size:0.9em; }
+.member-row:last-child { border-bottom:none; }
+.member-row-actions { display:flex; align-items:center; gap:6px; }
+.member-row button { padding:3px 8px; font-size:0.85em; }
+.member-search { margin-top:14px; padding-top:14px; border-top:1px solid var(--border); }
+.member-search-form { display:flex; gap:6px; margin-bottom:10px; }
+.member-search-form input { flex:1; min-width:0; }
+@media (max-width: 900px) {
+  /* minmax(0, 1fr) rather than 1fr, so the expense table scrolls inside its
+     own container instead of stretching the page sideways */
+  .family-workspace { grid-template-columns: minmax(0, 1fr); }
+  .expense-summary-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .sheet-grid { grid-template-columns: minmax(0, 1fr); }
+  .category-row { grid-template-columns: 90px minmax(0, 1fr) 80px; }}

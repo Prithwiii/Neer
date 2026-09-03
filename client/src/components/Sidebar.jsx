@@ -45,6 +45,12 @@ function Sidebar({ open, role, onClose }) {
             Bill Payments
           </Link>
 
+          {role !== "staff" && (
+            <Link to="/family-expenses" onClick={onClose}>
+              Family Expenses
+            </Link>
+          )}
+
           <Link to="/books" onClick={onClose}>
             Library
           </Link>
