@@ -29,6 +29,8 @@ import FamilyExpenseSheet from "./pages/FamilyExpenseSheet";
 import LostFound from "./pages/LostFound";
 import LostFoundDetail from "./pages/LostFoundDetail";
 import Surveillance from "./pages/Surveillance";
+import GuestRegistration from "./pages/GuestRegistration";
+import GuestValidation from "./pages/GuestValidation";
 
 import DashboardLayout from "./layouts/DashboardLayout";
 
@@ -151,6 +153,16 @@ function App() {
           <Route
             path="/surveillance"
             element={<Surveillance token={token} role={role} />}
+          />  
+          
+          <Route  
+            path="/guest-registration"
+            element= {<GuestRegistration/>}
+          />
+
+          <Route
+            path="/guest-validation"
+            element= {<GuestValidation/>}
           />
 
         </Route>

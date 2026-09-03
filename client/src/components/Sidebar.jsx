@@ -101,6 +101,24 @@ function Sidebar({ open, role, onClose }) {
             Househelp Postings
           </Link>
 
+          {role === "staff" && (
+              <>
+                  <Link
+                      to="/guest-registration"
+                      className="..."
+                  >
+                      Register Guest
+                  </Link>
+
+                  <Link
+                      to="/guest-validation"
+                      className="..."
+                  >
+                      Validate Guest
+                  </Link>
+              </>
+          )}
+
           {/* add new features here later */}
         </nav>
       </aside>
