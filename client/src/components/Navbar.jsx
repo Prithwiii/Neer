@@ -20,9 +20,22 @@ function Navbar({ profile, onLogout, onMenuClick }) {
     "/building-layout": "Building Layout",
     "/building-layout/manage": "Manage Building Layout",
     "/intercom-access": "Intercom Management",
+    "/family-expenses": "Family Expenses",
   };
 
-  const pageName = pageNames[location.pathname] || "NEER";
+  // an exact match wins, otherwise fall back to the longest matching prefix so
+  // pages with an id in the url (e.g. /family-expenses/<id>) still get a name
+  const matchPageName = (path) => {
+    if (pageNames[path]) return pageNames[path];
+
+    const prefix = Object.keys(pageNames)
+      .filter((key) => path.startsWith(`${key}/`))
+      .sort((a, b) => b.length - a.length)[0];
+
+    return prefix ? pageNames[prefix] : "NEER";
+  };
+
+  const pageName = matchPageName(location.pathname);
 
   return (
     <header className="navbar">
