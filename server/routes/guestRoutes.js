@@ -27,7 +27,6 @@ const staffOnly = (req, res, next) => {
 router.post(
     "/register",
     authMiddleware,
-    staffOnly,
     registerGuest
 );
 

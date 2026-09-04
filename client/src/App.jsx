@@ -345,13 +345,13 @@ function App() {
             element={<Maintenance />} 
             />
 
+          <Route
+            path="/guest-registration"
+            element={<GuestRegistration />}
+            />
+
           {role === "staff" && (
             <>
-              <Route
-                path="/guest-registration"
-                element={<GuestRegistration />}
-              />
-
               <Route
                 path="/guest-validation"
                 element={<GuestValidation />}
