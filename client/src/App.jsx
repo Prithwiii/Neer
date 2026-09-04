@@ -28,6 +28,7 @@ import FamilyExpenses from "./pages/FamilyExpenses";
 import FamilyExpenseSheet from "./pages/FamilyExpenseSheet";
 import LostFound from "./pages/LostFound";
 import LostFoundDetail from "./pages/LostFoundDetail";
+import Surveillance from "./pages/Surveillance";
 
 import DashboardLayout from "./layouts/DashboardLayout";
 
@@ -145,6 +146,11 @@ function App() {
           <Route
             path="/lost-found/:postId"
             element={<LostFoundDetail token={token} role={role} />}
+          />
+
+          <Route
+            path="/surveillance"
+            element={<Surveillance token={token} role={role} />}
           />
 
         </Route>

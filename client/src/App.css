@@ -158,6 +158,29 @@ button.secondary { background:#fff; color:#000; }
   .layout-form-grid { grid-template-columns: repeat(2, 1fr); }
   .plan-marker { font-size:10px; }}
 
+/* Surveillance */
+.camera-workspace { grid-template-columns: 84px minmax(0, 1fr); }
+.camera-add-form { display:flex; flex-direction:column; gap:10px; margin-bottom:16px; max-width:420px; }
+.camera-add-form label { display:flex; flex-direction:column; gap:4px; font-size:0.9em; }
+.camera-grid { display:grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap:14px; margin-top:12px; }
+.camera-tile { border:1px solid var(--border); background:var(--surface); display:flex; flex-direction:column; }
+.camera-feed-visual { position:relative; aspect-ratio: 4 / 3; background:#111; overflow:hidden; }
+.camera-feed-visual img { width:100%; height:100%; object-fit:cover; display:block; }
+.camera-feed-placeholder { position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:6px; color:#8a8a8a; font-size:0.85em; background: repeating-linear-gradient(135deg, #161616, #161616 10px, #1c1c1c 10px, #1c1c1c 20px); }
+.camera-feed-icon { font-size:1.8em; }
+.camera-status-pill { position:absolute; top:8px; right:8px; padding:2px 8px; font-size:0.75em; font-weight:bold; border-radius:2px; background:rgba(0,0,0,0.65); color:#fff; }
+.camera-status-pill.live { color:#7CFC7C; }
+.camera-status-pill.offline { color:#ff8a8a; }
+.camera-tile.camera-offline .camera-feed-visual { opacity:0.7; }
+.camera-feed-info { padding:8px 10px; }
+.camera-feed-info h4 { margin:0 0 2px; font-size:0.95em; }
+.camera-feed-info p { margin:0; font-size:0.8em; opacity:0.75; }
+.camera-feed-actions { display:flex; gap:8px; padding:0 10px 10px; }
+.camera-feed-actions button { flex:1; font-size:0.8em; padding:6px 4px; }
+@media (max-width: 900px) {
+  .camera-workspace { grid-template-columns: 1fr; }
+}
+
 .flats-header {display: flex; justify-content: space-between; align-items: center;gap: 20px;margin-bottom: 20px;}
 .flats-header h2 {margin: 0;}
 .flats-header input {padding: 8px 12px;min-width: 220px;}

@@ -25,6 +25,7 @@ import flatRoutes from "./routes/flatRoutes.js";
 import househelpRoutes from "./routes/househelpRoutes.js";
 import familyExpenseRoutes from "./routes/familyExpenseRoutes.js";
 import lostFoundRoutes from "./routes/lostFoundRoutes.js";
+import cameraRoutes from "./routes/cameraRoutes.js";
 
 import {setIO} from "./config/socket.js";
 
@@ -45,6 +46,7 @@ app.use("/api/flats", flatRoutes);
 app.use("/api/househelp", househelpRoutes);
 app.use("/api/family-expenses", familyExpenseRoutes);
 app.use("/api/lost-found", lostFoundRoutes);
+app.use("/api/cameras", cameraRoutes);
 
 // app.listen(PORT, () => {
 //   console.log(`Server running on port ${PORT}`);
