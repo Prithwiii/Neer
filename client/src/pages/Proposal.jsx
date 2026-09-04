@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import API_URL from "../config/api";
 
 function Proposal() {
   const [proposals, setProposals] = useState([]);
@@ -6,7 +7,8 @@ function Proposal() {
   useEffect(() => {
     const token = localStorage.getItem("token");
 
-    fetch("http://localhost:5000/api/proposals", {
+    // fetch("http://localhost:5000/api/proposals", {
+    fetch(`${API_URL}/api/proposals`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -19,7 +21,8 @@ function Proposal() {
     const token = localStorage.getItem("token");
 
     const response = await fetch(
-      `http://localhost:5000/api/proposals/${proposalId}/vote`,
+      // `http://localhost:5000/api/proposals/${proposalId}/vote`,
+      `${API_URL}/api/proposals/${proposalId}/vote`,
       {
         method: "POST",
         headers: {

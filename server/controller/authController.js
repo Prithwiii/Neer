@@ -8,8 +8,14 @@ export const registerUser = async(req, res) => {
 
     try{
 
-        const {username, email, password} = req.body;
+        const {username, email, password, flatNumber} = req.body;
         const role = req.body.role || "resident";
+
+        if (role !== "staff" && !/^\d+-[A-Z]$/.test(flatNumber || "")) {
+            return res.status(400).json({
+                message: "Flat number must use the format 10-A"
+            });
+        }
 
         const existingUser = await User.findOne({email});
 
@@ -26,7 +32,8 @@ export const registerUser = async(req, res) => {
             username,
             email,
             password: hashedPassword,
-            role
+            role,
+            flatNumber: role === "staff" ? undefined : flatNumber.toUpperCase()
         });
 
         res.status(201).json({
@@ -34,6 +41,7 @@ export const registerUser = async(req, res) => {
             username: user.username,
             email: user.email,
             role: user.role,
+            flatNumber: user.flatNumber || null,
             token: generateToken(user._id)
         });
     }
@@ -79,6 +87,9 @@ export const loginUser = async(req, res) => {
             username: user.username,
             email: user.email,
             role: user.role,
+            flatNumber: user.flatNumber || null,
+            intercomEnabled: user.intercomEnabled,
+            intercomAccess: user.intercomAccess,
             token: generateToken(user._id)
         });
     }

@@ -1,11 +1,12 @@
 import express from "express";
 import Proposal from "../models/proposal.js";
 import protect from "../middleware/authMiddleware.js";
+import requireRole from "../middleware/roleMiddleware.js";
 
 const router = express.Router();
 
 // Create proposal
-router.post("/", protect, async (req, res) => {
+router.post("/", protect, requireRole("committee"), async (req, res) => {
   try {
     const { title, description, type } = req.body;
 

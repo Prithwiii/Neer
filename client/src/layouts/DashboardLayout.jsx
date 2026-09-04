@@ -1,13 +1,17 @@
 import { useEffect, useState } from "react";
 import { Outlet } from "react-router-dom";
+import {socket, registerIntercomUser} from "../services/intercomSocket";
+import IncomingIntercomCall from "../components/IncomingIntercomCall";
 
 import Navbar from "../components/Navbar";
 import Sidebar from "../components/Sidebar";
-import API_URL from "../config/api";
+import API_URL from "../config/api"; //API_URL hoitese http://localhost:{.env file er port number}
+                                     // so etar por /api/page_name kore dilei hobe
 
-function DashboardLayout({ token, onLogout }) {
+function DashboardLayout({ token, role, onLogout }) {
   const [profile, setProfile] = useState(null);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [incomingCall, setIncomingCall] = useState(null);
 
   useEffect(() => {
     if (!token) return;
@@ -28,6 +32,11 @@ function DashboardLayout({ token, onLogout }) {
 
         const user = await response.json();
         setProfile(user);
+
+        if (user._id) {
+          registerIntercomUser(user._id);
+        }
+ 
       } catch (error) {
         console.error("Failed to load profile:", error);
       }
@@ -36,12 +45,30 @@ function DashboardLayout({ token, onLogout }) {
     loadProfile();
   }, [token]);
 
-  const closeMenu = () => {
-    setMenuOpen(false);
-  };
+  useEffect(() => {
+    const handleIncomingCall = (call) => {
+      setIncomingCall(call);
+    };
+
+    socket.on( "incoming-intercom-call", handleIncomingCall );
+
+    return () => {
+      socket.off("incoming-intercom-call", handleIncomingCall);
+    };
+  }, []);
+
+  const closeMenu = () => { setMenuOpen(false); };
 
   return (
     <div className="app-layout">
+
+      {role !== "staff" && incomingCall && (
+        <IncomingIntercomCall 
+          call = {incomingCall}
+          onClose={() => setIncomingCall(null)}
+        />
+      )}
+
       <Navbar
         profile={profile}
         onLogout={onLogout}
@@ -50,6 +77,7 @@ function DashboardLayout({ token, onLogout }) {
 
       <Sidebar
         open={menuOpen}
+        role={role}
         onClose={closeMenu}
       />
 
@@ -58,6 +86,7 @@ function DashboardLayout({ token, onLogout }) {
       </main>
     </div>
   );
+
 }
 
 export default DashboardLayout;

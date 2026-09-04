@@ -2,14 +2,33 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { useState } from "react";
 
 import Noticeboard from "./pages/Noticeboard";
+import Complaints from "./pages/Complaints";
+import ComplaintSubmit from "./pages/ComplaintSubmit";
 import Auth from "./pages/Auth";
 import StaffDashboard from "./pages/StaffDashboard";
 import ResidentDashboard from "./pages/ResidentDashboard";
 import CommitteeDashboard from "./pages/CommitteeDashboard";
 import Booking from "./pages/Booking";
+import Garages from "./pages/Garages";
+import GarageBookingPage from "./pages/GarageBookingPage";
+import MyGarageBookings from "./pages/MyGarageBookings";
 import Books from "./pages/Books";
 import CreateBook from "./pages/CreateBook";
 import DashboardHome from "./pages/DashboardHome";
+import BillPayments from "./pages/BillPayments";
+import BuildingLayout from "./pages/BuildingLayout";
+import ManageBuildingLayout from "./pages/ManageBuildingLayout";
+import IntercomAccess from "./pages/IntercomAccess";
+import Intercom from "./pages/Intercom";
+import ContactDirectory from "./pages/ContactDirectory";
+import Flats from "./pages/Flats"
+import HousehelpPostings from "./pages/HousehelpPostings";
+import CreateHousehelpPosting from "./pages/CreateHousehelpPosting";
+import FamilyExpenses from "./pages/FamilyExpenses";
+import FamilyExpenseSheet from "./pages/FamilyExpenseSheet";
+import LostFound from "./pages/LostFound";
+import LostFoundDetail from "./pages/LostFoundDetail";
+import Surveillance from "./pages/Surveillance";
 import Maintenance from "./pages/Maintenance";
 
 import DashboardLayout from "./layouts/DashboardLayout";
@@ -56,6 +75,7 @@ function App() {
           element = { token ? (
             <DashboardLayout
               token = {token}
+              role = {role}
               onLogout={handleLogout}
             />
           ) : (
@@ -74,8 +94,74 @@ function App() {
             element={<CreateBook token={token} />}
           />
 
+          <Route
+            path="/building-layout"
+            element={<BuildingLayout token={token} role={role} />}
+          />
+
+          <Route
+            path="/building-layout/manage"
+            element={<ManageBuildingLayout token={token} role={role} />}
+          />
+
+          <Route
+            path="/intercom"
+            element={<Intercom/>}
+          />
+
+          <Route
+            path="/intercom-access"
+            element={<IntercomAccess/>}
+          />
+
+          <Route
+            path="/flats"
+            element={<Flats/>}
+          />
+
+          <Route
+            path="/househelp"
+            element= {<HousehelpPostings/>}
+          />
+          
+          <Route
+            path="/househelp/create"
+            element= {<CreateHousehelpPosting/>}
+          />
+
+          <Route
+            path="/family-expenses"
+            element={<FamilyExpenses token={token} />}
+          />
+
+          <Route
+            path="/family-expenses/:sheetId"
+            element={<FamilyExpenseSheet token={token} />}
+          />
+
+          <Route
+            path="/lost-found"
+            element={<LostFound token={token} />}
+          />
+
+          <Route
+            path="/lost-found/:postId"
+            element={<LostFoundDetail token={token} role={role} />}
+          />
+
+          <Route
+            path="/surveillance"
+            element={<Surveillance token={token} role={role} />}
+          />
+
+
           <Route path="/maintenance" element={<Maintenance />} />
         </Route>
+
+        <Route
+          path="/contacts/:type?"
+          element={<ContactDirectory token={token} />}
+        />
 
 {/* ------------------------- */}
         <Route
@@ -120,7 +206,63 @@ function App() {
             )
           }
         />
-    
+
+        <Route
+          path="/bills"
+          element={
+            token ? (
+              <BillPayments
+                token={token}
+                onLogout={handleLogout}
+                role={role}
+              />
+            ) : (
+              <Navigate to="/login" replace />
+            )
+          }
+        />
+
+        <Route
+          path="/garages"
+          element={
+            token ? (
+              <Garages
+                token={token}
+                onLogout={handleLogout}
+                role={role}
+              />
+            ) : (
+              <Navigate to="/login" replace />
+            )
+          }
+        />
+
+        <Route
+          path="/garages/book/:garageId"
+          element={
+            token ? <GarageBookingPage token={token} onLogout={handleLogout} /> : <Navigate to="/login" replace />
+          }
+        />
+
+        <Route
+          path="/garages/my-bookings"
+          element={
+            token ? <MyGarageBookings token={token} onLogout={handleLogout} /> : <Navigate to="/login" replace />
+          }
+        />
+
+        <Route path="/books" element={<Books />} />
+
+        <Route
+          path="/books/create"
+          element={
+            token ? (
+              <CreateBook token={token} />
+            ) : (
+              <Navigate to="/login" replace />
+            )
+          }
+        />
 
         {/* Noticeboard */}
         <Route
@@ -135,9 +277,35 @@ function App() {
         />
 
         <Route
+          path="/complaints"
+          element={
+            token ? (
+              <Complaints token={token} onLogout={handleLogout} role={role} />
+            ) : (
+              <Navigate to="/login" replace />
+            )
+          }
+        />
+
+        <Route
+          path="/complaints/my-flat"
+          element={
+            token && role !== "staff" ? <Complaints token={token} onLogout={handleLogout} role={role} view="my-flat" /> : <Navigate to={token ? "/complaints" : "/login"} replace />
+          }
+        />
+
+        <Route
+          path="/complaints/submit"
+          element={
+            token && role !== "staff" ? <ComplaintSubmit token={token} onLogout={handleLogout} /> : <Navigate to={token ? "/complaints" : "/login"} replace />
+          }
+        />
+
+        <Route
           path="*"
           element={<Navigate to="/login" replace />}
         />
+
 
       </Routes>
     </BrowserRouter>

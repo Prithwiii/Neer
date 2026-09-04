@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 
-function Sidebar({ open, onClose }) {
+function Sidebar({ open, role, onClose }) {
   return (
     <>
       {open && (
@@ -37,12 +37,68 @@ function Sidebar({ open, onClose }) {
             Bookings
           </Link>
 
+          <Link to="/garages" onClick={onClose}>
+            Garages
+          </Link>
+
+          <Link to="/bills" onClick={onClose}>
+            Bill Payments
+          </Link>
+
+          {role !== "staff" && (
+            <Link to="/family-expenses" onClick={onClose}>
+              Family Expenses
+            </Link>
+          )}
+
           <Link to="/books" onClick={onClose}>
             Library
           </Link>
 
           <Link to="/noticeboard" onClick={onClose}>
             Noticeboard
+          </Link>
+
+          <Link to="/lost-found" onClick={onClose}>
+            Lost &amp; Found
+          </Link>
+
+          <Link to="/building-layout" onClick={onClose}>
+            Building Layout
+          </Link>
+
+          <Link to="/surveillance" onClick={onClose}>
+            Surveillance
+          </Link>
+
+          {role === "committee" && (
+            <Link to="/building-layout/manage" onClick={onClose}>
+              Manage Building Layout
+            </Link>
+          )}
+
+          <Link to="/complaints" onClick={onClose}>
+            Complaints
+          </Link>
+
+          <Link to="/contacts" onClick={onClose}>
+            Contact Directory
+          </Link>
+
+          <Link to="/intercom-access" onClick={onClose}>
+            Intercom Management
+          </Link>
+
+          <Link to="/intercom" onClick={onClose}>
+            Intercom
+          </Link>
+
+          <Link to="/flats" onClick={onClose}>
+            Flats
+          </Link>
+
+          <Link to="/househelp" onClick={onClose}>
+            Househelp Postings
           </Link>
 
           <Link to="/maintenance" onClick={onClose}>

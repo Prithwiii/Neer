@@ -1,4 +1,6 @@
 import { useEffect, useState } from "react";
+import API_URL from "../config/api";
+import App from "../App";
 
 function Noticeboard() {
     const [notices, setNotices] = useState([]);
@@ -16,7 +18,8 @@ function Noticeboard() {
     const fetchNotices = async () => {
         try {
             const response = await fetch(
-                "http://localhost:5001/api/notices",
+                // "http://localhost:5001/api/notices",
+                `${API_URL}/api/notices`,
                 {
                     headers: {
                         Authorization: `Bearer ${token}`
@@ -50,7 +53,8 @@ function Noticeboard() {
 
         try {
             const response = await fetch(
-                "http://localhost:5001/api/notices",
+                // "http://localhost:5001/api/notices",
+                `${API_URL}/api/notices`,
                 {
                     method: "POST",
                     headers: {
