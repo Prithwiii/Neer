@@ -67,6 +67,10 @@ function Sidebar({ open, role, onClose }) {
             Building Layout
           </Link>
 
+          <Link to="/surveillance" onClick={onClose}>
+            Surveillance
+          </Link>
+
           {role === "committee" && (
             <Link to="/building-layout/manage" onClick={onClose}>
               Manage Building Layout
