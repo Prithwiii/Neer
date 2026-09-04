@@ -28,6 +28,7 @@ import lostFoundRoutes from "./routes/lostFoundRoutes.js";
 import cameraRoutes from "./routes/cameraRoutes.js";
 
 import {setIO} from "./config/socket.js";
+import maintenanceRoutes from "./routes/maintenanceRoutes.js";
 
 connectDB();
 
@@ -37,6 +38,7 @@ app.use("/api/proposals", proposalRoutes);
 app.use("/api/resources", resourceRoutes);
 app.use("/api/bookings", bookingRoutes);
 app.use("/api/notices", noticeRoutes);
+app.use("/api/maintenance", maintenanceRoutes);
 app.use("/api/intercom", intercomRoutes);
 app.use("/api/bills", billRoutes);
 app.use("/api/building-layout", buildingLayoutRoutes);

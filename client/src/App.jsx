@@ -31,6 +31,7 @@ import LostFoundDetail from "./pages/LostFoundDetail";
 import Surveillance from "./pages/Surveillance";
 import GuestRegistration from "./pages/GuestRegistration";
 import GuestValidation from "./pages/GuestValidation";
+import Maintenance from "./pages/Maintenance";
 
 import DashboardLayout from "./layouts/DashboardLayout";
 
@@ -339,9 +340,10 @@ function App() {
             }
           />
 
-          {/* ================================================= */}
-          {/* GUEST MANAGEMENT                                 */}
-          {/* ================================================= */}
+          <Route 
+            path="/maintenance" 
+            element={<Maintenance />} 
+            />
 
           {role === "staff" && (
             <>
