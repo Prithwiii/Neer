@@ -101,6 +101,10 @@ function Sidebar({ open, role, onClose }) {
             Househelp Postings
           </Link>
 
+          <Link to="/maintenance" onClick={onClose}>
+            Maintenance
+          </Link>
+
           {/* add new features here later */}
         </nav>
       </aside>

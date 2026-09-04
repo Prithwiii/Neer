@@ -29,6 +29,7 @@ import FamilyExpenseSheet from "./pages/FamilyExpenseSheet";
 import LostFound from "./pages/LostFound";
 import LostFoundDetail from "./pages/LostFoundDetail";
 import Surveillance from "./pages/Surveillance";
+import Maintenance from "./pages/Maintenance";
 
 import DashboardLayout from "./layouts/DashboardLayout";
 
@@ -153,6 +154,8 @@ function App() {
             element={<Surveillance token={token} role={role} />}
           />
 
+
+          <Route path="/maintenance" element={<Maintenance />} />
         </Route>
 
         <Route
