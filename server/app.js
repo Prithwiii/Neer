@@ -5,6 +5,7 @@ import authRoutes from "./routes/authRoutes.js";
 import bookRoutes from "./routes/bookRoutes.js";
 import complaintRoutes from "./routes/complaintRoutes.js";
 import contactRoutes from "./routes/contactRoutes.js";
+import guestRoutes from "./routes/guestRoutes.js";
 
 const app = express();
 
@@ -18,5 +19,6 @@ app.use("/api/auth", authRoutes);
 app.use("/api/books", bookRoutes);
 app.use("/api/complaints", complaintRoutes);
 app.use("/api/contacts", contactRoutes);
+app.use("/api/guests", guestRoutes);
 
 export default app;

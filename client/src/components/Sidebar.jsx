@@ -72,7 +72,10 @@ function Sidebar({ open, role, onClose }) {
           </Link>
 
           {role === "committee" && (
-            <Link to="/building-layout/manage" onClick={onClose}>
+            <Link
+              to="/building-layout/manage"
+              onClick={onClose}
+            >
               Manage Building Layout
             </Link>
           )}
@@ -85,9 +88,13 @@ function Sidebar({ open, role, onClose }) {
             Contact Directory
           </Link>
 
-          <Link to="/intercom-access" onClick={onClose}>
-            Intercom Management
-          </Link>
+          {role === "committee" && (
+            <>
+              <Link to="/intercom-access" onClick={onClose}>
+                Intercom Management
+              </Link>
+            </>
+          )}
 
           <Link to="/intercom" onClick={onClose}>
             Intercom
@@ -100,6 +107,24 @@ function Sidebar({ open, role, onClose }) {
           <Link to="/househelp" onClick={onClose}>
             Househelp Postings
           </Link>
+
+          <Link
+            to="/guest-registration"
+            onClick={onClose}
+          >
+            Register Guest
+          </Link>
+
+          {role === "staff" && (
+            <>
+              <Link
+                to="/guest-validation"
+                onClick={onClose}
+              >
+                Validate Guest
+              </Link>
+            </>
+          )}
 
           <Link to="/maintenance" onClick={onClose}>
             Maintenance
