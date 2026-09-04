@@ -42,14 +42,13 @@ const maintenanceSchema = new mongoose.Schema(
 
 // Auto-calculate nextMaintenance from lastServiced + intervalDays
 // whenever lastServiced changes and nextMaintenance wasn't explicitly set in the same update.
-maintenanceSchema.pre("save", function (next) {
+maintenanceSchema.pre("validate", function () {
   if (this.isModified("lastServiced") && !this.isModified("nextMaintenance")) {
     const base = this.lastServiced || new Date();
     const next_ = new Date(base);
     next_.setDate(next_.getDate() + this.intervalDays);
     this.nextMaintenance = next_;
   }
-  next();
 });
 
 // Virtual status, derived from nextMaintenance — never stored, so it can't go stale.

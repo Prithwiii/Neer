@@ -29,27 +29,18 @@ export const getReminders = async (req, res) => {
 // @route   POST /api/maintenance
 export const createMaintenanceItem = async (req, res) => {
   try {
-    const { itemName, category, lastServiced, intervalDays, nextMaintenance, notes } = req.body;
-
+    const { itemName, category, lastServiced, intervalDays, notes } = req.body;
     if (!itemName) {
       return res.status(400).json({ message: "Item name is required" });
     }
-    if (!nextMaintenance && !lastServiced) {
-      return res
-        .status(400)
-        .json({ message: "Provide either a nextMaintenance date or a lastServiced date" });
-    }
-
     const item = await Maintenance.create({
       user: req.user._id,
       itemName,
       category,
       lastServiced,
       intervalDays,
-      nextMaintenance,
       notes,
     });
-
     res.status(201).json(item);
   } catch (error) {
     res.status(500).json({ message: "Failed to create maintenance item", error: error.message });
