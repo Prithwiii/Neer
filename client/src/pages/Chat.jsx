@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { getMessages } from "../services/messageService";
 import { getSocket, disconnectSocket } from "../services/socket";
 import "./Chat.css";
@@ -11,6 +12,7 @@ function formatTime(dateStr) {
 }
 
 export default function Chat() {
+  const navigate = useNavigate();
   const [messages, setMessages] = useState([]);
   const [draft, setDraft] = useState("");
   const [loading, setLoading] = useState(true);
@@ -89,9 +91,30 @@ export default function Chat() {
           <h1>Community Chat</h1>
           <p className="chat-subtitle">A shared room for all residents.</p>
         </div>
-        <span className={`connection-badge ${connected ? "online" : "offline"}`}>
-          {connected ? "Connected" : "Connecting..."}
-        </span>
+        <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+          <span className={`connection-badge ${connected ? "online" : "offline"}`}>
+            {connected ? "Connected" : "Connecting..."}
+          </span>
+          <button
+            type="button"
+            onClick={() => navigate(-1)}
+            aria-label="Minimize chat"
+            style={{
+              background: "#1f2937",
+              border: "none",
+              borderRadius: 6,
+              width: 32,
+              height: 32,
+              cursor: "pointer",
+              fontSize: 18,
+              lineHeight: 1,
+              color: "#fff",
+              fontWeight: 700,
+            }}
+          >
+            −
+          </button>
+        </div>
       </div>
 
       {error && <div className="chat-error">{error}</div>}
@@ -107,7 +130,12 @@ export default function Chat() {
             return (
               <div key={msg._id} className={`chat-bubble-row ${isMine ? "mine" : ""}`}>
                 <div className={`chat-bubble ${isMine ? "mine" : ""}`}>
-                  {!isMine && <div className="chat-username">{msg.username}</div>}
+                  {!isMine && (
+                    <div className="chat-username">
+                      {msg.username}
+                      {msg.role && <span className="chat-role"> ({msg.role})</span>}
+                    </div>
+                  )}
                   <div className="chat-text">{msg.text}</div>
                   <div className="chat-time">{formatTime(msg.createdAt)}</div>
                 </div>

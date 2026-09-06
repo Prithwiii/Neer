@@ -26,9 +26,11 @@ import lostFoundRoutes from "./routes/lostFoundRoutes.js";
 import cameraRoutes from "./routes/cameraRoutes.js";
 import maintenanceRoutes from "./routes/maintenanceRoutes.js";
 import messageRoutes from "./routes/messageRoutes.js";
+import alertRoutes from "./routes/alertRoutes.js";
 
 
 import { initSocket } from "./config/socket.js";
+import { startEarthquakeMonitoring } from "./services/earthquakeService.js";
 
 connectDB();
 
@@ -50,6 +52,7 @@ app.use("/api/family-expenses", familyExpenseRoutes);
 app.use("/api/lost-found", lostFoundRoutes);
 app.use("/api/cameras", cameraRoutes);
 app.use("/api/messages", messageRoutes);
+app.use("/api/alerts", alertRoutes);
 
 
 // Wrap the Express app in a raw HTTP server so Socket.io can attach
@@ -60,6 +63,8 @@ const io = initSocket(httpServer);
 // Exposes the io instance to REST controllers, so a plain HTTP POST
 // can still broadcast in real time to every connected socket.
 app.set("io", io);
+
+startEarthquakeMonitoring(io);
 
 httpServer.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);

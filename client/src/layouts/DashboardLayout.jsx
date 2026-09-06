@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { Outlet } from "react-router-dom";
 import {socket, registerIntercomUser} from "../services/intercomSocket";
 import IncomingIntercomCall from "../components/IncomingIntercomCall";
+import AlertBanner from "../components/AlertBanner";
+import ChatFab from "../components/ChatFab";
 
 import Navbar from "../components/Navbar";
 import Sidebar from "../components/Sidebar";
@@ -61,6 +63,9 @@ function DashboardLayout({ token, role, onLogout }) {
 
   return (
     <div className="app-layout nx-shell">
+
+      <AlertBanner />
+      <ChatFab />
 
       {role !== "staff" && incomingCall && (
         <IncomingIntercomCall 

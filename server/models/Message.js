@@ -12,6 +12,13 @@ const messageSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    // Denormalized the same way as username, so the frontend can show
+    // each sender's role without a separate lookup.
+    role: {
+      type: String,
+      enum: ["staff", "resident", "committee"],
+      required: true,
+    },
     text: {
       type: String,
       required: [true, "Message text is required"],

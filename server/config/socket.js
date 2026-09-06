@@ -48,7 +48,7 @@ export function initSocket(httpServer) {
       next();
     } catch (error) {
       // Invalid token: proceed unauthenticated rather than rejecting the
-      // connection outright, so non-chat features aren't affected.
+      // connection outright, so other features aren't affected.
       next();
     }
   });
@@ -70,6 +70,7 @@ export function initSocket(httpServer) {
         const message = await Message.create({
           user: socket.user._id,
           username: socket.user.username,
+          role: socket.user.role,
           text,
         });
 
@@ -79,6 +80,7 @@ export function initSocket(httpServer) {
           _id: message._id,
           user: message.user,
           username: message.username,
+          role: message.role,
           text: message.text,
           createdAt: message.createdAt,
         });
