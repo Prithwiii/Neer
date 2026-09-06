@@ -1,15 +1,14 @@
 import { Link } from "react-router-dom";
 import API_URL from "../config/api";
 
-function StaffDashboard({ onLogout }) {
+function StaffDashboard() {
   return (
-    <div className="dashboard-page">
+    <div className="dashboard-page nx proposals-page">
       <div className="dashboard-header">
         <div>
           <h1>Staff Dashboard</h1>
           <p>Staff tools</p>
         </div>
-        <button className="secondary" onClick={onLogout}>Logout</button>
       </div>
 
       <nav className="top-nav">

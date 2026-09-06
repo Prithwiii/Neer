@@ -62,65 +62,81 @@ function Auth({ token, onLogin }) {
   };
 
   return (
-    <div className="auth-page">
-      <h1>Neer Login</h1>
-      <div className="auth-toggle">
-        <button type="button" onClick={() => setMode("login")}>Login</button>
-        <button type="button" onClick={() => setMode("register")}>Register</button>
-      </div>
-      {mode === "register" ? (
-        <form onSubmit={handleRegister} className="auth-form">
-          <h2>Register</h2>
-          <input
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            placeholder="Username"
-          />
-            <select value={roleSelect} onChange={(e) => { setRoleSelect(e.target.value); if (e.target.value === "staff") setFlatNumber(""); }}>
-              <option value="resident">Resident</option>
-              <option value="committee">Committee Member</option>
-              <option value="staff">Staff</option>
-            </select>
-          {roleSelect !== "staff" && (
-            <input
-              value={flatNumber}
-              onChange={(e) => setFlatNumber(e.target.value.toUpperCase())}
-              placeholder="Flat number (e.g. 10-A)"
-              pattern="[0-9]+-[A-Z]"
-              title="Use the format 10-A"
-              required
-            />
+    <div className="auth-page nx auth-page-shell">
+      <div className="auth-layout">
+        <aside className="auth-intro">
+          <div className="auth-brand">
+            <span className="auth-brand-mark">N</span>
+            <div>
+              <p className="auth-brand-name">NEER</p>
+              <p className="auth-brand-tagline">Life together, made simpler.</p>
+            </div>
+          </div>
+          <div className="auth-intro-copy">
+            <p className="auth-eyebrow">Your community, connected</p>
+            <h1>{mode === "register" ? "Make your building feel closer." : "Welcome back to your community."}</h1>
+            <p>{mode === "register" ? "Create your NEER account to stay connected with the people and services around you." : "Sign in to keep up with your building, your neighbours, and the things that matter at home."}</p>
+          </div>
+        </aside>
+
+        <section className="auth-panel">
+          <div className="auth-toggle">
+            <button className={mode === "login" ? "active" : ""} type="button" onClick={() => setMode("login")}>Login</button>
+            <button className={mode === "register" ? "active" : ""} type="button" onClick={() => setMode("register")}>Register</button>
+          </div>
+          {mode === "register" ? (
+            <form onSubmit={handleRegister} className="auth-form">
+              <div className="auth-form-heading">
+                <p className="auth-eyebrow">New to NEER</p>
+                <h2>Create your account</h2>
+                <p>Set up your profile in a few simple steps.</p>
+              </div>
+              <label htmlFor="register-username">Username</label>
+              <input id="register-username" value={username} onChange={(e) => setUsername(e.target.value)} placeholder="Your name" />
+              <label htmlFor="register-role">Account type</label>
+              <select id="register-role" value={roleSelect} onChange={(e) => { setRoleSelect(e.target.value); if (e.target.value === "staff") setFlatNumber(""); }}>
+                <option value="resident">Resident</option>
+                <option value="committee">Committee Member</option>
+                <option value="staff">Staff</option>
+              </select>
+              {roleSelect !== "staff" && (
+                <>
+                  <label htmlFor="register-flat">Flat number</label>
+                  <input
+                    id="register-flat"
+                    value={flatNumber}
+                    onChange={(e) => setFlatNumber(e.target.value.toUpperCase())}
+                    placeholder="e.g. 10-A"
+                    pattern="[0-9]+-[A-Z]"
+                    title="Use the format 10-A"
+                    required
+                  />
+                </>
+              )}
+              <label htmlFor="register-email">Email address</label>
+              <input id="register-email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="you@example.com" />
+              <label htmlFor="register-password">Password</label>
+              <input id="register-password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Create a password" />
+              <p className="auth-role-note">{roleSelect === "resident" ? "Stay connected with your building." : roleSelect === "committee" ? "Help shape your community." : "Keep building operations moving."}</p>
+              <button type="submit">Register</button>
+            </form>
+          ) : (
+            <form onSubmit={handleLogin} className="auth-form">
+              <div className="auth-form-heading">
+                <p className="auth-eyebrow">Good to see you</p>
+                <h2>Sign in to NEER</h2>
+                <p>Your building is waiting for you.</p>
+              </div>
+              <label htmlFor="login-email">Email address</label>
+              <input id="login-email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="you@example.com" />
+              <label htmlFor="login-password">Password</label>
+              <input id="login-password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Your password" />
+              <button type="submit">Login</button>
+            </form>
           )}
-          <input
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="Email"
-          />
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            placeholder="Password"
-          />
-          <button type="submit">Register</button>
-        </form>
-      ) : (
-        <form onSubmit={handleLogin} className="auth-form">
-          <h2>Login</h2>
-          <input
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="Email"
-          />
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            placeholder="Password"
-          />
-          <button type="submit">Login</button>
-        </form>
-      )}
+          <p className="auth-secure-note"><span aria-hidden="true">●</span> Your account details stay protected.</p>
+        </section>
+      </div>
       <pre>{message}</pre>
     </div>
   );
