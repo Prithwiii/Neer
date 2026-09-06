@@ -141,7 +141,7 @@ function LostFound({ token }) {
         filters.status !== "All";
 
     return (
-        <div className="dashboard-page">
+        <div className="dashboard-page nx">
             <div className="library-header">
                 <h2>Lost &amp; Found</h2>
 

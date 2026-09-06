@@ -281,7 +281,7 @@ function FamilyExpenseSheet({ token }) {
 
     if (loading) {
         return (
-            <div className="dashboard-page">
+            <div className="dashboard-page nx">
                 <p>Loading the family expense sheet...</p>
             </div>
         );
@@ -289,7 +289,7 @@ function FamilyExpenseSheet({ token }) {
 
     if (!sheet) {
         return (
-            <div className="dashboard-page">
+            <div className="dashboard-page nx">
                 <div className="library-header">
                     <h2>Family Expenses</h2>
 
@@ -308,7 +308,7 @@ function FamilyExpenseSheet({ token }) {
     const deleting = expenses.find((expense) => expense._id === deleteId);
 
     return (
-        <div className="dashboard-page family-page">
+        <div className="dashboard-page family-page nx">
             <div className="library-header">
                 <div>
                     <h2>{sheet.name}</h2>

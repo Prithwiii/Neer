@@ -205,11 +205,13 @@ function Booking({ token, onLogout, role }) {
   );
 
   return (
-    <div className="dashboard-page">
+    <div className="dashboard-page nx">
       <div className="dashboard-header">
         <div>
-          <h1>Common Space & Facility Booking</h1>
-          <p>Role: {role}</p>
+          <h1>Common Space &amp; Facility Booking</h1>
+          <p>
+            Reserve a shared space or facility · signed in as {role}
+          </p>
         </div>
         <button className="secondary" onClick={onLogout}>
           Logout
@@ -284,65 +286,96 @@ function Booking({ token, onLogout, role }) {
               </p>
             ) : (
               <form onSubmit={submitBooking} className="booking-form">
-                <select
-                  value={resourceId}
-                  onChange={(e) => setResourceId(e.target.value)}
-                  required
-                >
-                  <option value="">
-                    Select {category === "space" ? "a space" : "a facility"}
-                  </option>
-                  {filteredResources.map((r) => (
-                    <option key={r._id} value={r._id}>
-                      {r.name}
-                    </option>
-                  ))}
-                </select>
+                <div>
+                  <span className="field-label">
+                    Choose {category === "space" ? "a common space" : "a facility"}
+                  </span>
 
-                <input
-                  type="date"
-                  value={date}
-                  min={todayStr}
-                  onChange={(e) => setDate(e.target.value)}
-                  required
-                />
+                  <div className="facility-grid">
+                    {filteredResources.map((r) => (
+                      <button
+                        key={r._id}
+                        type="button"
+                        className={`facility-card ${
+                          resourceId === r._id ? "selected" : ""
+                        }`}
+                        aria-pressed={resourceId === r._id}
+                        onClick={() => setResourceId(r._id)}
+                      >
+                        <span className="facility-card-top">
+                          <span className="facility-card-name">{r.name}</span>
+                          <span className="status-badge">
+                            {r.category === "space" ? "Common Space" : "Facility"}
+                          </span>
+                        </span>
 
-                <div className="time-row">
-                  <input
-                    type="time"
-                    value={startTime}
-                    onChange={(e) => setStartTime(e.target.value)}
-                    required
-                  />
-                  <span>to</span>
-                  <input
-                    type="time"
-                    value={endTime}
-                    onChange={(e) => setEndTime(e.target.value)}
-                    required
-                  />
+                        {r.description && (
+                          <span className="facility-card-desc">
+                            {r.description}
+                          </span>
+                        )}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="field-row">
+                  <div>
+                    <span className="field-label">Date</span>
+                    <input
+                      type="date"
+                      value={date}
+                      min={todayStr}
+                      onChange={(e) => setDate(e.target.value)}
+                      required
+                      style={{ width: "100%" }}
+                    />
+                  </div>
+
+                  <div>
+                    <span className="field-label">Start and end time</span>
+                    <div className="time-row">
+                      <input
+                        type="time"
+                        value={startTime}
+                        onChange={(e) => setStartTime(e.target.value)}
+                        required
+                      />
+                      <span>to</span>
+                      <input
+                        type="time"
+                        value={endTime}
+                        onChange={(e) => setEndTime(e.target.value)}
+                        required
+                      />
+                    </div>
+                  </div>
                 </div>
 
                 {category === "space" && (
-                  <input
-                    type="text"
-                    placeholder="Purpose / Event name"
-                    value={purpose}
-                    onChange={(e) => setPurpose(e.target.value)}
-                    required
-                  />
+                  <div>
+                    <span className="field-label">Purpose / Event name</span>
+                    <input
+                      type="text"
+                      placeholder="e.g. Birthday gathering"
+                      value={purpose}
+                      onChange={(e) => setPurpose(e.target.value)}
+                      required
+                      style={{ width: "100%" }}
+                    />
+                  </div>
                 )}
 
                 {resourceId && date && (
                   <div className="availability-box">
-                    <strong>Already booked on this date:</strong>
+                    <strong>Already booked on this date</strong>
                     {existingBookings.length === 0 ? (
                       <p>No bookings yet — fully available.</p>
                     ) : (
                       <ul>
                         {existingBookings.map((b, i) => (
                           <li key={i}>
-                            {b.startTime} - {b.endTime}
+                            {b.startTime} – {b.endTime}
                           </li>
                         ))}
                       </ul>
@@ -350,9 +383,18 @@ function Booking({ token, onLogout, role }) {
                   </div>
                 )}
 
-                <button className="primary" type="submit">
-                  Confirm Booking
-                </button>
+                {!resourceId && (
+                  <p className="dash-empty">
+                    Select {category === "space" ? "a space" : "a facility"} above
+                    to continue.
+                  </p>
+                )}
+
+                <div className="bill-actions">
+                  <button className="primary" type="submit" disabled={!resourceId}>
+                    Confirm Booking
+                  </button>
+                </div>
               </form>
             )}
           </div>
@@ -362,37 +404,69 @@ function Booking({ token, onLogout, role }) {
           <div className="panel-card">
             <h2>My Bookings</h2>
 
-            <h3>Upcoming</h3>
+            <h3 className="booking-group-title">Upcoming</h3>
             {upcomingBookings.length === 0 ? (
-              <p>No upcoming bookings.</p>
+              <p className="dash-empty">No upcoming bookings.</p>
             ) : (
               upcomingBookings.map((b) => (
-                <div key={b._id} className="proposal-card">
-                  <h3>{b.resource ? b.resource.name : "Resource removed"}</h3>
-                  <p>
-                    {b.date} | {b.startTime} - {b.endTime}
-                  </p>
-                  {b.purpose && <p>Purpose: {b.purpose}</p>}
-                  <button className="secondary" onClick={() => cancelBooking(b._id)}>
-                    Cancel
-                  </button>
+                <div key={b._id} className="proposal-card booking-item">
+                  <div className="booking-item-top">
+                    <div>
+                      <h3>{b.resource ? b.resource.name : "Resource removed"}</h3>
+                      <p className="booking-item-meta">
+                        {b.date} &middot; {b.startTime} – {b.endTime}
+                      </p>
+                    </div>
+
+                    <span className="status-badge upcoming">Upcoming</span>
+                  </div>
+
+                  {b.purpose && (
+                    <p className="booking-item-purpose">
+                      <strong>Purpose:</strong> {b.purpose}
+                    </p>
+                  )}
+
+                  <div className="booking-item-actions">
+                    <button
+                      className="secondary"
+                      onClick={() => cancelBooking(b._id)}
+                    >
+                      Cancel Booking
+                    </button>
+                  </div>
                 </div>
               ))
             )}
 
-            <h3>Previous</h3>
+            <h3 className="booking-group-title">Previous</h3>
             {previousBookings.length === 0 ? (
-              <p>No previous bookings.</p>
+              <p className="dash-empty">No previous bookings.</p>
             ) : (
               previousBookings.map((b) => (
-                <div key={b._id} className="proposal-card">
-                  <h3>{b.resource ? b.resource.name : "Resource removed"}</h3>
-                  <p>
-                    {b.date} | {b.startTime} - {b.endTime}
-                  </p>
-                  <p>
-                    Status: {b.status === "cancelled" ? "Cancelled" : "Completed"}
-                  </p>
+                <div key={b._id} className="proposal-card booking-item">
+                  <div className="booking-item-top">
+                    <div>
+                      <h3>{b.resource ? b.resource.name : "Resource removed"}</h3>
+                      <p className="booking-item-meta">
+                        {b.date} &middot; {b.startTime} – {b.endTime}
+                      </p>
+                    </div>
+
+                    <span
+                      className={`status-badge ${
+                        b.status === "cancelled" ? "cancelled" : "completed"
+                      }`}
+                    >
+                      {b.status === "cancelled" ? "Cancelled" : "Completed"}
+                    </span>
+                  </div>
+
+                  {b.purpose && (
+                    <p className="booking-item-purpose">
+                      <strong>Purpose:</strong> {b.purpose}
+                    </p>
+                  )}
                 </div>
               ))
             )}
@@ -403,26 +477,42 @@ function Booking({ token, onLogout, role }) {
           <div className="panel-card">
             <h2>{editingResourceId ? "Edit Space or Facility" : "Add a Space or Facility"}</h2>
             <form onSubmit={submitResource} className="booking-form">
-              <input
-                type="text"
-                placeholder="Name"
-                value={newName}
-                onChange={(e) => setNewName(e.target.value)}
-                required
-              />
-              <select
-                value={newCategory}
-                onChange={(e) => setNewCategory(e.target.value)}
-              >
-                <option value="space">Common Space</option>
-                <option value="facility">Facility</option>
-              </select>
-              <input
-                type="text"
-                placeholder="Description (optional)"
-                value={newDescription}
-                onChange={(e) => setNewDescription(e.target.value)}
-              />
+              <div className="field-row">
+                <div>
+                  <span className="field-label">Name</span>
+                  <input
+                    type="text"
+                    placeholder="e.g. Rooftop Terrace"
+                    value={newName}
+                    onChange={(e) => setNewName(e.target.value)}
+                    required
+                    style={{ width: "100%" }}
+                  />
+                </div>
+
+                <div>
+                  <span className="field-label">Type</span>
+                  <select
+                    value={newCategory}
+                    onChange={(e) => setNewCategory(e.target.value)}
+                    style={{ width: "100%" }}
+                  >
+                    <option value="space">Common Space</option>
+                    <option value="facility">Facility</option>
+                  </select>
+                </div>
+              </div>
+
+              <div>
+                <span className="field-label">Description (optional)</span>
+                <input
+                  type="text"
+                  placeholder="What is this space used for?"
+                  value={newDescription}
+                  onChange={(e) => setNewDescription(e.target.value)}
+                  style={{ width: "100%" }}
+                />
+              </div>
               <div className="bill-actions">
                 <button className="primary" type="submit">
                   {editingResourceId ? "Save Changes" : "Add"}
@@ -442,8 +532,12 @@ function Booking({ token, onLogout, role }) {
               <div className="resources-grid">
                 {resources.map((r) => (
                   <div key={r._id} className="resource-card">
-                    <h3>{r.name}</h3>
-                    <p>{r.category === "space" ? "Common Space" : "Facility"}</p>
+                    <div className="facility-card-top">
+                      <h3>{r.name}</h3>
+                      <span className="status-badge">
+                        {r.category === "space" ? "Common Space" : "Facility"}
+                      </span>
+                    </div>
                     {r.description && <p>{r.description}</p>}
 
                     <div className="resource-actions">

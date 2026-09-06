@@ -36,6 +36,9 @@ import Maintenance from "./pages/Maintenance";
 import DashboardLayout from "./layouts/DashboardLayout";
 
 import "./App.css";
+// scoped theme for the Dashboard and the five redesigned feature areas.
+// every rule inside is nested under `.nx`, so it cannot reach other pages.
+import "./styles/neer-theme.css";
 
 function App() {
   const [token, setToken] = useState(() => localStorage.getItem("token"));
@@ -100,7 +103,7 @@ function App() {
           {/* Dashboard */}
           <Route
             path="/dashboard"
-            element={<DashboardHome role={role} />}
+            element={<DashboardHome role={role} token={token} />}
           />
 
           {/* Proposals */}

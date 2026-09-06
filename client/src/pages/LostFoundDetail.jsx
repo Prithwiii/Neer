@@ -143,7 +143,7 @@ function LostFoundDetail({ token, role }) {
 
     if (loading) {
         return (
-            <div className="dashboard-page">
+            <div className="dashboard-page nx">
                 <p>Loading the post...</p>
             </div>
         );
@@ -151,7 +151,7 @@ function LostFoundDetail({ token, role }) {
 
     if (!post) {
         return (
-            <div className="dashboard-page">
+            <div className="dashboard-page nx">
                 <div className="library-header">
                     <h2>Lost &amp; Found</h2>
 
@@ -180,7 +180,7 @@ function LostFoundDetail({ token, role }) {
         post.type === "Lost" ? "Mark as Found" : "Mark as Returned";
 
     return (
-        <div className="dashboard-page">
+        <div className="dashboard-page nx">
             <div className="library-header">
                 <div>
                     <h2>

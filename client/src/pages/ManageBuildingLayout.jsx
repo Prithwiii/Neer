@@ -288,14 +288,14 @@ function ManageBuildingLayout({ token, role }) {
 
   if (loading) {
     return (
-      <div className="dashboard-page">
+      <div className="dashboard-page nx">
         <p>Loading the building layout...</p>
       </div>
     );
   }
 
   return (
-    <div className="dashboard-page layout-page">
+    <div className="dashboard-page layout-page nx">
       <div className="library-header">
         <h2>Building Layout Management</h2>
 
