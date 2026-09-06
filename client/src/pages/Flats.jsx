@@ -34,6 +34,8 @@ const Flats = () => {
 
 
     useEffect(() => {
+        // The loader owns loading and error state for this initial request.
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         fetchFlats();
     }, []);
 
@@ -181,6 +183,8 @@ const Flats = () => {
 
 
     useEffect(() => {
+        // Reset pagination whenever the active filter or page size changes.
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setCurrentPage(1);
     }, [search, pageSize]);
 
@@ -257,36 +261,45 @@ const Flats = () => {
 
     if (loading) {
         return (
-            <div className="dashboard-page">
-                <p>Loading flats...</p>
+            <div className="dashboard-page nx flats-page">
+                <div className="dash-loading" role="status">
+                    <span className="dash-loading-mark" aria-hidden="true" />
+                    <span>Loading flat directory...</span>
+                </div>
             </div>
         );
     }
 
 
     return (
-        <div className="dashboard-page">
+        <div className="dashboard-page nx flats-page">
 
-            <div>
-                <h3>
-                    View the flats and their current availability.
-                </h3>
-                <p></p>
+            <div className="dashboard-header flats-page-header">
+                <div>
+                    <p className="dash-section-kicker">Building directory</p>
+                    <h1>Flat status</h1>
+                    <p>Browse availability and see which residents are assigned to each flat.</p>
+                </div>
             </div>
 
 
             <div className="panel-card">
 
                 <div className="flats-header">
+                    <div>
+                        <h2>Flat directory</h2>
+                        <p>{sortedFlats.length} matching flat{sortedFlats.length === 1 ? "" : "s"}</p>
+                    </div>
 
-                    <h2>Flat Directory</h2>
-
-                    <input
-                        type="text"
-                        placeholder="Search flats..."
-                        value={search}
-                        onChange={(e) => setSearch(e.target.value)}
-                    />
+                    <label className="flats-search">
+                        <span>Filter flats</span>
+                        <input
+                            type="search"
+                            placeholder="Search by flat, floor or resident"
+                            value={search}
+                            onChange={(e) => setSearch(e.target.value)}
+                        />
+                    </label>
 
                 </div>
 
@@ -299,8 +312,11 @@ const Flats = () => {
 
 
                 {sortedFlats.length === 0 ? (
-
-                    <p>No flats match your search.</p>
+                    <div className="feature-empty-state">
+                        <span className="feature-empty-icon" aria-hidden="true">⌕</span>
+                        <strong>No flats match your search</strong>
+                        <span>Try a different flat number, floor, state or resident name.</span>
+                    </div>
 
                 ) : (
 
@@ -314,6 +330,7 @@ const Flats = () => {
                                     <tr>
 
                                         <th
+                                            scope="col"
                                             onClick={() =>
                                                 handleSort("flatNumber")
                                             }
@@ -325,7 +342,7 @@ const Flats = () => {
                                         </th>
 
 
-                                        <th
+                                        <th scope="col"
                                             onClick={() =>
                                                 handleSort("floor")
                                             }
@@ -337,7 +354,7 @@ const Flats = () => {
                                         </th>
 
 
-                                        <th
+                                        <th scope="col"
                                             onClick={() =>
                                                 handleSort("state")
                                             }
@@ -349,7 +366,7 @@ const Flats = () => {
                                         </th>
 
 
-                                        <th
+                                        <th scope="col"
                                             onClick={() =>
                                                 handleSort("residents")
                                             }
@@ -379,7 +396,9 @@ const Flats = () => {
                                             </td>
 
                                             <td>
-                                                {flat.state || "—"}
+                                                <span className={`flat-state flat-state-${(flat.state || "unknown").toLowerCase()}`}>
+                                                    {flat.state || "—"}
+                                                </span>
                                             </td>
 
                                             <td>

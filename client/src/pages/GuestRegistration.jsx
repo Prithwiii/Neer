@@ -58,150 +58,121 @@ const GuestRegistration = () => {
 
 
     return (
-        <div className="min-h-screen bg-gray-100 p-6">
+        <div className="dashboard-page nx guest-page guest-registration-page">
+            <div className="dashboard-header guest-page-header">
+                <div>
+                    <p className="dash-section-kicker">Front desk services</p>
+                    <h1>Guest registration</h1>
+                    <p>Register a resident&apos;s visitor and generate a one-time entry passcode.</p>
+                </div>
+            </div>
 
-            <div className="max-w-2xl mx-auto">
-
-                <h1 className="text-3xl font-bold text-gray-800 mb-2">
-                    Guest Registration
-                </h1>
-
-                <p className="text-gray-600 mb-6">
-                    Register a resident's visiting guest and generate a
-                    one-time guest passcode.
-                </p>
-
-
-                <div className="bg-white rounded-xl shadow-md p-6">
+            <section className="panel-card guest-form-panel">
 
                     {error && (
-                        <div className="bg-red-100 text-red-700 p-3 rounded-lg mb-4">
+                        <div className="form-message error-message">
                             {error}
                         </div>
                     )}
 
                     {success && (
-                        <div className="bg-green-100 text-green-700 p-3 rounded-lg mb-4">
+                        <div className="form-message success-message">
                             {success}
                         </div>
                     )}
 
 
                     {passcode && (
-                        <div className="bg-blue-50 border border-blue-200 rounded-xl p-5 mb-6 text-center">
-
-                            <p className="text-sm text-gray-600 mb-2">
-                                One-Time Guest Passcode
-                            </p>
-
-                            <p className="text-4xl font-bold tracking-widest text-blue-700">
+                        <div className="guest-passcode">
+                            <p className="guest-passcode-label">One-time guest passcode</p>
+                            <p className="guest-passcode-value">
                                 {passcode}
                             </p>
-
-                            <p className="text-sm text-gray-500 mt-2">
-                                This code can only be used once.
-                            </p>
-
+                            <p className="guest-passcode-note">Share this code with the visitor. It can only be used once.</p>
                         </div>
                     )}
 
+                    <form onSubmit={handleSubmit} className="guest-form">
 
-                    <form onSubmit={handleSubmit} className="space-y-5">
+                        <div className="guest-form-heading">
+                            <h2>Visitor details</h2>
+                            <p>Enter the resident and visitor information for the expected visit.</p>
+                        </div>
 
-                        <div>
-                            <label className="block text-sm font-medium mb-1">
-                                Resident Name
-                            </label>
+                        <div className="guest-form-field">
+                            <label htmlFor="guest-resident-name">Resident name</label>
 
                             <input
+                                id="guest-resident-name"
                                 type="text"
                                 name="residentName"
                                 value={formData.residentName}
                                 onChange={handleChange}
                                 required
-                                className="w-full border rounded-lg px-4 py-2"
                             />
                         </div>
 
-
-                        <div>
-                            <label className="block text-sm font-medium mb-1">
-                                Flat Number
-                            </label>
+                        <div className="guest-form-field">
+                            <label htmlFor="guest-flat-number">Flat number</label>
 
                             <input
+                                id="guest-flat-number"
                                 type="text"
                                 name="flatNumber"
                                 value={formData.flatNumber}
                                 onChange={handleChange}
                                 required
-                                className="w-full border rounded-lg px-4 py-2"
+                                placeholder="e.g. 5-A"
                             />
                         </div>
 
-
-                        <div>
-                            <label className="block text-sm font-medium mb-1">
-                                Visit Date
-                            </label>
+                        <div className="guest-form-field">
+                            <label htmlFor="guest-visit-date">Visit date</label>
 
                             <input
+                                id="guest-visit-date"
                                 type="date"
                                 name="visitDate"
                                 value={formData.visitDate}
                                 onChange={handleChange}
                                 required
-                                className="w-full border rounded-lg px-4 py-2"
                             />
                         </div>
 
-
-                        <div>
-                            <label className="block text-sm font-medium mb-1">
-                                Guest Name
-                            </label>
+                        <div className="guest-form-field">
+                            <label htmlFor="guest-name">Guest name</label>
 
                             <input
+                                id="guest-name"
                                 type="text"
                                 name="guestName"
                                 value={formData.guestName}
                                 onChange={handleChange}
                                 required
-                                className="w-full border rounded-lg px-4 py-2"
                             />
                         </div>
 
-
-                        <div>
-                            <label className="block text-sm font-medium mb-1">
-                                Guest Phone Number
-                            </label>
+                        <div className="guest-form-field">
+                            <label htmlFor="guest-phone">Guest phone number</label>
 
                             <input
+                                id="guest-phone"
                                 type="tel"
                                 name="guestPhone"
                                 value={formData.guestPhone}
                                 onChange={handleChange}
                                 required
-                                className="w-full border rounded-lg px-4 py-2"
                             />
                         </div>
 
-
-                        <button
-                            type="submit"
-                            disabled={loading}
-                            className="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 disabled:opacity-50"
-                        >
+                        <button type="submit" disabled={loading}>
                             {loading
                                 ? "Registering..."
-                                : "Register Guest"}
+                                : "Register guest"}
                         </button>
 
                     </form>
-
-                </div>
-            </div>
+            </section>
         </div>
     );
 };
