@@ -88,7 +88,7 @@ const HousehelpPostings = () => {
                     <p>Find and share trusted househelp opportunities within the building.</p>
                 </div>
 
-                {role === "resident" && (
+                {role !== "staff" && (
                     <button
                         onClick={() =>
                             navigate("/househelp/create")

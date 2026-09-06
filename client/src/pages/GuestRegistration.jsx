@@ -2,179 +2,207 @@ import { useState } from "react";
 import { registerGuest } from "../services/guestService";
 
 const GuestRegistration = () => {
+const [formData, setFormData] = useState({
+residentName: "",
+flatNumber: "",
+visitDate: "",
+guestName: "",
+guestPhone: ""
+});
 
-    const [formData, setFormData] = useState({
-        residentName: "",
-        flatNumber: "",
-        visitDate: "",
-        guestName: "",
-        guestPhone: ""
-    });
+const [passcode, setPasscode] = useState("");
+const [loading, setLoading] = useState(false);
+const [error, setError] = useState("");
+const [success, setSuccess] = useState("");
 
-    const [passcode, setPasscode] = useState("");
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState("");
-    const [success, setSuccess] = useState("");
+const handleChange = (e) => {
+    const { name, value } = e.target;
 
-    const handleChange = (e) => {
+    setFormData((prev) => ({
+        ...prev,
+        [name]: value
+    }));
+};
+
+const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    setError("");
+    setSuccess("");
+    setPasscode("");
+    setLoading(true);
+
+    try {
+        const data = await registerGuest(formData);
+
+        setPasscode(data.passcode);
+
+        setSuccess(
+            "Guest registered successfully. Give this passcode to the visitor."
+        );
+
         setFormData({
-            ...formData,
-            [e.target.name]: e.target.value
+            residentName: "",
+            flatNumber: "",
+            visitDate: "",
+            guestName: "",
+            guestPhone: ""
         });
-    };
+    } catch (error) {
+        setError(error.message);
+    } finally {
+        setLoading(false);
+    }
+};
 
+return (
+    <div className="dashboard-page nx guest-page guest-registration-page">
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
+        <div className="dashboard-header library-header">
+            <div>
+                <p className="dash-section-kicker">Front desk services</p>
+                <h1>Guest registration</h1>
+                <p>
+                    Register a resident&apos;s visitor and generate a
+                    one-time entry passcode.
+                </p>
+            </div>
+        </div>
 
-        setError("");
-        setSuccess("");
-        setPasscode("");
-        setLoading(true);
+        {error && (
+            <div className="form-message error-message">
+                {error}
+            </div>
+        )}
 
-        try {
-            const data = await registerGuest(formData);
+        {success && (
+            <div className="form-message success-message">
+                {success}
+            </div>
+        )}
 
-            setPasscode(data.passcode);
+        {passcode && (
+            <div className="panel-card guest-passcode">
+                <p className="guest-passcode-label">
+                    One-time guest passcode
+                </p>
 
-            setSuccess(
-                "Guest registered successfully. Give this passcode to the visitor."
-            );
+                <p className="guest-passcode-value">
+                    {passcode}
+                </p>
 
-            setFormData({
-                residentName: "",
-                flatNumber: "",
-                visitDate: "",
-                guestName: "",
-                guestPhone: ""
-            });
+                <p className="guest-passcode-note">
+                    Share this code with the visitor. It can only be used once.
+                </p>
+            </div>
+        )}
 
-        } catch (error) {
-            setError(error.message);
-        } finally {
-            setLoading(false);
-        }
-    };
+        <form onSubmit={handleSubmit} className="panel-card guest-form">
 
-
-    return (
-        <div className="dashboard-page nx guest-page guest-registration-page">
-            <div className="dashboard-header guest-page-header">
-                <div>
-                    <p className="dash-section-kicker">Front desk services</p>
-                    <h1>Guest registration</h1>
-                    <p>Register a resident&apos;s visitor and generate a one-time entry passcode.</p>
-                </div>
+            <div className="guest-form-heading">
+                <h2>Visitor details</h2>
+                <p>
+                    Enter the resident and visitor information for the
+                    expected visit.
+                </p>
             </div>
 
-            <section className="panel-card guest-form-panel">
+            <div className="guest-field-grid">
 
-                    {error && (
-                        <div className="form-message error-message">
-                            {error}
-                        </div>
-                    )}
+                <div className="guest-form-field">
+                    <label htmlFor="guest-resident-name">
+                        Resident name
+                    </label>
 
-                    {success && (
-                        <div className="form-message success-message">
-                            {success}
-                        </div>
-                    )}
+                    <input
+                        id="guest-resident-name"
+                        type="text"
+                        name="residentName"
+                        value={formData.residentName}
+                        onChange={handleChange}
+                        required
+                        placeholder="Enter resident name"
+                    />
+                </div>
 
+                <div className="guest-form-field">
+                    <label htmlFor="guest-flat-number">
+                        Flat number
+                    </label>
 
-                    {passcode && (
-                        <div className="guest-passcode">
-                            <p className="guest-passcode-label">One-time guest passcode</p>
-                            <p className="guest-passcode-value">
-                                {passcode}
-                            </p>
-                            <p className="guest-passcode-note">Share this code with the visitor. It can only be used once.</p>
-                        </div>
-                    )}
+                    <input
+                        id="guest-flat-number"
+                        type="text"
+                        name="flatNumber"
+                        value={formData.flatNumber}
+                        onChange={handleChange}
+                        required
+                        placeholder="e.g. 5-A"
+                    />
+                </div>
 
-                    <form onSubmit={handleSubmit} className="guest-form">
+                <div className="guest-form-field">
+                    <label htmlFor="guest-visit-date">
+                        Visit date
+                    </label>
 
-                        <div className="guest-form-heading">
-                            <h2>Visitor details</h2>
-                            <p>Enter the resident and visitor information for the expected visit.</p>
-                        </div>
+                    <input
+                        id="guest-visit-date"
+                        type="date"
+                        name="visitDate"
+                        value={formData.visitDate}
+                        onChange={handleChange}
+                        required
+                    />
+                </div>
 
-                        <div className="guest-form-field">
-                            <label htmlFor="guest-resident-name">Resident name</label>
+                <div className="guest-form-field">
+                    <label htmlFor="guest-name">
+                        Guest name
+                    </label>
 
-                            <input
-                                id="guest-resident-name"
-                                type="text"
-                                name="residentName"
-                                value={formData.residentName}
-                                onChange={handleChange}
-                                required
-                            />
-                        </div>
+                    <input
+                        id="guest-name"
+                        type="text"
+                        name="guestName"
+                        value={formData.guestName}
+                        onChange={handleChange}
+                        required
+                        placeholder="Enter guest name"
+                    />
+                </div>
 
-                        <div className="guest-form-field">
-                            <label htmlFor="guest-flat-number">Flat number</label>
+                <div className="guest-form-field">
+                    <label htmlFor="guest-phone">
+                        Guest phone number
+                    </label>
 
-                            <input
-                                id="guest-flat-number"
-                                type="text"
-                                name="flatNumber"
-                                value={formData.flatNumber}
-                                onChange={handleChange}
-                                required
-                                placeholder="e.g. 5-A"
-                            />
-                        </div>
+                    <input
+                        id="guest-phone"
+                        type="tel"
+                        name="guestPhone"
+                        value={formData.guestPhone}
+                        onChange={handleChange}
+                        required
+                        placeholder="Enter guest phone"
+                    />
+                </div>
 
-                        <div className="guest-form-field">
-                            <label htmlFor="guest-visit-date">Visit date</label>
+            </div>
 
-                            <input
-                                id="guest-visit-date"
-                                type="date"
-                                name="visitDate"
-                                value={formData.visitDate}
-                                onChange={handleChange}
-                                required
-                            />
-                        </div>
+            <div className="guest-form-actions">
+                <button
+                    type="submit"
+                    disabled={loading}
+                >
+                    {loading ? "Registering..." : "Register guest"}
+                </button>
+            </div>
 
-                        <div className="guest-form-field">
-                            <label htmlFor="guest-name">Guest name</label>
+        </form>
+    </div>
+);
 
-                            <input
-                                id="guest-name"
-                                type="text"
-                                name="guestName"
-                                value={formData.guestName}
-                                onChange={handleChange}
-                                required
-                            />
-                        </div>
-
-                        <div className="guest-form-field">
-                            <label htmlFor="guest-phone">Guest phone number</label>
-
-                            <input
-                                id="guest-phone"
-                                type="tel"
-                                name="guestPhone"
-                                value={formData.guestPhone}
-                                onChange={handleChange}
-                                required
-                            />
-                        </div>
-
-                        <button type="submit" disabled={loading}>
-                            {loading
-                                ? "Registering..."
-                                : "Register guest"}
-                        </button>
-
-                    </form>
-            </section>
-        </div>
-    );
 };
 
 export default GuestRegistration;
