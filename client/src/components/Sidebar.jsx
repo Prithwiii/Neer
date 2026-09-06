@@ -85,6 +85,11 @@ function Sidebar({ open, role, onClose }) {
                 {navIcon("⌕")}
                 Lost &amp; Found
               </Link>
+
+              <Link className={linkClassName("/alerts")} to="/alerts" onClick={onClose}>
+                {navIcon("⚠")}
+                Alerts
+              </Link>
             </>
           )}
 
@@ -170,6 +175,10 @@ function Sidebar({ open, role, onClose }) {
             {navIcon("⚙")}
             Maintenance
           </Link>
+
+          
+
+          
 
           {/* add new features here later */}
         </nav>

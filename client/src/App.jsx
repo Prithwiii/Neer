@@ -31,6 +31,9 @@ import Surveillance from "./pages/Surveillance";
 import GuestRegistration from "./pages/GuestRegistration";
 import GuestValidation from "./pages/GuestValidation";
 import Maintenance from "./pages/Maintenance";
+import Chat from "./pages/Chat";
+import Alerts from "./pages/Alerts";
+import { disconnectSocket } from "./services/socket";
 
 import DashboardLayout from "./layouts/DashboardLayout";
 
@@ -55,6 +58,8 @@ function App() {
     localStorage.removeItem("token");
     localStorage.removeItem("role");
     localStorage.removeItem("userId");
+
+    disconnectSocket();
 
     setToken(null);
     setRole(null);
@@ -104,6 +109,17 @@ function App() {
             path="/dashboard"
             element={<DashboardHome role={role} token={token} />}
           />
+
+          {/* Maintenance */}
+          <Route path="/maintenance" element={<Maintenance />} />
+
+          {/* Chat */}
+          <Route
+            path="/chat"
+            element={<Chat token={token} role={role} />}
+          />
+
+          
 
           {/* Proposals */}
           <Route
@@ -339,23 +355,29 @@ function App() {
             }
           />
 
-          <Route 
-            path="/maintenance" 
-            element={<Maintenance />} 
-            />
+          {/* Alerts */}
+          <Route
+            path="/alerts"
+            element={
+              <Alerts
+                token={token}
+                onLogout={handleLogout}
+                role={role}
+              />
+            }
+          />
 
+          {/* Guest Registration */}
           <Route
             path="/guest-registration"
             element={<GuestRegistration />}
-            />
+          />
 
           {role === "staff" && (
-            <>
-              <Route
-                path="/guest-validation"
-                element={<GuestValidation />}
-              />
-            </>
+            <Route
+              path="/guest-validation"
+              element={<GuestValidation />}
+            />
           )}
 
         </Route>
