@@ -248,6 +248,63 @@
 }
 .nx-shell .sidebar-overlay { background: rgba(43, 31, 24, 0.3); backdrop-filter: blur(2px); }
 
+/* --------------------------------------------------------------- intercom */
+
+.nx .intercom-page { max-width: 860px; }
+.nx .intercom-header { margin-bottom: 20px; }
+.nx .intercom-panel { max-width: none; }
+.nx .intercom-panel-heading { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; padding-bottom: 16px; border-bottom: 1px solid var(--nx-border); }
+.nx .intercom-panel-heading h2 { margin: 0 0 4px; }
+.nx .intercom-panel-heading p { margin: 0; color: var(--nx-muted); font-size: 0.88rem; }
+.nx .intercom-panel-icon { display: inline-flex; align-items: center; justify-content: center; width: 42px; height: 42px; border: 1px solid var(--nx-border); border-radius: 12px; background: var(--nx-cream); color: var(--nx-brown); font-size: 1.35rem; }
+.nx .intercom-search-form,
+.nx .intercom-call-form { display: grid; gap: 7px; margin-top: 18px; }
+.nx .intercom-search-form label,
+.nx .intercom-call-form label { color: var(--nx-deep); font-size: 0.8rem; font-weight: 650; }
+.nx .intercom-search-row { display: flex; align-items: stretch; gap: 9px; }
+.nx .intercom-search-row input { flex: 1; min-width: 0; }
+.nx .intercom-user-panel { margin-top: 22px; padding-top: 20px; border-top: 1px solid var(--nx-border); }
+.nx .intercom-user-heading { display: flex; align-items: center; gap: 12px; }
+.nx .intercom-user-heading h2 { margin: 0; font-size: 1.15rem; }
+.nx .intercom-user-heading p { margin: 3px 0 0; color: var(--nx-muted); font-size: 0.86rem; }
+.nx .intercom-user-avatar { display: inline-flex; align-items: center; justify-content: center; width: 44px; height: 44px; flex: 0 0 auto; border-radius: 13px; background: var(--nx-cream); color: var(--nx-deep); font-size: 1.15rem; font-weight: 800; }
+.nx .intercom-role-badge { margin-left: auto; background: var(--nx-soft); color: var(--nx-muted); text-transform: capitalize; }
+.nx .intercom-permission-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin-top: 18px; }
+.nx .intercom-toggle { display: flex; align-items: flex-start; gap: 10px; padding: 14px; border: 1px solid var(--nx-border); border-radius: var(--nx-radius-sm); background: var(--nx-soft); cursor: pointer; }
+.nx .intercom-toggle:has(input:checked) { border-color: var(--nx-ok); background: var(--nx-ok-bg); }
+.nx .intercom-toggle input { flex: 0 0 auto; margin-top: 2px; }
+.nx .intercom-toggle span { display: grid; gap: 3px; }
+.nx .intercom-toggle strong { color: var(--nx-deep); font-size: 0.9rem; }
+.nx .intercom-toggle small { color: var(--nx-muted); font-size: 0.78rem; line-height: 1.4; }
+.nx .intercom-user-actions { display: flex; justify-content: flex-end; margin-top: 16px; }
+.nx .success-message { border-left-color: var(--nx-ok); background: var(--nx-ok-bg); color: var(--nx-ok); }
+
+.nx-shell .intercom-overlay { position: fixed; inset: 0; z-index: 1100; display: flex; align-items: center; justify-content: center; padding: 24px; background: rgba(43, 31, 24, 0.32); backdrop-filter: blur(4px); animation: nx-overlay-in 0.2s ease both; }
+.nx-shell .intercom-call-card { width: min(420px, 100%); padding: 30px; border: 1px solid var(--nx-border); border-radius: var(--nx-radius); background: var(--nx-surface); box-shadow: var(--nx-shadow-lift); text-align: center; animation: nx-fade-up 0.3s ease both; }
+.nx-shell .intercom-call-signal { display: inline-flex; align-items: center; justify-content: center; width: 54px; height: 54px; margin-bottom: 16px; border-radius: 17px; background: var(--nx-cream); color: var(--nx-brown); font-size: 1.35rem; box-shadow: 0 0 0 8px rgba(230, 214, 194, 0.45); animation: nx-pulse-soft 1.8s ease-in-out infinite; }
+.nx-shell .intercom-call-signal.is-live { background: var(--nx-ok-bg); color: var(--nx-ok); box-shadow: 0 0 0 8px rgba(231, 239, 230, 0.8); animation: none; font-size: 0.8rem; }
+.nx-shell .intercom-call-kicker { margin: 0 0 7px; color: var(--nx-brown); font-size: 0.7rem; font-weight: 750; letter-spacing: 0.1em; text-transform: uppercase; }
+.nx-shell .intercom-call-card h2 { margin: 0 0 8px; color: var(--nx-deep); font-size: 1.45rem; }
+.nx-shell .intercom-call-description { margin: 0; color: var(--nx-muted); font-size: 0.92rem; }
+.nx-shell .intercom-call-description strong { color: var(--nx-deep); }
+.nx-shell .intercom-call-actions { display: flex; gap: 9px; margin-top: 24px; }
+.nx-shell .intercom-call-actions button { flex: 1; }
+.nx-shell .intercom-call-status { display: inline-flex; align-items: center; gap: 8px; margin: 6px 0 0; color: var(--nx-ok); font-size: 0.9rem; font-weight: 650; }
+.nx-shell .intercom-status-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--nx-ok); box-shadow: 0 0 0 4px var(--nx-ok-bg); }
+.nx-shell .intercom-participant-count { margin: 18px 0 0; color: var(--nx-muted); font-size: 0.82rem; }
+.nx-shell .intercom-end-call { width: 100%; margin-top: 24px; background: var(--nx-danger); border-color: var(--nx-danger); }
+.nx-shell .intercom-end-call:hover:not(:disabled) { background: #8A3324; border-color: #8A3324; }
+
+@media (max-width: 640px) {
+  .nx .intercom-search-row { flex-direction: column; }
+  .nx .intercom-search-row button { width: 100%; }
+  .nx .intercom-permission-grid { grid-template-columns: minmax(0, 1fr); }
+  .nx .intercom-user-heading { align-items: flex-start; flex-wrap: wrap; }
+  .nx .intercom-role-badge { margin-left: 56px; }
+  .nx-shell .intercom-overlay { padding: 14px; }
+  .nx-shell .intercom-call-card { padding: 24px 20px; }
+}
+
 @media (max-width: 640px) {
   .nx-shell .navbar { height: 64px; padding: 0 16px; }
   .nx-shell .app-content { min-height: calc(100vh - 64px); padding: 20px 14px 36px; }

@@ -25,7 +25,7 @@ export const getIntercomResidents = async (req, res) => {
 
 export const updateIntercomAccess = async (req, res) => {
     try {
-        if (req.user.role !== "committee") {
+        if (!req.user || req.user.role !== "committee") {
             return res.status(403).json({
                 message: "Only committee members can manage intercom access",
             });
@@ -35,7 +35,7 @@ export const updateIntercomAccess = async (req, res) => {
         } = req.body;
 
         if (!email) {
-            return status(400).json({
+            return res.status(400).json({
                 message:"Email is required",
             });
         }
@@ -49,30 +49,34 @@ export const updateIntercomAccess = async (req, res) => {
             });
         }
 
-        if (user.role === "resident") {
-            user.intercomEnabled = Boolean(intercomEnabled);
-            user.intercomAccess = false;
-        } 
-        else if (user.role === "staff") {
-            user.intercomAccess = Boolean(intercomAccess);
-            user.intercomEnabled = false;
-        }
-        else if (user.role === "committee") {
-            user.intercomAccess = Boolean(intercomAccess);
-            user.intercomEnabled = Boolean(intercomEnabled);
+        const permissionUpdate = user.role === "resident"
+            ? { intercomEnabled: Boolean(intercomEnabled), intercomAccess: false }
+            : user.role === "staff"
+                ? { intercomEnabled: false, intercomAccess: Boolean(intercomAccess) }
+                : user.role === "committee"
+                    ? {
+                        intercomEnabled: Boolean(intercomEnabled),
+                        intercomAccess: Boolean(intercomAccess),
+                    }
+                    : null;
+
+        if (!permissionUpdate) {
+            return res.status(400).json({
+                message: "User has an unsupported role",
+            });
         }
 
-        await user.save();
+        // Update only the permission fields so legacy user records are not
+        // rejected by validation of unrelated profile fields.
+        const updatedUser = await User.findOneAndUpdate(
+            { _id: user._id },
+            { $set: permissionUpdate },
+            { new: true, runValidators: true }
+        ).select("_id username email role intercomEnabled intercomAccess");
+
         return res.status(200).json({
             message: "Intercom permission updated successfully",
-            user: {
-                _id: user._id,
-                username: user.username,
-                email: user.email,
-                role: user.role,
-                intercomEnabled: user.intercomEnabled,
-                intercomAccess: user.intercomAccess,
-            },
+            user: updatedUser,
         });
     } catch (error) {
         console.error("Update intercom access error:", error);

@@ -27,27 +27,43 @@ const Intercom = () => {
     };
 
     return (
-        <div>
-            <h1>Intercom</h1>
+        <div className="dashboard-page nx intercom-page">
+            <div className="dashboard-header intercom-header">
+                <div>
+                    <p className="dash-section-kicker">Building communications</p>
+                    <h1>Intercom</h1>
+                    <p>Reach a resident directly through the building intercom.</p>
+                </div>
+            </div>
 
-            <form onSubmit={handleCall}>
-                <input
-                    type="email"
-                    placeholder="Resident email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    required
-                />
+            <section className="panel-card intercom-panel">
+                <div className="intercom-panel-heading">
+                    <div>
+                        <h2>Start a call</h2>
+                        <p>Enter the resident email registered with NEER.</p>
+                    </div>
+                    <span className="intercom-panel-icon" aria-hidden="true">◉</span>
+                </div>
 
-                <button
-                    type="submit"
-                    disabled={loading}
-                >
-                    {loading ? "Calling..." : "Call"}
-                </button>
-            </form>
+                <form className="intercom-call-form" onSubmit={handleCall}>
+                    <label htmlFor="resident-email">Resident email</label>
+                    <div className="intercom-search-row">
+                        <input
+                            id="resident-email"
+                            type="email"
+                            placeholder="resident@example.com"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            required
+                        />
+                        <button type="submit" disabled={loading}>
+                            {loading ? "Calling..." : "Start call"}
+                        </button>
+                    </div>
+                </form>
 
-            {message && <p>{message}</p>}
+                {message && <p className={`form-message ${callData ? "success-message" : "error-message"}`}>{message}</p>}
+            </section>
 
             {callData && (
                 <IntercomCall 

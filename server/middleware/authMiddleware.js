@@ -18,6 +18,12 @@ const protect = async(req, res, next) => {
 
                 req.user = await User.findById(decode.id).select("-password");
 
+                if (!req.user) {
+                    return res.status(401).json({
+                        message: "User account not found",
+                    });
+                }
+
                 next();
             }
 
