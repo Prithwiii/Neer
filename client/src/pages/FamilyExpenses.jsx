@@ -73,14 +73,14 @@ function FamilyExpenses({ token }) {
 
     if (loading) {
         return (
-            <div className="dashboard-page">
+            <div className="dashboard-page nx">
                 <p>Loading your family expense sheets...</p>
             </div>
         );
     }
 
     return (
-        <div className="dashboard-page">
+        <div className="dashboard-page nx">
             <div className="library-header">
                 <h2>Family Expenses</h2>
 

@@ -1,0 +1,983 @@
+/* ==========================================================================
+   NEER — scoped visual theme
+   --------------------------------------------------------------------------
+   Every rule in this file is nested under `.nx`. That class is added only to
+   the root element of the Dashboard and the five feature areas in scope for
+   the redesign:
+
+     Dashboard, Bill Payments, Building Layout, Family Expense Tracker,
+     Lost & Found, Common Space & Facility Booking
+
+   Nothing here can reach an unrelated page, even though those pages share
+   class names (.dashboard-page, .panel-card, .status-badge) and share the
+   FloorSelector component with Surveillance. Scoped selectors also outrank
+   the matching rules in App.css on specificity, so no !important is needed.
+   ========================================================================== */
+
+.nx {
+  /* palette */
+  --nx-cream: #E6D6C2;
+  --nx-tan: #C9A17A;
+  --nx-brown: #8B5E3C;
+  --nx-deep: #5E3E2B;
+  --nx-ink: #2B1F18;
+
+  /* tints derived from the palette above */
+  --nx-page: #F5EDE3;
+  --nx-surface: #FFFFFF;
+  --nx-soft: #FAF5EE;
+  --nx-border: #DFCBB1;
+  --nx-border-strong: #C9A17A;
+  --nx-muted: #6B5647;
+
+  /* Functional status colours — the only non-palette hues in the file, kept
+     desaturated so they sit inside the brown scheme. Needed so paid/overdue
+     and free/booked read correctly at a glance. */
+  --nx-ok: #3F6B4A;
+  --nx-ok-bg: #E7EFE6;
+  --nx-danger: #A3402C;
+  --nx-danger-bg: #F5E2DD;
+
+  --nx-radius: 14px;
+  --nx-radius-sm: 9px;
+  --nx-shadow: 0 1px 2px rgba(43, 31, 24, 0.05), 0 2px 8px rgba(43, 31, 24, 0.05);
+  --nx-shadow-lift: 0 2px 4px rgba(43, 31, 24, 0.07), 0 8px 20px rgba(43, 31, 24, 0.09);
+}
+
+/* --------------------------------------------------------------- page shell */
+
+.dashboard-page.nx,
+.dashboard-page.nx.layout-page,
+.dashboard-page.nx.family-page {
+  max-width: 1040px;
+  margin: 0 auto;
+  padding: 4px 0 48px;
+  color: var(--nx-ink);
+  font-size: 15px;
+  line-height: 1.55;
+}
+
+.nx h1,
+.nx h2,
+.nx h3,
+.nx h4 {
+  color: var(--nx-deep);
+  letter-spacing: -0.01em;
+  margin: 0 0 10px;
+}
+
+.nx h1 { font-size: 1.85rem; font-weight: 700; }
+.nx h2 { font-size: 1.3rem;  font-weight: 650; }
+.nx h3 { font-size: 1.05rem; font-weight: 650; }
+.nx h4 { font-size: 0.95rem; font-weight: 650; }
+.nx p  { margin: 0 0 10px; }
+.nx strong { color: var(--nx-deep); font-weight: 650; }
+.nx a { color: var(--nx-brown); }
+
+/* --------------------------------------------------------------- page header */
+
+.nx .dashboard-header,
+.nx .library-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin: 0 0 20px;
+  padding: 0 0 16px;
+  border-bottom: 1px solid var(--nx-border);
+}
+
+.nx .dashboard-header h1,
+.nx .dashboard-header h2,
+.nx .library-header h2,
+.nx .library-header h3 { margin: 0; }
+
+.nx .dashboard-header p,
+.nx .library-header p {
+  margin: 4px 0 0;
+  color: var(--nx-muted);
+  font-size: 0.9rem;
+}
+
+/* a header nested inside a card should not repeat the page-level divider */
+.nx .panel-card .library-header {
+  padding-bottom: 12px;
+  margin-bottom: 14px;
+}
+
+/* --------------------------------------------------------------- buttons */
+
+.nx button {
+  font: inherit;
+  font-weight: 600;
+  padding: 9px 16px;
+  border-radius: var(--nx-radius-sm);
+  border: 1px solid var(--nx-brown);
+  background: var(--nx-brown);
+  color: #fff;
+  cursor: pointer;
+  transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+
+.nx button:hover:not(:disabled) { background: var(--nx-deep); border-color: var(--nx-deep); }
+.nx button:focus-visible { outline: 2px solid var(--nx-deep); outline-offset: 2px; }
+.nx button:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.nx button.secondary {
+  background: var(--nx-surface);
+  color: var(--nx-deep);
+  border-color: var(--nx-border-strong);
+}
+.nx button.secondary:hover:not(:disabled) {
+  background: var(--nx-cream);
+  color: var(--nx-ink);
+  border-color: var(--nx-brown);
+}
+
+.nx button.primary { background: var(--nx-brown); border-color: var(--nx-brown); color: #fff; }
+.nx button.primary:hover:not(:disabled) { background: var(--nx-deep); border-color: var(--nx-deep); }
+
+/* links the existing markup styles as buttons */
+.nx .create-book-link,
+.nx .secondary-link {
+  display: inline-block;
+  padding: 9px 16px;
+  border-radius: var(--nx-radius-sm);
+  border: 1px solid var(--nx-border-strong);
+  background: var(--nx-surface);
+  color: var(--nx-deep);
+  font-weight: 600;
+  font-size: 0.9rem;
+  text-decoration: none;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+.nx .create-book-link:hover,
+.nx .secondary-link:hover { background: var(--nx-cream); border-color: var(--nx-brown); color: var(--nx-ink); }
+
+/* --------------------------------------------------------------- inputs */
+
+.nx input,
+.nx textarea,
+.nx select {
+  font: inherit;
+  padding: 9px 11px;
+  border: 1px solid var(--nx-border);
+  border-radius: var(--nx-radius-sm);
+  background: var(--nx-surface);
+  color: var(--nx-ink);
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.nx input::placeholder,
+.nx textarea::placeholder { color: #A08F80; }
+
+.nx input:focus,
+.nx textarea:focus,
+.nx select:focus {
+  outline: none;
+  border-color: var(--nx-brown);
+  box-shadow: 0 0 0 3px rgba(139, 94, 60, 0.15);
+}
+
+.nx input[type="checkbox"],
+.nx input[type="radio"] {
+  accent-color: var(--nx-brown);
+  width: 17px;
+  height: 17px;
+  padding: 0;
+  box-shadow: none;
+}
+
+.nx input[type="file"] { padding: 7px; background: var(--nx-soft); }
+
+.nx label { color: var(--nx-deep); font-weight: 500; }
+
+/* --------------------------------------------------------------- cards */
+
+.nx .panel-card {
+  background: var(--nx-surface);
+  border: 1px solid var(--nx-border);
+  border-radius: var(--nx-radius);
+  padding: 20px;
+  margin-bottom: 18px;
+  box-shadow: var(--nx-shadow);
+}
+
+.nx .proposal-card,
+.nx .resource-card,
+.nx .bill-card,
+.nx .sheet-card,
+.nx .lost-found-card {
+  background: var(--nx-surface);
+  border: 1px solid var(--nx-border);
+  border-radius: var(--nx-radius);
+  padding: 16px;
+}
+
+/* --------------------------------------------------------------- messages */
+
+.nx .form-message {
+  max-width: none;
+  margin: 0 0 16px;
+  padding: 11px 14px;
+  border: 1px solid var(--nx-border-strong);
+  border-left: 4px solid var(--nx-brown);
+  border-radius: var(--nx-radius-sm);
+  background: var(--nx-cream);
+  color: var(--nx-ink);
+  font-size: 0.92rem;
+}
+
+.nx .confirm-box {
+  margin-top: 12px;
+  padding: 14px;
+  border: 1px solid var(--nx-danger);
+  border-radius: var(--nx-radius-sm);
+  background: var(--nx-danger-bg);
+}
+.nx .confirm-box p { margin: 0 0 10px; color: var(--nx-ink); font-size: 0.92rem; }
+.nx .confirm-box button { margin-right: 8px; }
+.nx .confirm-box button:not(.secondary) { background: var(--nx-danger); border-color: var(--nx-danger); }
+.nx .confirm-box button:not(.secondary):hover:not(:disabled) { background: #8A3324; border-color: #8A3324; }
+
+/* --------------------------------------------------------------- badges */
+
+.nx .status-badge {
+  display: inline-block;
+  padding: 3px 10px;
+  border: 1px solid var(--nx-border-strong);
+  border-radius: 999px;
+  background: var(--nx-cream);
+  color: var(--nx-deep);
+  font-size: 0.76rem;
+  font-weight: 650;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  vertical-align: middle;
+}
+
+.nx .status-badge.paid,
+.nx .status-badge.confirmed,
+.nx .status-badge.returned {
+  background: var(--nx-ok-bg); border-color: var(--nx-ok); color: var(--nx-ok);
+}
+.nx .status-badge.pending,
+.nx .status-badge.upcoming {
+  background: var(--nx-cream); border-color: var(--nx-brown); color: var(--nx-deep);
+}
+.nx .status-badge.overdue,
+.nx .status-badge.cancelled {
+  background: var(--nx-danger-bg); border-color: var(--nx-danger); color: var(--nx-danger);
+}
+.nx .status-badge.completed {
+  background: var(--nx-soft); border-color: var(--nx-border); color: var(--nx-muted);
+}
+
+/* Lost / Found marker */
+.nx .type-tag {
+  display: inline-block;
+  padding: 2px 9px;
+  border-radius: 999px;
+  border: 1px solid var(--nx-border-strong);
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  vertical-align: middle;
+}
+.nx .type-lost  { background: var(--nx-deep); border-color: var(--nx-deep); color: #fff; }
+.nx .type-found { background: var(--nx-ok-bg); border-color: var(--nx-ok); color: var(--nx-ok); }
+
+/* --------------------------------------------------------- category tints
+   Shared by the floor-plan markers, the lost & found categories and the
+   family-expense category bars. A brown ramp keeps them inside the palette.
+   Emergency Exit keeps the functional danger colour — it is a safety marker
+   on a floor plan, not decoration. */
+
+.nx .cat-flat      { background: #FFFFFF; }
+.nx .cat-entrance  { background: var(--nx-cream); }
+.nx .cat-exit      { background: #DCC7AC; }
+.nx .cat-emergency { background: var(--nx-danger-bg); border-color: var(--nx-danger); color: var(--nx-danger); }
+.nx .cat-elevator  { background: var(--nx-tan); }
+.nx .cat-staircase { background: #D9BFA0; }
+.nx .cat-facility  { background: #EFE2D2; }
+.nx .cat-parking   { background: #CBB396; }
+.nx .cat-security  { background: #B98F63; color: #fff; }
+.nx .cat-other     { background: var(--nx-soft); }
+
+/* ==========================================================================
+   DASHBOARD
+   ========================================================================== */
+
+.nx .dash-hero {
+  padding: 26px 26px 24px;
+  margin-bottom: 22px;
+  background: var(--nx-cream);
+  border: 1px solid var(--nx-border);
+  border-radius: var(--nx-radius);
+}
+.nx .dash-hero h1 { margin: 0 0 6px; font-size: 2rem; }
+.nx .dash-hero p  { margin: 0; color: var(--nx-deep); max-width: 62ch; }
+.nx .dash-hero-role {
+  display: inline-block;
+  margin-top: 14px;
+  padding: 4px 12px;
+  border-radius: 999px;
+  background: var(--nx-surface);
+  border: 1px solid var(--nx-border-strong);
+  color: var(--nx-deep);
+  font-size: 0.8rem;
+  font-weight: 650;
+  text-transform: capitalize;
+}
+
+.nx .dash-section-title {
+  margin: 26px 0 12px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--nx-muted);
+}
+
+.nx .dash-stat-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.nx .dash-stat {
+  display: block;
+  padding: 16px 18px;
+  background: var(--nx-surface);
+  border: 1px solid var(--nx-border);
+  border-radius: var(--nx-radius);
+  box-shadow: var(--nx-shadow);
+  color: inherit;
+  text-decoration: none;
+}
+.nx a.dash-stat { transition: border-color 0.15s ease, box-shadow 0.15s ease; }
+.nx a.dash-stat:hover { border-color: var(--nx-brown); box-shadow: var(--nx-shadow-lift); }
+
+.nx .dash-stat-label {
+  display: block;
+  font-size: 0.78rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--nx-muted);
+}
+.nx .dash-stat-value {
+  display: block;
+  margin-top: 6px;
+  font-size: 1.75rem;
+  font-weight: 700;
+  line-height: 1.1;
+  color: var(--nx-deep);
+}
+.nx .dash-stat-value.is-alert { color: var(--nx-danger); }
+.nx .dash-stat-value.is-ok    { color: var(--nx-ok); }
+.nx .dash-stat-note { display: block; margin-top: 4px; font-size: 0.8rem; color: var(--nx-muted); }
+
+.nx .dash-quick-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.nx .dash-quick-card {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 20px;
+  background: var(--nx-surface);
+  border: 1px solid var(--nx-border);
+  border-radius: var(--nx-radius);
+  box-shadow: var(--nx-shadow);
+  color: inherit;
+  text-decoration: none;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+.nx .dash-quick-card:hover { border-color: var(--nx-brown); box-shadow: var(--nx-shadow-lift); }
+.nx .dash-quick-card h3 { margin: 0; font-size: 1rem; }
+.nx .dash-quick-card p  { margin: 0; font-size: 0.88rem; color: var(--nx-muted); }
+
+.nx .dash-quick-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 11px;
+  background: var(--nx-cream);
+  border: 1px solid var(--nx-border);
+  color: var(--nx-deep);
+}
+.nx .dash-quick-icon svg { width: 20px; height: 20px; }
+
+.nx .dash-empty { color: var(--nx-muted); font-size: 0.9rem; }
+
+/* ==========================================================================
+   BILL PAYMENTS
+   ========================================================================== */
+
+/* the legacy in-page link row, kept but restyled as a quiet segmented bar */
+.nx .top-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  justify-content: flex-start;
+  margin: 0 0 20px;
+  padding: 5px;
+  background: var(--nx-soft);
+  border: 1px solid var(--nx-border);
+  border-radius: var(--nx-radius-sm);
+}
+.nx .top-nav a {
+  padding: 7px 14px;
+  border: none;
+  border-radius: 7px;
+  color: var(--nx-deep);
+  font-size: 0.88rem;
+  font-weight: 600;
+  text-decoration: none;
+}
+.nx .top-nav a:hover { background: var(--nx-cream); }
+
+.nx .month-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  margin: 0 0 18px;
+  padding: 10px 14px;
+  background: var(--nx-surface);
+  border: 1px solid var(--nx-border);
+  border-radius: var(--nx-radius);
+  box-shadow: var(--nx-shadow);
+}
+.nx .month-nav strong { font-size: 1.05rem; color: var(--nx-deep); text-align: center; }
+.nx .month-nav button {
+  background: var(--nx-surface);
+  color: var(--nx-deep);
+  border-color: var(--nx-border-strong);
+  font-size: 0.87rem;
+}
+.nx .month-nav button:hover:not(:disabled) { background: var(--nx-cream); border-color: var(--nx-brown); color: var(--nx-ink); }
+
+.nx .bills-summary-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  margin: 0 0 16px;
+}
+.nx .bill-stat {
+  padding: 12px 14px;
+  background: var(--nx-soft);
+  border: 1px solid var(--nx-border);
+  border-radius: var(--nx-radius-sm);
+}
+.nx .bill-stat-label {
+  display: block;
+  font-size: 0.74rem;
+  font-weight: 650;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--nx-muted);
+}
+.nx .bill-stat-value { display: block; margin-top: 3px; font-size: 1.3rem; font-weight: 700; color: var(--nx-deep); }
+.nx .bill-stat-value.is-alert { color: var(--nx-danger); }
+.nx .bill-stat-value.is-ok    { color: var(--nx-ok); }
+
+.nx .progress-bar {
+  width: 100%;
+  height: 9px;
+  border: none;
+  border-radius: 999px;
+  background: var(--nx-cream);
+  overflow: hidden;
+}
+.nx .progress-bar-fill { height: 100%; background: var(--nx-brown); border-radius: 999px; transition: width 0.2s ease; }
+.nx .progress-note { margin: 8px 0 0; font-size: 0.87rem; color: var(--nx-muted); }
+
+.nx .bill-card {
+  margin-bottom: 10px;
+  padding: 14px 16px;
+  transition: border-color 0.15s ease;
+}
+.nx .bill-card:hover { border-color: var(--nx-border-strong); }
+.nx .bill-card.paid { opacity: 1; background: var(--nx-soft); }
+
+.nx .bill-card-row { display: flex; justify-content: space-between; align-items: flex-start; gap: 14px; }
+.nx .bill-info { display: flex; align-items: flex-start; gap: 12px; flex: 1; min-width: 0; }
+.nx .bill-info input[type="checkbox"] { margin-top: 3px; flex-shrink: 0; }
+.nx .bill-name { font-size: 1rem; font-weight: 650; color: var(--nx-deep); margin: 0 0 3px; }
+.nx .bill-name.paid-text { text-decoration: line-through; color: var(--nx-muted); }
+.nx .bill-meta { margin: 0; font-size: 0.87rem; color: var(--nx-muted); }
+.nx .bill-meta-amount { font-weight: 700; color: var(--nx-ink); }
+.nx .bill-note { margin: 4px 0 0; font-size: 0.85rem; color: var(--nx-muted); font-style: italic; }
+
+.nx .bill-actions { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.nx .bill-actions button { padding: 6px 13px; font-size: 0.86rem; }
+
+/* ==========================================================================
+   COMMON SPACE & FACILITY BOOKING
+   ========================================================================== */
+
+.nx .dashboard-menu {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  justify-content: flex-start;
+  margin: 0 0 18px;
+  padding: 5px;
+  background: var(--nx-soft);
+  border: 1px solid var(--nx-border);
+  border-radius: var(--nx-radius-sm);
+}
+.nx .dashboard-menu button {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 7px;
+  background: transparent;
+  color: var(--nx-deep);
+  font-size: 0.9rem;
+}
+.nx .dashboard-menu button:hover:not(.active) { background: var(--nx-cream); color: var(--nx-ink); }
+.nx .dashboard-menu button.active { background: var(--nx-brown); color: #fff; }
+
+/* facility picker */
+.nx .facility-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin-bottom: 18px;
+}
+.nx .facility-card {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 15px 16px;
+  text-align: left;
+  background: var(--nx-surface);
+  border: 1px solid var(--nx-border);
+  border-radius: var(--nx-radius);
+  color: var(--nx-ink);
+  font-weight: 400;
+  cursor: pointer;
+}
+.nx .facility-card:hover:not(:disabled) { background: var(--nx-soft); border-color: var(--nx-brown); color: var(--nx-ink); }
+.nx .facility-card.selected {
+  border-color: var(--nx-brown);
+  background: var(--nx-cream);
+  box-shadow: 0 0 0 2px rgba(139, 94, 60, 0.2);
+}
+.nx .facility-card-top { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.nx .facility-card-name { font-size: 1rem; font-weight: 650; color: var(--nx-deep); }
+.nx .facility-card-desc { margin: 0; font-size: 0.87rem; color: var(--nx-muted); }
+
+.nx .booking-form { display: grid; gap: 12px; max-width: none; margin: 0; }
+.nx .field-label {
+  display: block;
+  margin-bottom: 5px;
+  font-size: 0.8rem;
+  font-weight: 650;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--nx-muted);
+}
+.nx .field-row { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.nx .time-row { display: flex; align-items: center; gap: 10px; }
+.nx .time-row input { flex: 1; min-width: 0; }
+.nx .time-row span { color: var(--nx-muted); font-size: 0.88rem; }
+
+.nx .availability-box {
+  margin: 0;
+  padding: 14px;
+  background: var(--nx-soft);
+  border: 1px solid var(--nx-border);
+  border-left: 4px solid var(--nx-tan);
+  border-radius: var(--nx-radius-sm);
+}
+.nx .availability-box strong { display: block; margin-bottom: 8px; font-size: 0.88rem; }
+.nx .availability-box p { margin: 0; font-size: 0.88rem; color: var(--nx-ok); }
+.nx .availability-box ul { display: flex; flex-wrap: wrap; gap: 7px; margin: 0; padding: 0; list-style: none; }
+.nx .availability-box li {
+  padding: 4px 11px;
+  border-radius: 999px;
+  background: var(--nx-danger-bg);
+  border: 1px solid var(--nx-danger);
+  color: var(--nx-danger);
+  font-size: 0.82rem;
+  font-weight: 600;
+}
+
+.nx .booking-item { margin-bottom: 10px; }
+.nx .booking-item-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.nx .booking-item h3 { margin: 0 0 4px; font-size: 1rem; }
+.nx .booking-item-meta { margin: 0; font-size: 0.88rem; color: var(--nx-muted); }
+.nx .booking-item-purpose { margin: 6px 0 0; font-size: 0.88rem; color: var(--nx-ink); }
+.nx .booking-item-actions { margin-top: 12px; }
+.nx .booking-group-title {
+  margin: 20px 0 10px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.09em;
+  color: var(--nx-muted);
+}
+.nx .booking-group-title:first-of-type { margin-top: 0; }
+
+.nx .resources-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.nx .resource-card h3 { margin: 0 0 4px; }
+.nx .resource-card p { margin: 0 0 4px; font-size: 0.88rem; color: var(--nx-muted); }
+.nx .resource-actions { display: flex; gap: 8px; margin-top: 12px; }
+.nx .resource-actions button { flex: 1; padding: 6px 12px; font-size: 0.86rem; }
+
+/* ==========================================================================
+   BUILDING LAYOUT
+   ========================================================================== */
+
+.nx .layout-workspace { display: grid; grid-template-columns: 92px minmax(0, 1fr) 276px; gap: 16px; align-items: start; }
+
+.nx .floor-stack {
+  background: var(--nx-surface);
+  border: 1px solid var(--nx-border);
+  border-radius: var(--nx-radius);
+  overflow: hidden;
+  box-shadow: var(--nx-shadow);
+}
+.nx .floor-stack-title {
+  margin: 0;
+  padding: 10px 8px;
+  background: var(--nx-cream);
+  border-bottom: 1px solid var(--nx-border);
+  color: var(--nx-deep);
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  text-align: center;
+}
+.nx .floor-stack-level {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  padding: 9px 12px;
+  border: none;
+  border-bottom: 1px solid var(--nx-border);
+  border-radius: 0;
+  background: var(--nx-surface);
+  color: var(--nx-ink);
+  font-weight: 500;
+  cursor: pointer;
+}
+.nx .floor-stack-level:last-child { border-bottom: none; }
+.nx .floor-stack-level:hover:not(.active) { background: var(--nx-soft); color: var(--nx-ink); }
+.nx .floor-stack-level.active { background: var(--nx-brown); color: #fff; }
+.nx .floor-stack-key { font-weight: 700; font-size: 0.92rem; }
+.nx .floor-stack-count { font-size: 0.75rem; opacity: 0.75; }
+
+.nx .floor-plan-bar { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; margin-bottom: 10px; }
+.nx .floor-plan-bar h3 { margin: 0; }
+.nx .floor-plan-zoom { display: flex; align-items: center; gap: 6px; }
+.nx .floor-plan-zoom button { padding: 5px 11px; font-size: 0.85rem; }
+.nx .floor-plan-zoom-value { min-width: 46px; text-align: center; font-size: 0.85rem; color: var(--nx-muted); font-weight: 600; }
+
+.nx .floor-plan-viewport {
+  border: 1px solid var(--nx-border);
+  border-radius: var(--nx-radius);
+  background: var(--nx-soft);
+  overflow: auto;
+  box-shadow: var(--nx-shadow);
+}
+.nx .floor-plan-slab {
+  background: var(--nx-surface);
+  border: 2px solid var(--nx-deep);
+  border-radius: 6px;
+  box-shadow: inset 0 0 0 5px var(--nx-surface), inset 0 0 0 6px var(--nx-border);
+}
+.nx .floor-plan-empty { color: var(--nx-muted); font-size: 0.9rem; }
+
+.nx .plan-marker {
+  border: 1px solid var(--nx-deep);
+  border-radius: 5px;
+  color: var(--nx-ink);
+  font-size: 11px;
+  font-weight: 600;
+  padding: 2px;
+}
+.nx .plan-marker.selected { outline: 3px solid var(--nx-brown); outline-offset: 1px; }
+.nx .plan-marker.preview { border-style: dashed; border-color: var(--nx-brown); }
+
+.nx .floor-plan-legend { display: flex; flex-wrap: wrap; gap: 7px 16px; margin-top: 12px; font-size: 0.83rem; color: var(--nx-muted); }
+.nx .legend-swatch { width: 14px; height: 14px; border: 1px solid var(--nx-deep); border-radius: 4px; }
+.nx .floor-plan-summary { margin: 12px 0 0; font-size: 0.87rem; color: var(--nx-muted); }
+
+.nx .location-details h3 { margin: 0 0 10px; }
+.nx .location-details p { margin: 10px 0 0; font-size: 0.9rem; }
+
+.nx .layout-form-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+.nx .layout-form-grid label {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  font-size: 0.8rem;
+  font-weight: 650;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--nx-muted);
+}
+.nx .layout-form-grid input,
+.nx .layout-form-grid select { font-weight: 400; text-transform: none; letter-spacing: 0; }
+
+.nx .allocation-box { padding: 14px; background: var(--nx-soft); border: 1px solid var(--nx-border); border-radius: var(--nx-radius-sm); }
+.nx .allocation-chips { display: flex; flex-wrap: wrap; gap: 8px; margin: 10px 0; }
+.nx .allocation-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 6px 4px 12px;
+  border: 1px solid var(--nx-border-strong);
+  border-radius: 999px;
+  background: var(--nx-surface);
+  font-size: 0.86rem;
+}
+.nx .allocation-chip button {
+  padding: 0 5px;
+  border: none;
+  background: none;
+  color: var(--nx-danger);
+  font-size: 1.05rem;
+  line-height: 1;
+}
+.nx .allocation-chip button:hover:not(:disabled) { background: none; color: #8A3324; }
+
+/* ==========================================================================
+   FAMILY EXPENSE TRACKER
+   ========================================================================== */
+
+.nx .sheet-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+.nx .sheet-card {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  box-shadow: var(--nx-shadow);
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+.nx .sheet-card:hover { border-color: var(--nx-brown); box-shadow: var(--nx-shadow-lift); }
+.nx .sheet-card h3 { margin: 0; }
+.nx .sheet-card p { margin: 8px 0 0; font-size: 0.9rem; color: var(--nx-muted); }
+.nx .sheet-card-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
+.nx .sheet-card-meta { font-size: 0.85rem; color: var(--nx-muted); }
+
+.nx .family-workspace { display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 16px; align-items: start; }
+
+.nx .expense-summary h2 { margin: 0 0 14px; }
+.nx .expense-summary h3 {
+  margin: 0 0 12px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.09em;
+  color: var(--nx-muted);
+}
+.nx .expense-summary-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
+.nx .expense-stat { padding: 13px 15px; background: var(--nx-soft); border: 1px solid var(--nx-border); border-radius: var(--nx-radius-sm); }
+.nx .expense-stat-label { font-size: 0.74rem; font-weight: 650; text-transform: uppercase; letter-spacing: 0.05em; color: var(--nx-muted); }
+.nx .expense-stat strong { display: block; margin-top: 4px; font-size: 1.3rem; font-weight: 700; color: var(--nx-deep); }
+
+.nx .category-breakdown { margin-top: 20px; padding-top: 18px; border-top: 1px solid var(--nx-border); }
+.nx .category-row { display: grid; grid-template-columns: 104px minmax(0, 1fr) 94px; align-items: center; gap: 12px; margin-bottom: 8px; font-size: 0.88rem; }
+.nx .category-row-name { color: var(--nx-deep); font-weight: 500; }
+.nx .category-bar { display: block; height: 13px; border: none; border-radius: 999px; background: var(--nx-cream); overflow: hidden; }
+.nx .category-bar-fill { display: block; height: 100%; border: none; border-radius: 999px; min-width: 3px; }
+.nx .category-row-amount { text-align: right; font-weight: 650; color: var(--nx-deep); }
+
+.nx .expense-table { width: 100%; min-width: 560px; border-collapse: collapse; }
+.nx .expense-table th {
+  padding: 10px 12px;
+  background: var(--nx-soft);
+  border-bottom: 1px solid var(--nx-border);
+  font-size: 0.73rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--nx-muted);
+  text-align: left;
+}
+.nx .expense-table th:first-child { border-top-left-radius: var(--nx-radius-sm); }
+.nx .expense-table th:last-child  { border-top-right-radius: var(--nx-radius-sm); }
+.nx .expense-table td { padding: 11px 12px; border-bottom: 1px solid var(--nx-border); vertical-align: top; font-size: 0.9rem; }
+.nx .expense-table tbody tr:last-child td { border-bottom: none; }
+.nx .expense-table tbody tr:hover { background: var(--nx-soft); }
+.nx .expense-table .align-right { text-align: right; font-weight: 650; color: var(--nx-deep); }
+.nx .expense-table .bill-actions { display: inline-flex; flex-wrap: nowrap; gap: 6px; }
+.nx .expense-table button { padding: 4px 11px; font-size: 0.83rem; }
+.nx .expense-note { display: block; margin-top: 4px; font-size: 0.83rem; color: var(--nx-muted); }
+
+.nx .family-members h3 { margin: 0 0 12px; }
+.nx .family-members h4 {
+  margin: 0 0 10px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--nx-muted);
+}
+.nx .member-list { list-style: none; margin: 0; padding: 0; }
+.nx .member-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--nx-border);
+  font-size: 0.89rem;
+}
+.nx .member-row:last-child { border-bottom: none; }
+.nx .member-row-actions { display: flex; align-items: center; gap: 7px; }
+.nx .member-row button { padding: 4px 10px; font-size: 0.82rem; }
+.nx .member-search { margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--nx-border); }
+.nx .member-search-form { display: flex; gap: 7px; margin-bottom: 12px; }
+.nx .member-search-form input { flex: 1; min-width: 0; }
+
+/* ==========================================================================
+   LOST & FOUND
+   ========================================================================== */
+
+.nx .search-row { display: flex; gap: 9px; margin-bottom: 14px; }
+.nx .search-row input { flex: 1; min-width: 0; }
+
+.nx .filter-row { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 12px; }
+.nx .filter-row label {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  font-size: 0.76rem;
+  font-weight: 650;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--nx-muted);
+}
+.nx .filter-row select { font-weight: 400; text-transform: none; letter-spacing: 0; }
+
+.nx .lost-found-summary { margin: 0 0 14px; font-size: 0.88rem; color: var(--nx-muted); }
+.nx .lost-found-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+.nx .lost-found-card {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  box-shadow: var(--nx-shadow);
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+.nx .lost-found-card:hover { border-color: var(--nx-brown); box-shadow: var(--nx-shadow-lift); }
+.nx .lost-found-card h3 { margin: 0; font-size: 1rem; line-height: 1.4; }
+.nx .lost-found-card p { margin: 8px 0 0; font-size: 0.89rem; }
+.nx .lost-found-card-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
+.nx .lost-found-card-meta {
+  font-size: 0.84rem;
+  color: var(--nx-muted);
+  padding-top: 12px;
+  margin-top: 12px;
+  border-top: 1px solid var(--nx-border);
+}
+.nx .lost-found-description { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; color: var(--nx-muted); }
+
+.nx .lost-found-detail p { margin: 12px 0; }
+.nx .lost-found-photo {
+  display: block;
+  max-width: 100%;
+  max-height: 340px;
+  margin-bottom: 18px;
+  border: 1px solid var(--nx-border);
+  border-radius: var(--nx-radius-sm);
+}
+.nx .privacy-hint {
+  font-size: 0.86rem;
+  color: var(--nx-muted);
+  padding: 11px 14px;
+  background: var(--nx-soft);
+  border: 1px solid var(--nx-border);
+  border-radius: var(--nx-radius-sm);
+}
+
+.nx .image-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 0.8rem;
+  font-weight: 650;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--nx-muted);
+}
+.nx .image-preview { display: flex; align-items: flex-start; gap: 12px; }
+.nx .image-preview img { max-width: 160px; max-height: 120px; border: 1px solid var(--nx-border); border-radius: var(--nx-radius-sm); }
+.nx .type-choice { display: flex; flex-wrap: wrap; gap: 10px; }
+.nx .type-choice label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 14px;
+  border: 1px solid var(--nx-border);
+  border-radius: var(--nx-radius-sm);
+  background: var(--nx-surface);
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+.nx .type-choice label:hover { background: var(--nx-soft); border-color: var(--nx-border-strong); }
+.nx .type-choice label:has(input:checked) { border-color: var(--nx-brown); background: var(--nx-cream); }
+
+/* ==========================================================================
+   RESPONSIVE
+   ========================================================================== */
+
+@media (max-width: 960px) {
+  .nx .dash-stat-grid   { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .nx .dash-quick-grid  { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .nx .layout-workspace { grid-template-columns: 1fr; }
+  .nx .family-workspace { grid-template-columns: minmax(0, 1fr); }
+  .nx .floor-stack-levels { flex-direction: row-reverse; justify-content: flex-end; overflow-x: auto; }
+  .nx .floor-stack-level { flex-direction: column; gap: 2px; border-bottom: none; border-right: 1px solid var(--nx-border); }
+  .nx .floor-stack-level:last-child { border-right: none; }
+  .nx .layout-form-grid { grid-template-columns: repeat(2, 1fr); }
+  .nx .expense-summary-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .nx .bills-summary-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (max-width: 700px) {
+  .dashboard-page.nx,
+  .dashboard-page.nx.layout-page,
+  .dashboard-page.nx.family-page { padding: 0 0 36px; }
+
+  .nx .dash-hero { padding: 20px; }
+  .nx .dash-hero h1 { font-size: 1.5rem; }
+  .nx .dash-stat-grid,
+  .nx .dash-quick-grid { grid-template-columns: minmax(0, 1fr); }
+
+  .nx .dashboard-header,
+  .nx .library-header { flex-direction: column; align-items: stretch; }
+
+  .nx .bills-summary-grid { grid-template-columns: minmax(0, 1fr); }
+  .nx .bill-card-row { flex-direction: column; }
+  .nx .bill-actions { width: 100%; }
+
+  .nx .month-nav { flex-wrap: wrap; }
+  .nx .month-nav button { flex: 1; }
+  .nx .month-nav strong { order: -1; width: 100%; }
+
+  .nx .facility-grid,
+  .nx .resources-grid,
+  .nx .sheet-grid,
+  .nx .lost-found-grid { grid-template-columns: minmax(0, 1fr); }
+
+  .nx .field-row { grid-template-columns: minmax(0, 1fr); }
+  .nx .expense-summary-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .nx .category-row { grid-template-columns: 88px minmax(0, 1fr) 78px; }
+  .nx .layout-form-grid { grid-template-columns: minmax(0, 1fr); }
+  .nx .filter-row label { flex: 1; min-width: 130px; }
+  .nx .search-row { flex-direction: column; }
+}

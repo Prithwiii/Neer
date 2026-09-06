@@ -178,11 +178,11 @@ function BillPayments({ token, onLogout, role }) {
     totalBills === 0 ? 0 : Math.round((paidBills / totalBills) * 100);
 
   return (
-    <div className="dashboard-page">
+    <div className="dashboard-page nx">
       <div className="dashboard-header">
         <div>
           <h1>Bill Payments</h1>
-          <p>Role: {role}</p>
+          <p>Your monthly household bills · signed in as {role}</p>
         </div>
         <button className="secondary" onClick={onLogout}>
           Logout
@@ -209,12 +209,34 @@ function BillPayments({ token, onLogout, role }) {
       <div className="bills-summary panel-card">
         <h2>Summary</h2>
         <div className="bills-summary-grid">
-          <div>Total Bills: {totalBills}</div>
-          <div>Paid: {paidBills}</div>
-          <div>Pending: {pendingBills}</div>
-          <div>Overdue: {overdueBills}</div>
-          <div>Total Amount: &#2547;{totalAmount}</div>
-          <div>Paid Amount: &#2547;{paidAmount}</div>
+          <div className="bill-stat">
+            <span className="bill-stat-label">Total Bills</span>
+            <span className="bill-stat-value">{totalBills}</span>
+          </div>
+          <div className="bill-stat">
+            <span className="bill-stat-label">Paid</span>
+            <span className="bill-stat-value is-ok">{paidBills}</span>
+          </div>
+          <div className="bill-stat">
+            <span className="bill-stat-label">Pending</span>
+            <span className="bill-stat-value">{pendingBills}</span>
+          </div>
+          <div className="bill-stat">
+            <span className="bill-stat-label">Overdue</span>
+            <span
+              className={`bill-stat-value ${overdueBills > 0 ? "is-alert" : ""}`}
+            >
+              {overdueBills}
+            </span>
+          </div>
+          <div className="bill-stat">
+            <span className="bill-stat-label">Total Amount</span>
+            <span className="bill-stat-value">&#2547;{totalAmount}</span>
+          </div>
+          <div className="bill-stat">
+            <span className="bill-stat-label">Paid Amount</span>
+            <span className="bill-stat-value is-ok">&#2547;{paidAmount}</span>
+          </div>
         </div>
         <div className="progress-bar">
           <div
@@ -222,7 +244,10 @@ function BillPayments({ token, onLogout, role }) {
             style={{ width: `${progressPercent}%` }}
           />
         </div>
-        <p>{progressPercent}% completed</p>
+        <p className="progress-note">
+          {progressPercent}% completed &middot; {paidBills} of {totalBills} bills
+          paid
+        </p>
       </div>
 
       <div className="panel-card">
@@ -258,12 +283,15 @@ function BillPayments({ token, onLogout, role }) {
                     >
                       {bill.name}
                     </p>
-                    <p>
-                      &#2547;{bill.amount} | Due {bill.dueDate} | {bill.category}
+                    <p className="bill-meta">
+                      <span className="bill-meta-amount">
+                        &#2547;{bill.amount}
+                      </span>{" "}
+                      &middot; {bill.category} &middot; Due {bill.dueDate}
                     </p>
-                    {bill.note && <p>Note: {bill.note}</p>}
+                    {bill.note && <p className="bill-note">{bill.note}</p>}
                     {bill.status === "paid" && bill.paidDate && (
-                      <p>Paid on {bill.paidDate}</p>
+                      <p className="bill-meta">Paid on {bill.paidDate}</p>
                     )}
                   </div>
                 </div>
