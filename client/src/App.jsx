@@ -33,7 +33,6 @@ import GuestRegistration from "./pages/GuestRegistration";
 import GuestValidation from "./pages/GuestValidation";
 import Maintenance from "./pages/Maintenance";
 import Chat from "./pages/Chat";
-import Alerts from "./pages/Alerts";
 import { disconnectSocket } from "./services/socket";
 
 import DashboardLayout from "./layouts/DashboardLayout";
@@ -120,11 +119,7 @@ function App() {
             element={<Chat token={token} role={role} />}
           />
 
-          {/* Alerts */}
-          <Route
-            path="/alerts"
-            element={<Alerts token={token} role={role} />}
-          />
+          
 
           {/* Proposals */}
           <Route
