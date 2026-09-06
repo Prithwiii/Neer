@@ -2,9 +2,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
 import API_URL from "../config/api";
-import { formatAmount, getCurrentMonth } from "../config/familyExpense";
-import { getFamilySheets } from "../services/familyExpenseService";
-import { getLostFoundPosts } from "../services/lostFoundService";
+import { getCurrentMonth } from "../config/familyExpense";
 
 // Small stroke icons for the quick access cards. They are inline so the
 // project does not pick up an icon dependency.
@@ -40,6 +38,20 @@ const icons = {
             <path d="M11 8v3.5M11 14.5v.01" />
         </svg>
     ),
+    complaints: (
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7"
+            strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+            <path d="M5 4h14a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H10l-5 4v-4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z" />
+            <path d="M7 8h10M7 12h6" />
+        </svg>
+    ),
+    contacts: (
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7"
+            strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+            <circle cx="9" cy="8" r="3" />
+            <path d="M3 20a6 6 0 0 1 12 0M16 4h5v16h-5M18 8h1M18 12h1M18 16h1" />
+        </svg>
+    ),
     booking: (
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7"
             strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
@@ -52,14 +64,11 @@ const icons = {
 
 const emptyStats = {
     pendingBills: 0,
-    paidBills: 0,
     overdueBills: 0,
     totalBills: 0,
-    upcomingBookings: 0,
-    activeLostFound: 0,
-    returnedLostFound: 0,
-    familySheets: 0,
-    familyTotal: 0
+    complaintsAgainstMyFlat: 0,
+    garageBookingsDue: 0,
+    proposalsYetToVote: 0
 };
 
 function DashboardHome({ role, token }) {
@@ -69,6 +78,7 @@ function DashboardHome({ role, token }) {
 
     // staff do not get the family expense tracker, matching the sidebar
     const showsFamily = role !== "staff";
+    const showsServices = role !== "staff";
 
     useEffect(() => {
         if (!token) return;
@@ -86,12 +96,42 @@ function DashboardHome({ role, token }) {
             return response.json();
         };
 
-        const loadBookings = async () => {
-            const response = await fetch(`${API_URL}/api/bookings/mine`, {
+        const loadProfile = async () => {
+            const response = await fetch(`${API_URL}/api/auth/profile`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
 
-            if (!response.ok) throw new Error("bookings");
+            if (!response.ok) throw new Error("profile");
+
+            return response.json();
+        };
+
+        const loadGarageBookings = async () => {
+            const response = await fetch(`${API_URL}/api/garage-bookings/mine`, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+
+            if (!response.ok) throw new Error("garage-bookings");
+
+            return response.json();
+        };
+
+        const loadProposals = async () => {
+            const response = await fetch(`${API_URL}/api/proposals`, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+
+            if (!response.ok) throw new Error("proposals");
+
+            return response.json();
+        };
+
+        const loadComplaints = async () => {
+            const response = await fetch(`${API_URL}/api/complaints`, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+
+            if (!response.ok) throw new Error("complaints");
 
             return response.json();
         };
@@ -99,11 +139,12 @@ function DashboardHome({ role, token }) {
         const loadSummary = async () => {
             // every panel is optional, one failing feature should not take the
             // whole dashboard down, so each result is handled on its own
-            const [bills, bookings, board, sheets] = await Promise.allSettled([
+            const [bills, profile, complaints, garageBookings, proposals] = await Promise.allSettled([
                 loadBills(),
-                loadBookings(),
-                getLostFoundPosts({}, token),
-                showsFamily ? getFamilySheets(token) : Promise.resolve([])
+                showsFamily ? loadProfile() : Promise.resolve(null),
+                showsFamily ? loadComplaints() : Promise.resolve([]),
+                showsFamily ? loadGarageBookings() : Promise.resolve([]),
+                showsFamily ? loadProposals() : Promise.resolve([])
             ]);
 
             if (cancelled) return;
@@ -112,32 +153,30 @@ function DashboardHome({ role, token }) {
 
             if (bills.status === "fulfilled" && Array.isArray(bills.value)) {
                 next.totalBills = bills.value.length;
-                next.paidBills = bills.value.filter((b) => b.status === "paid").length;
                 next.pendingBills = bills.value.filter((b) => b.status === "pending").length;
                 next.overdueBills = bills.value.filter((b) => b.status === "overdue").length;
             }
 
-            if (bookings.status === "fulfilled" && Array.isArray(bookings.value)) {
-                const now = new Date();
-
-                next.upcomingBookings = bookings.value.filter(
-                    (b) =>
-                        b.status === "confirmed" &&
-                        new Date(`${b.date}T${b.endTime}:00`) >= now
+            if (profile.status === "fulfilled" && profile.value?.flatNumber && complaints.status === "fulfilled" && Array.isArray(complaints.value)) {
+                const flatNumber = profile.value.flatNumber.trim().toUpperCase();
+                next.complaintsAgainstMyFlat = complaints.value.filter(
+                    (complaint) => (complaint.flatNumber || "").trim().toUpperCase() === flatNumber
                 ).length;
             }
 
-            if (board.status === "fulfilled" && board.value.summary) {
-                next.activeLostFound = board.value.summary.active;
-                next.returnedLostFound = board.value.summary.returned;
+            if (garageBookings.status === "fulfilled" && Array.isArray(garageBookings.value)) {
+                const now = new Date();
+                next.garageBookingsDue = garageBookings.value.filter(
+                    (booking) => booking.status === "confirmed" && new Date(booking.startDate) >= now
+                ).length;
             }
 
-            if (sheets.status === "fulfilled" && Array.isArray(sheets.value)) {
-                next.familySheets = sheets.value.length;
-                next.familyTotal = sheets.value.reduce(
-                    (sum, sheet) => sum + (sheet.totalAmount || 0),
-                    0
-                );
+            if (profile.status === "fulfilled" && profile.value?._id && proposals.status === "fulfilled" && Array.isArray(proposals.value)) {
+                next.proposalsYetToVote = proposals.value.filter(
+                    (proposal) => !proposal.votes.some(
+                        (vote) => String(vote.resident) === String(profile.value._id)
+                    )
+                ).length;
             }
 
             setStats(next);
@@ -165,70 +204,60 @@ function DashboardHome({ role, token }) {
                 <span className="dash-hero-role">Signed in as {role}</span>
             </div>
 
-            <h2 className="dash-section-title">This Month</h2>
-
-            {loading ? (
-                <p className="dash-empty">Loading your summary...</p>
-            ) : (
-                <div className="dash-stat-grid">
-                    <Link to="/bills" className="dash-stat">
-                        <span className="dash-stat-label">Pending Bills</span>
-                        <span
-                            className={`dash-stat-value ${
-                                stats.overdueBills > 0 ? "is-alert" : ""
-                            }`}
-                        >
-                            {stats.pendingBills + stats.overdueBills}
-                        </span>
-                        <span className="dash-stat-note">
-                            {stats.overdueBills > 0
-                                ? `${stats.overdueBills} overdue`
-                                : "Nothing overdue"}
-                        </span>
-                    </Link>
-
-                    <Link to="/bills" className="dash-stat">
-                        <span className="dash-stat-label">Paid Bills</span>
-                        <span className="dash-stat-value is-ok">{stats.paidBills}</span>
-                        <span className="dash-stat-note">
-                            of {stats.totalBills} this month
-                        </span>
-                    </Link>
-
-                    <Link to="/bookings" className="dash-stat">
-                        <span className="dash-stat-label">Upcoming Bookings</span>
-                        <span className="dash-stat-value">{stats.upcomingBookings}</span>
-                        <span className="dash-stat-note">
-                            Spaces &amp; facilities
-                        </span>
-                    </Link>
-
-                    <Link to="/lost-found" className="dash-stat">
-                        <span className="dash-stat-label">Active Lost &amp; Found</span>
-                        <span className="dash-stat-value">{stats.activeLostFound}</span>
-                        <span className="dash-stat-note">
-                            {stats.returnedLostFound} returned
-                        </span>
-                    </Link>
-
-                    {showsFamily && stats.familySheets > 0 && (
-                        <Link to="/family-expenses" className="dash-stat">
-                            <span className="dash-stat-label">Family Expenses</span>
-                            <span className="dash-stat-value">
-                                &#2547;{formatAmount(stats.familyTotal)}
-                            </span>
-                            <span className="dash-stat-note">
-                                across {stats.familySheets} sheet
-                                {stats.familySheets === 1 ? "" : "s"}
-                            </span>
-                        </Link>
-                    )}
+            {!showsServices ? (
+                <div className="dash-empty staff-dashboard-note">
+                    <strong>Staff workspace</strong>
+                    <span>Use the building and operations tools from the navigation menu.</span>
                 </div>
+            ) : loading ? (
+                <div className="dash-empty dash-loading" role="status">
+                    <span className="dash-loading-mark" aria-hidden="true" />
+                    <span>Loading your summary...</span>
+                </div>
+            ) : null}
+
+            {showsFamily && !loading && (
+                <section className="notification-center" aria-label="Notifications">
+                    <div className="notification-center-heading">
+                        <div>
+                            <p className="dash-section-kicker">Needs your attention</p>
+                            <h2>Notification Centre</h2>
+                        </div>
+                        <span>{stats.pendingBills + stats.overdueBills + stats.garageBookingsDue + stats.complaintsAgainstMyFlat + stats.proposalsYetToVote} items</span>
+                    </div>
+                    <div className="notification-list">
+                        <Link to="/bills" className="notification-item">
+                            <span className="notification-icon notification-icon-alert">৳</span>
+                            <span><strong>Pending bills</strong><small>{stats.pendingBills + stats.overdueBills} requiring attention this month</small></span>
+                            <b>{stats.pendingBills + stats.overdueBills}</b>
+                        </Link>
+                        <Link to="/garages/my-bookings" className="notification-item">
+                            <span className="notification-icon">▤</span>
+                            <span><strong>Garage booking due</strong><small>Upcoming confirmed garage bookings</small></span>
+                            <b>{stats.garageBookingsDue}</b>
+                        </Link>
+                        <Link to="/complaints/my-flat" className="notification-item">
+                            <span className="notification-icon">!</span>
+                            <span><strong>Complaints against my flat</strong><small>Verified complaints listed for your flat</small></span>
+                            <b>{stats.complaintsAgainstMyFlat}</b>
+                        </Link>
+                        <Link to="/proposals" className="notification-item">
+                            <span className="notification-icon">◇</span>
+                            <span><strong>Proposals yet to vote</strong><small>Community decisions waiting for your vote</small></span>
+                            <b>{stats.proposalsYetToVote}</b>
+                        </Link>
+                    </div>
+                </section>
             )}
 
-            <h2 className="dash-section-title">Quick Access</h2>
+            <div className="dash-section-heading dash-section-heading-quick">
+                <div>
+                    <p className="dash-section-kicker">{showsServices ? "Everything close at hand" : "Staff tools"}</p>
+                    <h2 className="dash-section-title">Quick Access</h2>
+                </div>
+            </div>
 
-            <div className="dash-quick-grid">
+            {showsServices ? <div className="dash-quick-grid">
                 <Link to="/bills" className="dash-quick-card">
                     <span className="dash-quick-icon">{icons.bills}</span>
                     <h3>Bill Payments</h3>
@@ -275,7 +304,21 @@ function DashboardHome({ role, token }) {
                         neighbours have posted to the board.
                     </p>
                 </Link>
-            </div>
+            </div> : (
+                <div className="dash-quick-grid staff-quick-grid">
+                    <Link to="/complaints" className="dash-quick-card">
+                        <span className="dash-quick-icon">{icons.complaints}</span>
+                        <h3>Complaints</h3>
+                        <p>Review and manage resident complaints from one place.</p>
+                    </Link>
+
+                    <Link to="/contacts" className="dash-quick-card">
+                        <span className="dash-quick-icon">{icons.contacts}</span>
+                        <h3>Contact Directory</h3>
+                        <p>Find building staff, emergency contacts, and committee members.</p>
+                    </Link>
+                </div>
+            )}
         </div>
     );
 }

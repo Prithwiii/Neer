@@ -5,7 +5,6 @@ import Noticeboard from "./pages/Noticeboard";
 import Complaints from "./pages/Complaints";
 import ComplaintSubmit from "./pages/ComplaintSubmit";
 import Auth from "./pages/Auth";
-import StaffDashboard from "./pages/StaffDashboard";
 import ResidentDashboard from "./pages/ResidentDashboard";
 import CommitteeDashboard from "./pages/CommitteeDashboard";
 import Booking from "./pages/Booking";
@@ -126,10 +125,7 @@ function App() {
             path="/proposals"
             element={
               role === "staff" ? (
-                <StaffDashboard
-                  token={token}
-                  onLogout={handleLogout}
-                />
+                <Navigate to="/dashboard" replace />
               ) : role === "committee" ? (
                 <CommitteeDashboard
                   token={token}

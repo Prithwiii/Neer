@@ -60,7 +60,7 @@ function DashboardLayout({ token, role, onLogout }) {
   const closeMenu = () => { setMenuOpen(false); };
 
   return (
-    <div className="app-layout">
+    <div className="app-layout nx-shell">
 
       {role !== "staff" && incomingCall && (
         <IncomingIntercomCall 

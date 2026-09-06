@@ -97,70 +97,91 @@ function ContactDirectory({ token }) {
   const contacts = token ? (liveContacts.length > 0 ? liveContacts : fallbackList) : fallbackList;
 
   const selectedType = type || "";
+  const emergencyCount = contacts.filter((contact) => contact.category === "emergency").length;
+  const staffCount = contacts.filter((contact) => contact.category === "staff").length;
+  const committeeCount = contacts.filter((contact) => contact.category === "committee").length;
 
   if (!selectedType) {
     return (
-      <div className="dashboard-page">
+      <div className="dashboard-page nx contacts-page">
         <div className="page-header-row">
           <div>
             <p className="eyebrow">Directory</p>
             <h1>Contact Directory</h1>
+            <p className="contacts-intro">Trusted building contacts, organised for quick access when you need them.</p>
           </div>
-          <Link to="/dashboard" className="secondary-link">
-            ← Dashboard
-          </Link>
+        </div>
+
+        <div className="feature-stat-grid" aria-label="Directory summary">
+          <div className="feature-stat-card"><span>Total contacts</span><strong>{contacts.length}</strong></div>
+          <div className="feature-stat-card"><span>Emergency</span><strong>{emergencyCount}</strong></div>
+          <div className="feature-stat-card"><span>Building team</span><strong>{staffCount + committeeCount}</strong></div>
         </div>
 
         <div className="contact-directory-grid">
           {Object.entries(categoryLabels).map(([key, label]) => (
             <Link key={key} to={`/contacts/${key}`} className="contact-option-card">
-              <span className="contact-option-icon">☎</span>
-              <h2>{label}</h2>
-              <p>View the available contacts for {label.toLowerCase()}.</p>
+              <div className={`contact-option-icon contact-option-icon-${key}`} aria-hidden="true">
+                {key === "emergency" ? "!" : key === "staff" ? "S" : "C"}
+              </div>
+              <div className="contact-option-content">
+                <p className="contact-option-kicker">{key === "emergency" ? "Urgent support" : key === "staff" ? "Building team" : "Leadership"}</p>
+                <h2>{label}</h2>
+                <p>View the available contacts for {label.toLowerCase()}.</p>
+              </div>
+              <span className="contact-option-arrow" aria-hidden="true">-&gt;</span>
             </Link>
           ))}
         </div>
+
       </div>
     );
   }
 
   return (
-    <div className="dashboard-page">
+    <div className="dashboard-page nx contacts-page">
       <div className="page-header-row contact-header-row">
         <div>
           <p className="eyebrow">Directory</p>
           <h1>{categoryLabels[selectedType] || "Contact List"}</h1>
         </div>
         <div className="header-actions">
-          <Link to="/dashboard" className="secondary-link">
-            ← Dashboard
-          </Link>
           <Link to="/contacts" className="secondary-link">
             Back to directory
           </Link>
         </div>
       </div>
 
+      <div className="feature-stat-grid" aria-label="Contact category summary">
+        <div className="feature-stat-card"><span>Contacts listed</span><strong>{contacts.length}</strong></div>
+        <div className="feature-stat-card"><span>Category</span><strong>{selectedType}</strong></div>
+        <div className="feature-stat-card"><span>Directory status</span><strong>Available</strong></div>
+      </div>
+
       {loading && <p>Loading contacts...</p>}
       {error && <p className="form-message error-message">{error}</p>}
 
       {!loading && !error && contacts.length === 0 && (
-        <p className="form-message">No contacts available for this category yet.</p>
+        <div className="feature-empty-state"><span className="feature-empty-icon">◎</span><strong>No contacts available yet</strong><span>There are no contacts listed for this category.</span></div>
       )}
 
       <div className="contact-list">
         {contacts.map((contact) => (
           <div key={contact._id} className="contact-card">
-            <div className="contact-meta-row">
+            <div className="contact-card-top">
+              <div className="contact-avatar" aria-hidden="true">
+                {contact.name?.charAt(0)?.toUpperCase() || "?"}
+              </div>
               <span className="contact-badge">{categoryLabels[contact.category] || "Contact"}</span>
             </div>
-            <h3>{contact.name}</h3>
-            <p>
-              <strong>Phone:</strong> {contact.phone}
-            </p>
-            <p>
-              <strong>Designation:</strong> {contact.designation}
-            </p>
+            <div className="contact-card-heading">
+              <h3>{contact.name}</h3>
+              <p>{contact.designation}</p>
+            </div>
+            <div className="contact-phone-row">
+              <span className="contact-detail-label">Phone</span>
+              <strong>{contact.phone}</strong>
+            </div>
           </div>
         ))}
       </div>

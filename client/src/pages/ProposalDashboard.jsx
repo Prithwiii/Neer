@@ -1,5 +1,4 @@
 import { useState, useEffect, useCallback } from "react";
-import { Link } from "react-router-dom";
 import API_URL from "../config/api";
 
 // const PROPOSAL_API = "http://localhost:5001/api/proposals";
@@ -10,7 +9,7 @@ const dashboardOptions = [
   { key: "vote", label: "Vote Proposal" },
 ];
 
-function ProposalDashboard({ token, onLogout, role }) {
+function ProposalDashboard({ token, role }) {
   const [proposals, setProposals] = useState([]);
   const defaultPanel = role === "resident" ? "vote" : "create";
   const [activePanel, setActivePanel] = useState(defaultPanel);
@@ -18,6 +17,8 @@ function ProposalDashboard({ token, onLogout, role }) {
   const [description, setDescription] = useState("");
   const [type, setType] = useState("Budget Approval");
   const [message, setMessage] = useState("");
+  const [changingVoteId, setChangingVoteId] = useState(null);
+  const userId = localStorage.getItem("userId");
 
   const loadProposals = useCallback(async () => {
     const response = await fetch(PROPOSAL_API, {
@@ -78,6 +79,7 @@ function ProposalDashboard({ token, onLogout, role }) {
     setMessage(JSON.stringify(data, null, 2));
 
     if (response.ok) {
+      setChangingVoteId(null);
       setProposals((prev) =>
         prev.map((proposal) =>
           proposal._id === data._id ? data : proposal
@@ -86,33 +88,28 @@ function ProposalDashboard({ token, onLogout, role }) {
     }
   };
 
+  const totalVotes = proposals.reduce((sum, proposal) => sum + proposal.votes.length, 0);
+
   return (
-    <div className="dashboard-page">
+    <div className="dashboard-page nx proposals-page">
       <div className="dashboard-header">
         <div>
           <h1>Proposal Dashboard</h1>
           <p>Choose an action below to manage proposals.</p>
         </div>
-        <button className="secondary" onClick={onLogout}>
-          Logout
-        </button>
       </div>
 
-      <nav className="top-nav">
-        <Link to="/proposals">Proposals</Link>
-        <Link to="/bookings">Bookings</Link>
-        <Link to="/bills">Bill Payments</Link>
-        <Link to="/garages">Garages</Link>
-        <Link to="/noticeboard">Noticeboard</Link>
-        <Link to="/books">Library</Link>
-        <Link to="/dashboard">Dashboard</Link>
-      </nav>
+      <div className="feature-stat-grid" aria-label="Proposal summary">
+        <div className="feature-stat-card"><span>Active proposals</span><strong>{proposals.length}</strong></div>
+        <div className="feature-stat-card"><span>Total votes</span><strong>{totalVotes}</strong></div>
+        <div className="feature-stat-card"><span>Workspace</span><strong>{role === "committee" ? "Committee" : "Resident"}</strong></div>
+      </div>
 
       <div className="dashboard-menu">
         {dashboardOptions
           .filter((opt) => {
             if (role === "resident") return opt.key === "vote";
-            return true; // committee sees all options
+            return role === "committee";
           })
           .map((option) => (
             <button
@@ -155,21 +152,42 @@ function ProposalDashboard({ token, onLogout, role }) {
           <div className="panel-card" id="vote-proposals">
             <h2>Vote for Proposal</h2>
             {proposals.length === 0 ? (
-              <p>No proposals available yet.</p>
+              <div className="feature-empty-state"><span className="feature-empty-icon">◇</span><strong>No proposals available yet</strong><span>New community proposals will appear here when they are published.</span></div>
             ) : (
               proposals.map((proposal) => {
                 const yesVotes = proposal.votes.filter((v) => v.vote === "Yes").length;
                 const noVotes = proposal.votes.filter((v) => v.vote === "No").length;
+                const userVote = proposal.votes.find(
+                  (vote) => String(vote.resident) === String(userId)
+                );
+                const isChangingVote = changingVoteId === proposal._id;
                 return (
-                  <div key={proposal._id} className="proposal-card">
-                    <h3>{proposal.title}</h3>
-                    <p>{proposal.description}</p>
-                    <p>Type: {proposal.type}</p>
-                    <div className="proposal-actions">
-                      <button onClick={() => voteProposal(proposal._id, "Yes")}>Yes</button>
-                      <button onClick={() => voteProposal(proposal._id, "No")}>No</button>
+                  <div key={proposal._id} className="proposal-card proposal-card-rich">
+                    <div className="proposal-card-topline">
+                      <span className="proposal-type-badge">{proposal.type}</span>
+                      {userVote && <span className="proposal-vote-status">Vote recorded</span>}
                     </div>
-                    <p>Yes: {yesVotes} | No: {noVotes}</p>
+                    <h3>{proposal.title}</h3>
+                    <p className="proposal-description">{proposal.description}</p>
+                    <div className="proposal-vote-summary">
+                      <span>Yes <strong>{yesVotes}</strong></span>
+                      <span>No <strong>{noVotes}</strong></span>
+                    </div>
+                    {userVote && !isChangingVote ? (
+                      <div className="proposal-voted-state">
+                        <span>Your vote: <strong>{userVote.vote}</strong></span>
+                        <button className="secondary" onClick={() => setChangingVoteId(proposal._id)}>
+                          Change vote
+                        </button>
+                      </div>
+                    ) : (
+                      <div className="proposal-actions">
+                        {isChangingVote && <span className="proposal-change-prompt">Choose a new vote</span>}
+                        <button onClick={() => voteProposal(proposal._id, "Yes")}>Yes</button>
+                        <button onClick={() => voteProposal(proposal._id, "No")}>No</button>
+                        {isChangingVote && <button className="secondary" onClick={() => setChangingVoteId(null)}>Cancel</button>}
+                      </div>
+                    )}
                   </div>
                 );
               })
