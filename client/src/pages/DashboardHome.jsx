@@ -221,7 +221,7 @@ function DashboardHome({ role, token }) {
                     <div className="notification-center-heading">
                         <div>
                             <p className="dash-section-kicker">Needs your attention</p>
-                            <h2>Notification Center</h2>
+                            <h2>Notification Centre</h2>
                         </div>
                         <span>{stats.pendingBills + stats.overdueBills + stats.garageBookingsDue + stats.complaintsAgainstMyFlat + stats.proposalsYetToVote} items</span>
                     </div>
