@@ -48,22 +48,32 @@ const CreateBook = ({ token }) => {
 
 
     return (
-        <div>
+        <div className="dashboard-page nx library-page create-book-page">
 
-            <h1>Put a Book Up for Borrowing</h1>
+            <div className="dashboard-header library-header">
+                <div>
+                    <p className="dash-section-kicker">Neighbourhood library</p>
+                    <h1>Share a book</h1>
+                    <p>Add a title to the community borrowing shelf.</p>
+                </div>
+            </div>
 
             {error && (
-                <p>{error}</p>
+                <p className="form-message error-message">{error}</p>
             )}
 
-            <form onSubmit={handleSubmit}>
+            <form className="panel-card book-form" onSubmit={handleSubmit}>
+
+                <div className="book-form-heading">
+                    <h2>Book details</h2>
+                    <p>Give neighbours enough information to recognise and choose the book.</p>
+                </div>
 
                 <div>
-                    <label>
-                        Title
-                    </label>
+                    <label htmlFor="book-title">Title</label>
 
                     <input
+                        id="book-title"
                         type="text"
                         value={title}
                         onChange={(event) =>
@@ -75,11 +85,10 @@ const CreateBook = ({ token }) => {
 
 
                 <div>
-                    <label>
-                        Author
-                    </label>
+                    <label htmlFor="book-author">Author</label>
 
                     <input
+                        id="book-author"
                         type="text"
                         value={author}
                         onChange={(event) =>
@@ -91,11 +100,10 @@ const CreateBook = ({ token }) => {
 
 
                 <div>
-                    <label>
-                        Description
-                    </label>
+                    <label htmlFor="book-description">Description</label>
 
                     <textarea
+                        id="book-description"
                         value={description}
                         onChange={(event) =>
                             setDescription(event.target.value)
@@ -104,15 +112,11 @@ const CreateBook = ({ token }) => {
                 </div>
 
 
-                <button
-                    type="submit"
-                    disabled={loading}
-                >
-                    {loading
-                        ? "Putting up book..."
-                        : "Put Book Up for Borrowing"
-                    }
-                </button>
+                <div className="book-form-actions">
+                    <button type="submit" disabled={loading}>
+                        {loading ? "Putting up book..." : "Share book"}
+                    </button>
+                </div>
 
             </form>
 

@@ -1,5 +1,3 @@
-import React from "react";
-
 const HousehelpCard = ({
     posting,
     isAuthenticated,
@@ -22,46 +20,47 @@ const HousehelpCard = ({
         (isOwner || isStaff);
 
     return (
-        <div className="book-card">
+        <article className="househelp-card">
 
-            <h3>Flat {posting.flatNumber}</h3>
+            <div className="househelp-card-heading">
+                <div>
+                    <p className="househelp-card-kicker">Househelp request</p>
+                    <h3>Flat {posting.flatNumber}</h3>
+                </div>
+                <span className={`status-badge ${posting.status === "open" ? "househelp-open" : "completed"}`}>
+                    {posting.status === "open" ? "Open" : "Closed"}
+                </span>
+            </div>
 
             <p>
-                <strong>Resident:</strong>{" "}
+                <span className="househelp-detail-label">Resident</span>
                 {posting.residentName}
             </p>
 
             <p>
-                <strong>Preferred Hours:</strong>{" "}
+                <span className="househelp-detail-label">Preferred hours</span>
                 {posting.hours}
             </p>
 
             <p>
-                <strong>Mobile:</strong>{" "}
+                <span className="househelp-detail-label">Mobile</span>
                 {posting.mobileNumber}
             </p>
 
-            <p>
-                <strong>Status:</strong>{" "}
-                {posting.status === "open"
-                    ? "Looking for Househelp"
-                    : "Closed"}
-            </p>
-
-            <div className="book-actions">
+            <div className="househelp-card-actions">
 
                 {canClose && (
                     <button
                         className="secondary"
                         onClick={() => onClose(posting._id)}
                     >
-                        Mark as Closed
+                        Mark as closed
                     </button>
                 )}
 
             </div>
 
-        </div>
+        </article>
     );
 };
 

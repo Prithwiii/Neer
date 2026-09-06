@@ -17,37 +17,35 @@ const BookCard = ({
         book.borrowedBy?._id === userId;
 
     return (
-        <div className="book-card">
+        <article className="book-card">
 
-            <h3>{book.title}</h3>
+            <div className="book-card-heading">
+                <h3>{book.title}</h3>
+                <span className={`status-badge ${book.available ? "book-available" : "book-borrowed"}`}>
+                    {book.available ? "Available" : "Borrowed"}
+                </span>
+            </div>
 
             <p>
-                <strong>Author:</strong>{" "}
+                <span className="book-detail-label">Author</span>
                 {book.author}
             </p>
 
             <p>
-                <strong>Owner:</strong>{" "}
+                <span className="book-detail-label">Shared by</span>
                 {book.owner?.username || "Unknown"}
-            </p>
-
-            <p>
-                <strong>Status:</strong>{" "}
-                {book.available
-                    ? "Available"
-                    : "Borrowed"}
             </p>
 
             {!book.available && book.borrowedBy && (
                 <p>
-                    <strong>Borrowed by:</strong>{" "}
+                    <span className="book-detail-label">Borrowed by</span>
                     {book.borrowedBy.username}
                 </p>
             )}
 
             {!book.available && book.returnDate && (
                 <p>
-                    <strong>Return date:</strong>{" "}
+                    <span className="book-detail-label">Return date</span>
                     {new Date(book.returnDate).toLocaleDateString()}
                 </p>
             )}
@@ -82,7 +80,7 @@ const BookCard = ({
 
             </div>
 
-        </div>
+        </article>
     );
 };
 

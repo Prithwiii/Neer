@@ -327,6 +327,9 @@ router.put("/:id/residents", committeeOnly, async (req, res) => {
       await user.save();
     }
 
+    location.state = "Occupied";
+    await location.save();
+
     await sendLocation(res, location);
   } catch (error) {
     res.status(500).json({

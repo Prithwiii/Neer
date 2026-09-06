@@ -1,6 +1,7 @@
 console.log("auth routes loaded");
 
 import User from "../models/User.js";
+import BuildingLocation from "../models/BuildingLocation.js";
 import generateToken from "../utils/generateToken.js";
 import { hashPassword, comparePassword } from "../utils/hashPassword.js";
 
@@ -15,6 +16,23 @@ export const registerUser = async(req, res) => {
             return res.status(400).json({
                 message: "Flat number must use the format 10-A"
             });
+        }
+
+        const normalizedFlatNumber = role === "staff"
+            ? null
+            : flatNumber.trim().toUpperCase();
+
+        if (normalizedFlatNumber) {
+            const flat = await BuildingLocation.findOne({
+                category: "Flat",
+                flatNumber: normalizedFlatNumber
+            });
+
+            if (!flat) {
+                return res.status(400).json({
+                    message: "The selected flat does not exist"
+                });
+            }
         }
 
         const existingUser = await User.findOne({email});
@@ -33,8 +51,18 @@ export const registerUser = async(req, res) => {
             email,
             password: hashedPassword,
             role,
-            flatNumber: role === "staff" ? undefined : flatNumber.toUpperCase()
+            flatNumber: normalizedFlatNumber || undefined
         });
+
+        if (normalizedFlatNumber) {
+            await BuildingLocation.updateOne(
+                {
+                    category: "Flat",
+                    flatNumber: normalizedFlatNumber
+                },
+                { $set: { state: "Occupied" } }
+            );
+        }
 
         res.status(201).json({
             _id: user._id,

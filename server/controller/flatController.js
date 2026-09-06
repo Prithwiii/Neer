@@ -3,35 +3,59 @@ import User from "../models/User.js";
 
 const VALID_STATES = ["For Sale", "To-Let", "Occupied"];
 
+const normalizeFlatNumber = (value) => {
+    const normalized = String(value || "").trim().toUpperCase();
+    const compactMatch = normalized.match(/^(\d+)([A-Z])$/);
+
+    return compactMatch
+        ? `${compactMatch[1]}-${compactMatch[2]}`
+        : normalized;
+};
+
+const flatNumberPattern = (flatNumber) => new RegExp(
+    `^${String(flatNumber).replace("-", "-?")}$`,
+    "i"
+);
+
 export const getFlats = async (req, res) => {
     try {
         const flats = await BuildingLocation.find({
             category: "Flat"
         }).sort({floor: 1, flatNumber: 1});
 
-        const flatNumbers = flats.map((flat) => flat.flatNumber);
-
         const users = await User.find(
             {
-                flatNumber: {$in: flatNumbers}
+                flatNumber: {$exists: true, $nin: [null, ""]}
             },
             "username email role flatNumber" );
         
-        const result = flats.map(flat => ({
-            _id: flat._id,
-            name: flat.name,
-            floor: flat.floor,
-            flatNumber: flat.flatNumber,
-            state: flat.state,
-            residents: users
-                .filter((user) => user.flatNumber === flat.flatNumber)
+        const result = flats.map((flat) => {
+            const flatNumber = normalizeFlatNumber(flat.flatNumber);
+            const residents = users
+                .filter((user) => normalizeFlatNumber(user.flatNumber) === flatNumber)
                 .map((user) => ({
                     _id: user._id,
                     username: user.username,
                     email: user.email,
                     role: user.role
                 }))
-        }));
+
+            return {
+                _id: flat._id,
+                name: flat.name,
+                floor: flat.floor,
+                flatNumber: flat.flatNumber,
+                // Occupied is derived from current assignments. A stale
+                // persisted Occupied value must not survive after residents
+                // move away or are removed.
+                state: residents.length > 0
+                    ? "Occupied"
+                    : flat.state === "Occupied"
+                        ? "For Sale"
+                        : flat.state,
+                residents
+            };
+        });
 
         res.status(200).json(result);
     } catch (error) {
@@ -62,6 +86,19 @@ export const updateFlatState = async (req, res) => {
             return res.status(404).json({
                 message: "Flat not found"
             });
+        }
+
+        if (state === "Occupied") {
+            const hasResident = await User.exists({
+                flatNumber: flatNumberPattern(flat.flatNumber),
+                role: { $ne: "staff" }
+            });
+
+            if (!hasResident) {
+                return res.status(400).json({
+                    message: "A flat can only be occupied when residents are assigned"
+                });
+            }
         }
 
         flat.state = state;

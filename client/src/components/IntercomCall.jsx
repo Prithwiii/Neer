@@ -1,33 +1,31 @@
-import { LiveKitRoom, RoomAudioRenderer, 
-         useParticipants, StartAudio, } from "@livekit/components-react";
+import { LiveKitRoom, RoomAudioRenderer, useParticipants, StartAudio } from "@livekit/components-react";
 
 import "@livekit/components-styles";
 
 const CallContent = ({onEndCall}) => {
   const participants = useParticipants();
 
-  console.log("LiveKit participants:", participants);
-
   return (
     <>
-      <RoomAudioRenderer/>
-      <StartAudio label = "Enable Call Audio"/>
-      <div>
-        <h2>Intercom Call</h2>
+      <RoomAudioRenderer />
+      <StartAudio label="Enable call audio" />
+      <div className="intercom-overlay active-call-overlay" role="dialog" aria-modal="true" aria-labelledby="active-call-title">
+        <div className="intercom-call-card active-call-card">
+          <span className="intercom-call-signal is-live" aria-hidden="true">●</span>
+          <p className="intercom-call-kicker">Live intercom</p>
+          <h2 id="active-call-title">Intercom call</h2>
 
-        <p>
-          {participants.length > 1
-          ? "connected"
-          : "waiting for the other user..."}
-        </p>
+          <p className="intercom-call-status">
+            <span className="intercom-status-dot" aria-hidden="true" />
+            {participants.length > 1 ? "Connected" : "Waiting for the other user..."}
+          </p>
 
-        <p>
-          Participants: {participants.length}
-        </p>
+          <p className="intercom-participant-count">{participants.length} participant{participants.length === 1 ? "" : "s"}</p>
 
-        <button onClick={onEndCall}>
-          End Call
-        </button>
+          <button type="button" className="intercom-end-call" onClick={onEndCall}>
+            End call
+          </button>
+        </div>
 
       </div>
     </>

@@ -83,114 +83,95 @@ const GuestValidation = () => {
 
 
     return (
-        <div className="min-h-screen bg-gray-100 p-6">
-
-            <div className="max-w-3xl mx-auto">
-
-                {/* Page Header */}
-                <div className="mb-6">
-
-                    <h1 className="text-3xl font-bold text-gray-800">
-                        Guest Validation
-                    </h1>
-
-                    <p className="text-gray-600 mt-1">
-                        Verify the guest's information before allowing entry.
-                    </p>
-
+        <div className="dashboard-page nx guest-page guest-validation-page">
+            <div className="dashboard-header guest-page-header">
+                <div>
+                    <p className="dash-section-kicker">Front desk services</p>
+                    <h1>Guest validation</h1>
+                    <p>Verify visitor details and record entry only after the information is confirmed.</p>
                 </div>
+            </div>
 
 
-                {/* Validation Form */}
-                <div className="bg-white rounded-xl shadow-md p-6">
-
-                    <h2 className="text-xl font-semibold text-gray-800 mb-5">
-                        Enter Guest Information
-                    </h2>
+            <section className="panel-card guest-form-panel">
+                    <div className="guest-form-heading">
+                        <h2>Find a guest registration</h2>
+                        <p>Use the resident details, phone number, and one-time passcode provided by the visitor.</p>
+                    </div>
 
 
                     {error && (
-                        <div className="bg-red-100 border border-red-200 text-red-700 p-3 rounded-lg mb-5">
+                        <div className="form-message error-message">
                             {error}
                         </div>
                     )}
 
 
                     {success && (
-                        <div className="bg-green-100 border border-green-200 text-green-700 p-3 rounded-lg mb-5">
+                        <div className="form-message success-message">
                             {success}
                         </div>
                     )}
 
 
-                    <form
-                        onSubmit={handleValidate}
-                        className="space-y-5"
-                    >
+                    <form onSubmit={handleValidate} className="guest-form">
 
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                        <div className="guest-field-grid">
 
                             {/* Resident Name */}
-                            <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-1">
-                                    Resident Name
-                                </label>
+                            <div className="guest-form-field">
+                                <label htmlFor="validation-resident-name">Resident name</label>
 
                                 <input
+                                    id="validation-resident-name"
                                     type="text"
                                     name="residentName"
                                     value={formData.residentName}
                                     onChange={handleChange}
                                     required
-                                    className="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-blue-500"
                                     placeholder="Enter resident name"
                                 />
                             </div>
 
 
                             {/* Flat Number */}
-                            <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-1">
-                                    Flat Number
-                                </label>
+                            <div className="guest-form-field">
+                                <label htmlFor="validation-flat-number">Flat number</label>
 
                                 <input
+                                    id="validation-flat-number"
                                     type="text"
                                     name="flatNumber"
                                     value={formData.flatNumber}
                                     onChange={handleChange}
                                     required
-                                    className="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                    placeholder="Enter flat number"
+                                    placeholder="e.g. 5-A"
                                 />
                             </div>
 
 
                             {/* Guest Phone */}
-                            <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-1">
-                                    Guest Phone Number
-                                </label>
+                            <div className="guest-form-field">
+                                <label htmlFor="validation-guest-phone">Guest phone number</label>
 
                                 <input
+                                    id="validation-guest-phone"
                                     type="tel"
                                     name="guestPhone"
                                     value={formData.guestPhone}
                                     onChange={handleChange}
                                     required
-                                    className="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-blue-500"
                                     placeholder="Enter guest phone"
                                 />
                             </div>
 
 
                             {/* Passcode */}
-                            <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-1">
-                                    One-Time Passcode
-                                </label>
+                            <div className="guest-form-field">
+                                <label htmlFor="validation-passcode">One-time passcode</label>
 
                                 <input
+                                    id="validation-passcode"
                                     type="text"
                                     name="passcode"
                                     value={formData.passcode}
@@ -198,7 +179,6 @@ const GuestValidation = () => {
                                     required
                                     maxLength="6"
                                     inputMode="numeric"
-                                    className="w-full border border-gray-300 rounded-lg px-4 py-2.5 tracking-widest focus:outline-none focus:ring-2 focus:ring-blue-500"
                                     placeholder="6-digit passcode"
                                 />
                             </div>
@@ -206,119 +186,87 @@ const GuestValidation = () => {
                         </div>
 
 
-                        <button
-                            type="submit"
-                            disabled={loading}
-                            className="w-full bg-blue-600 text-white py-3 rounded-lg font-medium hover:bg-blue-700 transition disabled:opacity-50"
-                        >
+                        <button type="submit" disabled={loading}>
                             {loading
                                 ? "Checking..."
-                                : "Validate Guest"}
+                                : "Validate guest"}
                         </button>
 
                     </form>
 
-                </div>
+            </section>
 
 
                 {/* Guest Details Card */}
                 {guest && (
-                    <div className="mt-6 bg-white rounded-xl shadow-md overflow-hidden">
+                    <section className="panel-card guest-details-card">
 
                         {/* Card Header */}
-                        <div className="bg-blue-600 px-6 py-4">
-
-                            <div className="flex items-center justify-between">
-
-                                <div>
-                                    <h2 className="text-xl font-semibold text-white">
-                                        Guest Details
-                                    </h2>
-
-                                    <p className="text-blue-100 text-sm mt-1">
-                                        Registration verified successfully
-                                    </p>
-                                </div>
-
-
-                                {/* Status */}
-                                <div>
-                                    {guest.checkedIn ? (
-                                        <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-700">
-                                            Checked In
-                                        </span>
-                                    ) : (
-                                        <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-yellow-100 text-yellow-700">
-                                            Not Checked In
-                                        </span>
-                                    )}
-                                </div>
-
+                        <div className="guest-details-header">
+                            <div>
+                                <p className="dash-section-kicker">Registration verified</p>
+                                <h2>Guest details</h2>
+                                <p>Review the information before recording entry.</p>
                             </div>
 
+                            <div>
+                                    {guest.checkedIn ? (
+                                        <span className="status-badge guest-checked-in">
+                                            Checked in
+                                        </span>
+                                    ) : (
+                                        <span className="status-badge guest-not-checked-in">
+                                            Not checked in
+                                        </span>
+                                    )}
+                            </div>
                         </div>
 
 
                         {/* Guest Information */}
-                        <div className="p-6">
-
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                        <div className="guest-details-body">
+                            <div className="guest-details-grid">
 
                                 {/* Guest Name */}
-                                <div className="bg-gray-50 rounded-lg p-4">
-                                    <p className="text-sm text-gray-500 mb-1">
-                                        Guest Name
-                                    </p>
-
-                                    <p className="text-lg font-semibold text-gray-800">
+                                <div className="guest-detail-item">
+                                    <p className="guest-detail-label">Guest name</p>
+                                    <p className="guest-detail-value">
                                         {guest.guestName}
                                     </p>
                                 </div>
 
 
                                 {/* Guest Phone */}
-                                <div className="bg-gray-50 rounded-lg p-4">
-                                    <p className="text-sm text-gray-500 mb-1">
-                                        Phone Number
-                                    </p>
-
-                                    <p className="text-lg font-semibold text-gray-800">
+                                <div className="guest-detail-item">
+                                    <p className="guest-detail-label">Phone number</p>
+                                    <p className="guest-detail-value">
                                         {guest.guestPhone}
                                     </p>
                                 </div>
 
 
                                 {/* Resident */}
-                                <div className="bg-gray-50 rounded-lg p-4">
-                                    <p className="text-sm text-gray-500 mb-1">
-                                        Visiting Resident
-                                    </p>
-
-                                    <p className="text-lg font-semibold text-gray-800">
+                                <div className="guest-detail-item">
+                                    <p className="guest-detail-label">Visiting resident</p>
+                                    <p className="guest-detail-value">
                                         {guest.residentName}
                                     </p>
                                 </div>
 
 
                                 {/* Flat */}
-                                <div className="bg-gray-50 rounded-lg p-4">
-                                    <p className="text-sm text-gray-500 mb-1">
-                                        Flat Number
-                                    </p>
-
-                                    <p className="text-lg font-semibold text-gray-800">
+                                <div className="guest-detail-item">
+                                    <p className="guest-detail-label">Flat number</p>
+                                    <p className="guest-detail-value">
                                         {guest.flatNumber}
                                     </p>
                                 </div>
 
 
                                 {/* Visit Date */}
-                                <div className="bg-gray-50 rounded-lg p-4">
-                                    <p className="text-sm text-gray-500 mb-1">
-                                        Visit Date
-                                    </p>
-
-                                    <p className="text-lg font-semibold text-gray-800">
+                                <div className="guest-detail-item">
+                                    <p className="guest-detail-label">Visit date</p>
+                                    <p className="guest-detail-value">
                                         {new Date(
                                             guest.visitDate
                                         ).toLocaleDateString()}
@@ -327,12 +275,9 @@ const GuestValidation = () => {
 
 
                                 {/* Registration ID */}
-                                <div className="bg-gray-50 rounded-lg p-4">
-                                    <p className="text-sm text-gray-500 mb-1">
-                                        Guest Registration ID
-                                    </p>
-
-                                    <p className="text-sm font-mono text-gray-800 break-all">
+                                <div className="guest-detail-item">
+                                    <p className="guest-detail-label">Registration ID</p>
+                                    <p className="guest-detail-value guest-detail-id">
                                         {guest._id}
                                     </p>
                                 </div>
@@ -343,70 +288,45 @@ const GuestValidation = () => {
                             {/* Confirmation */}
                             {!guest.checkedIn ? (
 
-                                <div className="mt-6">
+                                <div className="guest-confirmation">
 
-                                    <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-4">
-                                        <p className="text-sm text-yellow-800">
-                                            <span className="font-semibold">
-                                                Important:
-                                            </span>{" "}
-                                            Verify the guest's identity
-                                            manually before confirming entry.
-                                        </p>
+                                    <div className="guest-warning">
+                                        <p><strong>Important:</strong> Verify the guest&apos;s identity manually before confirming entry.</p>
                                     </div>
 
 
-                                    <button
-                                        onClick={handleConfirm}
-                                        disabled={confirming}
-                                        className="w-full bg-green-600 text-white py-3 rounded-lg font-semibold hover:bg-green-700 transition disabled:opacity-50"
-                                    >
+                                    <button onClick={handleConfirm} disabled={confirming}>
                                         {confirming
-                                            ? "Confirming Guest Visit..."
-                                            : "Confirm Guest Visit"}
+                                            ? "Confirming guest visit..."
+                                            : "Confirm guest visit"}
                                     </button>
 
                                 </div>
 
                             ) : (
 
-                                <div className="mt-6 bg-green-50 border border-green-200 rounded-lg p-5">
+                                <div className="guest-confirmed-state">
+                                    <span className="guest-confirmed-icon" aria-hidden="true">✓</span>
 
-                                    <div className="flex items-center gap-3">
+                                    <div>
+                                        <p><strong>Guest visit confirmed</strong></p>
 
-                                        <div className="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center">
-                                            <span className="text-green-600 text-xl">
-                                                ✓
-                                            </span>
-                                        </div>
-
-                                        <div>
-                                            <p className="font-semibold text-green-800">
-                                                Guest Visit Confirmed
-                                            </p>
-
-                                            {guest.checkedInAt && (
-                                                <p className="text-sm text-green-700">
+                                        {guest.checkedInAt && (
+                                            <p>
                                                     Entry recorded at{" "}
                                                     {new Date(
                                                         guest.checkedInAt
                                                     ).toLocaleString()}
-                                                </p>
-                                            )}
-                                        </div>
-
+                                            </p>
+                                        )}
                                     </div>
-
                                 </div>
 
                             )}
 
                         </div>
-
-                    </div>
+                    </section>
                 )}
-
-            </div>
 
         </div>
     );

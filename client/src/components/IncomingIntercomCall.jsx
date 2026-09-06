@@ -23,24 +23,26 @@ const IncomingIntercomCall = ({ call, onClose }) => {
   }
 
   return (
-    <div>
-      <h2>Incoming Intercom Call</h2>
+    <div className="intercom-overlay" role="dialog" aria-modal="true" aria-labelledby="incoming-call-title">
+      <div className="intercom-call-card incoming-call-card">
+        <span className="intercom-call-signal" aria-hidden="true">◉</span>
+        <p className="intercom-call-kicker">Incoming intercom</p>
+        <h2 id="incoming-call-title">Someone is calling</h2>
 
-      <p>
-        {call.staffName} is calling you.
-      </p>
+        <p className="intercom-call-description">
+          <strong>{call.staffName}</strong> is calling you from the building desk.
+        </p>
 
-      <button
-        onClick={() => setAccepted(true)}
-      >
-        Accept
-      </button>
+        <div className="intercom-call-actions">
+          <button type="button" onClick={() => setAccepted(true)}>
+            Accept call
+          </button>
 
-      <button
-        onClick={onClose}
-      >
-        Decline
-      </button>
+          <button type="button" className="secondary" onClick={onClose}>
+            Decline
+          </button>
+        </div>
+      </div>
     </div>
   );
 };

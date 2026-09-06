@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 import {
     getBooks,
@@ -17,8 +17,6 @@ const Books = () => {
     const [error, setError] = useState("");
 
     const token = localStorage.getItem("token");
-    const navigate = useNavigate();
-
     const fetchBooks = async () => {
         try {
             setLoading(true);
@@ -35,6 +33,8 @@ const Books = () => {
     };
 
     useEffect(() => {
+        // The fetch helper owns loading and error state for refreshes as well.
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         fetchBooks();
     }, []);
 
@@ -80,28 +80,26 @@ const Books = () => {
         }
     };
 
-    const handleLogout = () => {
-        localStorage.removeItem("token");
-        localStorage.removeItem("role");
-        localStorage.removeItem("userId");
-
-        navigate("/login");
-    };
-
     if (loading) {
         return (
-            <div className="dashboard-page">
-                <p>Loading books...</p>
+            <div className="dashboard-page nx library-page">
+                <div className="dash-loading" role="status">
+                    <span className="dash-loading-mark" aria-hidden="true" />
+                    <span>Loading books...</span>
+                </div>
             </div>
         );
     }
 
     return (
-        <div className="dashboard-page">
+        <div className="dashboard-page nx library-page">
 
-            <div>
-                <h3>Browse books available for borrowing.</h3>
-                <p></p>
+            <div className="dashboard-header library-header">
+                <div>
+                    <p className="dash-section-kicker">Neighbourhood library</p>
+                    <h1>Books</h1>
+                    <p>Browse books shared by residents and borrow something new.</p>
+                </div>
             </div>
 
             <div className="panel-card">
@@ -126,7 +124,11 @@ const Books = () => {
                 )}
 
                 {books.length === 0 ? (
-                    <p>No books are currently listed.</p>
+                    <div className="feature-empty-state">
+                        <span className="feature-empty-icon" aria-hidden="true">▤</span>
+                        <strong>No books are listed yet</strong>
+                        <span>Be the first neighbour to share a book with the community.</span>
+                    </div>
                 ) : (
                     <div className="books-grid">
                         {books.map((book) => (
