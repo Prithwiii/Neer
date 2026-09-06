@@ -673,6 +673,40 @@
 .nx .proposals-page .dashboard-menu { margin-bottom: 18px; }
 .nx .proposals-page .dashboard-menu button { min-width: 148px; }
 
+/* --------------------------------------------------------------- library */
+
+.nx .library-page { max-width: 1040px; }
+.nx .library-page .dashboard-header { margin-bottom: 20px; }
+.nx .library-page .panel-card { padding: 20px; }
+.nx .books-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+.nx .book-card { display: flex; min-height: 220px; flex-direction: column; padding: 18px; border: 1px solid var(--nx-border); border-radius: var(--nx-radius); background: var(--nx-surface); box-shadow: var(--nx-shadow); }
+.nx .book-card-heading { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; padding-bottom: 12px; border-bottom: 1px solid var(--nx-border); }
+.nx .book-card h3 { margin: 0; color: var(--nx-deep); font-size: 1.05rem; line-height: 1.35; }
+.nx .book-card p { display: flex; flex-direction: column; gap: 2px; margin: 13px 0 0; color: var(--nx-ink); font-size: 0.88rem; }
+.nx .book-detail-label { color: var(--nx-muted); font-size: 0.71rem; font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase; }
+.nx .book-card .book-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: auto; padding-top: 18px; }
+.nx .book-card .book-actions button { flex: 1; min-width: 92px; padding: 7px 12px; font-size: 0.86rem; }
+.nx .book-card .book-available { background: var(--nx-ok-bg); border-color: var(--nx-ok); color: var(--nx-ok); }
+.nx .book-card .book-borrowed { background: var(--nx-cream); border-color: var(--nx-brown); color: var(--nx-deep); }
+.nx .create-book-page { max-width: 760px; }
+.nx .book-form { display: grid; gap: 16px; max-width: none; }
+.nx .book-form-heading { padding-bottom: 4px; }
+.nx .book-form-heading h2 { margin-bottom: 4px; }
+.nx .book-form-heading p { margin: 0; color: var(--nx-muted); font-size: 0.88rem; }
+.nx .book-form > div:not(.book-form-heading):not(.book-form-actions) { display: grid; gap: 6px; }
+.nx .book-form label { font-size: 0.82rem; font-weight: 650; }
+.nx .book-form textarea { min-height: 128px; resize: vertical; }
+.nx .book-form-actions { display: flex; justify-content: flex-end; padding-top: 4px; }
+
+@media (max-width: 960px) {
+  .nx .books-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (max-width: 640px) {
+  .nx .books-grid { grid-template-columns: minmax(0, 1fr); }
+  .nx .book-form-actions button { width: 100%; }
+}
+
 /* ==========================================================================
    AUTHENTICATION
    ========================================================================== */

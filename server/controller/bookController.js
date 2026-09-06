@@ -139,9 +139,9 @@ const returnBook = async(req, res) => {
             });
         }
 
-        const isOwner = book.owner.toString() === req.user._id.toString();
+        const isBorrower = book.borrowedBy && book.borrowedBy.toString() === req.user._id.toString();
         
-        if (!isOwner) {
+        if (!isBorrower) {
             return res.status(403).json({
                 message: "You are not authorized for this action"
             });
@@ -149,7 +149,7 @@ const returnBook = async(req, res) => {
 
         book.available = true;
         book.borrowedAt = null;
-        bool.borrowedBy = null;
+        book.borrowedBy = null;
         book.returnDate = null;
 
         await book.save();
