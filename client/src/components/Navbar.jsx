@@ -1,7 +1,9 @@
+import { useState } from "react";
 import { useLocation } from "react-router-dom";
 
 function Navbar({ profile, onLogout, onMenuClick }) {
   const location = useLocation();
+  const [profileOpen, setProfileOpen] = useState(false);
 
   const pageNames = {
     "/dashboard": "Dashboard",
@@ -22,6 +24,10 @@ function Navbar({ profile, onLogout, onMenuClick }) {
     "/intercom-access": "Intercom Management",
     "/family-expenses": "Family Expenses",
     "/lost-found": "Lost & Found",
+    "/contacts": "Contact Directory",
+    "/flats": "Flats",
+    "/househelp": "Househelp Postings",
+    "/maintenance": "Maintenance",
   };
 
   // an exact match wins, otherwise fall back to the longest matching prefix so
@@ -56,17 +62,33 @@ function Navbar({ profile, onLogout, onMenuClick }) {
       </div>
 
       <div className="navbar-right">
-        <span className="navbar-username">
-          {profile ? `${profile.username}${profile.flatNumber ? ` : ${profile.flatNumber}` : ""}` : "User"}
-        </span>
+        <div className="profile-menu">
+          <button
+            type="button"
+            className="profile-trigger"
+            aria-expanded={profileOpen}
+            onClick={() => setProfileOpen((open) => !open)}
+          >
+            <span className="profile-avatar" aria-hidden="true">
+              {(profile?.username || "U").charAt(0).toUpperCase()}
+            </span>
+            <span className="navbar-username">
+              {profile ? `${profile.username}${profile.flatNumber ? ` : ${profile.flatNumber}` : ""}` : "User"}
+            </span>
+            <span className="profile-chevron" aria-hidden="true">⌄</span>
+          </button>
 
-        <button
-          type="button"
-          className="secondary"
-          onClick={onLogout}
-        >
-          Logout
-        </button>
+          {profileOpen && (
+            <div className="profile-dropdown">
+              <p className="profile-dropdown-label">Signed in as</p>
+              <strong>{profile?.username || "User"}</strong>
+              {profile?.flatNumber && <span>{profile.flatNumber}</span>}
+              <button type="button" className="profile-logout" onClick={onLogout}>
+                Sign out
+              </button>
+            </div>
+          )}
+        </div>
       </div>
     </header>
   );

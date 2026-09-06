@@ -7,7 +7,7 @@ import API_URL from "../config/api";
 const RESOURCE_API = `${API_URL}/api/resources`;
 const BOOKING_API = `${API_URL}/api/bookings`;
 
-function Booking({ token, onLogout, role }) {
+function Booking({ token, role }) {
   const [resources, setResources] = useState([]);
   const [myBookings, setMyBookings] = useState([]);
   const [activeTab, setActiveTab] = useState("book");
@@ -213,9 +213,6 @@ function Booking({ token, onLogout, role }) {
             Reserve a shared space or facility · signed in as {role}
           </p>
         </div>
-        <button className="secondary" onClick={onLogout}>
-          Logout
-        </button>
       </div>
 
       <nav className="top-nav">

@@ -53,20 +53,15 @@ router.post("/:id/vote", protect, async (req, res) => {
       });
     }
 
-    const alreadyVoted = proposal.votes.some(
-      (v) => v.resident.toString() === req.user._id.toString()
+    const existingVote = proposal.votes.find(
+      (item) => item.resident.toString() === req.user._id.toString()
     );
 
-    if (alreadyVoted) {
-      return res.status(400).json({
-        message: "You have already voted",
-      });
+    if (existingVote) {
+      existingVote.vote = vote;
+    } else {
+      proposal.votes.push({ resident: req.user._id, vote });
     }
-
-    proposal.votes.push({
-      resident: req.user._id,
-      vote,
-    });
 
     await proposal.save();
 

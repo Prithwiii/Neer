@@ -5,7 +5,7 @@ import API_URL from "../config/api";
 
 const GARAGE_BOOKING_API = `${API_URL}/api/garage-bookings`;
 
-function MyGarageBookings({ token, onLogout }) {
+function MyGarageBookings({ token }) {
   const [bookings, setBookings] = useState([]);
   const [message, setMessage] = useState("");
 
@@ -30,9 +30,9 @@ function MyGarageBookings({ token, onLogout }) {
   };
 
   return (
-    <div className="dashboard-page">
-      <div className="dashboard-header"><div><h1>My Garage Bookings</h1><p>View and cancel your garage bookings.</p></div><button className="secondary" onClick={onLogout}>Logout</button></div>
-      <nav className="top-nav"><Link to="/dashboard">Dashboard</Link><Link to="/garages">Available Garages</Link><Link to="/garages/my-bookings">My Garage Bookings</Link></nav>
+    <div className="dashboard-page nx garages-page">
+      <div className="dashboard-header"><div><h1>My Garage Bookings</h1><p>View and cancel your garage bookings.</p></div></div>
+      <nav className="top-nav"><Link to="/garages">Available Garages</Link><Link to="/garages/my-bookings">My Garage Bookings</Link></nav>
       <div className="dashboard-panel"><div className="panel-card">{message && <p className="form-message">{message}</p>}{bookings.length === 0 ? <p>No bookings yet.</p> : bookings.map((booking) => <div key={booking._id} className="proposal-card"><h3>{booking.garage?.name || "Garage removed"}</h3><p>{new Date(booking.startDate).toLocaleString()} — {new Date(booking.endDate).toLocaleString()}</p><p>Status: {booking.status}</p>{booking.status === "confirmed" && <button className="secondary" onClick={() => cancelBooking(booking._id)}>Cancel</button>}</div>)}</div></div>
     </div>
   );

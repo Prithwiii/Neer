@@ -40,7 +40,7 @@ const emptyForm = {
   recurring: false,
 };
 
-function BillPayments({ token, onLogout, role }) {
+function BillPayments({ token, role }) {
   const [month, setMonth] = useState(getCurrentMonth());
   const [bills, setBills] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -184,9 +184,6 @@ function BillPayments({ token, onLogout, role }) {
           <h1>Bill Payments</h1>
           <p>Your monthly household bills · signed in as {role}</p>
         </div>
-        <button className="secondary" onClick={onLogout}>
-          Logout
-        </button>
       </div>
 
       <nav className="top-nav">

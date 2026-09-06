@@ -6,7 +6,7 @@ import API_URL from "../config/api";
 const GARAGE_API = `${API_URL}/api/garages`;
 const GARAGE_BOOKING_API = `${API_URL}/api/garage-bookings`;
 
-function GarageBookingPage({ token, onLogout }) {
+function GarageBookingPage({ token }) {
   const { garageId } = useParams();
   const navigate = useNavigate();
   const [garage, setGarage] = useState(null);
@@ -46,9 +46,9 @@ function GarageBookingPage({ token, onLogout }) {
   };
 
   return (
-    <div className="dashboard-page">
-      <div className="dashboard-header"><div><h1>Book Garage</h1><p>Choose the booking period for this garage.</p></div><button className="secondary" onClick={onLogout}>Logout</button></div>
-      <nav className="top-nav"><Link to="/dashboard">Dashboard</Link><Link to="/garages">Available Garages</Link><Link to="/garages/my-bookings">My Garage Bookings</Link></nav>
+    <div className="dashboard-page nx garages-page">
+      <div className="dashboard-header"><div><h1>Book Garage</h1><p>Choose the booking period for this garage.</p></div></div>
+      <nav className="top-nav"><Link to="/garages">Available Garages</Link><Link to="/garages/my-bookings">My Garage Bookings</Link></nav>
       <div className="dashboard-panel"><div className="panel-card">
         {garage ? <form className="booking-form" onSubmit={submitBooking}><h2>{garage.name} {garage.slotNumber ? `— ${garage.slotNumber}` : ""}</h2><p>{garage.description || "Garage space"}</p><label>Start</label><div className="time-row"><input type="date" value={startDate} onChange={(event) => setStartDate(event.target.value)} required /><input type="time" value={startTime} onChange={(event) => setStartTime(event.target.value)} required /></div><label>End</label><div className="time-row"><input type="date" value={endDate} onChange={(event) => setEndDate(event.target.value)} required /><input type="time" value={endTime} onChange={(event) => setEndTime(event.target.value)} required /></div><input placeholder="Booking purpose or duration" value={purpose} onChange={(event) => setPurpose(event.target.value)} /><button className="primary" type="submit">Confirm Booking</button>{message && <p className="form-message">{message}</p>}</form> : <p>{message || "Loading garage..."}</p>}
       </div></div>
