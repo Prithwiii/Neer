@@ -1,4 +1,4 @@
-import React from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import HousehelpCard from "../components/HousehelpCard";
@@ -12,9 +12,9 @@ const HousehelpPostings = () => {
 
     const navigate = useNavigate();
 
-    const [postings, setPostings] = React.useState([]);
-    const [loading, setLoading] = React.useState(true);
-    const [error, setError] = React.useState("");
+    const [postings, setPostings] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState("");
 
     const role = localStorage.getItem("role");
     const isAuthenticated = !!localStorage.getItem("token");
@@ -36,7 +36,9 @@ const HousehelpPostings = () => {
         }
     };
 
-    React.useEffect(() => {
+    useEffect(() => {
+        // The loader also owns refresh state after closing a posting.
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         loadPostings();
     }, []);
 
@@ -66,23 +68,24 @@ const HousehelpPostings = () => {
 
     if (loading) {
         return (
-            <div className="library-page">
-                <p>Loading househelp postings...</p>
+            <div className="dashboard-page nx househelp-page">
+                <div className="dash-loading" role="status">
+                    <span className="dash-loading-mark" aria-hidden="true" />
+                    <span>Loading househelp postings...</span>
+                </div>
             </div>
         );
     }
 
     return (
-        <div className="library-page">
+        <div className="dashboard-page nx househelp-page">
 
-            <div className="library-header">
+            <div className="dashboard-header library-header">
 
                 <div>
+                    <p className="dash-section-kicker">Neighbourhood services</p>
                     <h1>Househelp</h1>
-
-                    <p>
-                        Residents looking for househelp
-                    </p>
+                    <p>Find and share trusted househelp opportunities within the building.</p>
                 </div>
 
                 {role === "resident" && (
@@ -91,29 +94,29 @@ const HousehelpPostings = () => {
                             navigate("/househelp/create")
                         }
                     >
-                        Create Posting
+                        Create posting
                     </button>
                 )}
 
             </div>
 
             {error && (
-                <div className="error-message">
+                <div className="form-message error-message">
                     {error}
                 </div>
             )}
 
             {postings.length === 0 ? (
 
-                <div className="empty-message">
-                    <p>
-                        There are currently no househelp postings.
-                    </p>
+                <div className="feature-empty-state">
+                    <span className="feature-empty-icon" aria-hidden="true">⌂</span>
+                    <strong>No househelp postings yet</strong>
+                    <span>Share an opportunity when you are looking for help at home.</span>
                 </div>
 
             ) : (
                 <div>
-                    <div className="book-grid">
+                    <div className="househelp-grid">
 
                         {postings.map((posting) => (
 

@@ -1,4 +1,4 @@
-import React from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import {
@@ -8,15 +8,15 @@ import {
 function CreateHousehelpPosting() {
   const navigate = useNavigate();
 
-  const [formData, setFormData] = React.useState({
+  const [formData, setFormData] = useState({
     residentName: "",
     flatNumber: "",
     hours: "",
     mobileNumber: "",
   });
 
-  const [error, setError] = React.useState("");
-  const [loading, setLoading] = React.useState(false);
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -45,97 +45,88 @@ function CreateHousehelpPosting() {
   };
 
   return (
-    <div className="max-w-xl mx-auto p-6">
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold">
-          Create Househelp Posting
-        </h1>
-
-        <p className="text-gray-600 mt-1">
-          Let other residents know that you are looking
-          for a househelp.
-        </p>
+    <div className="dashboard-page nx househelp-page create-househelp-page">
+      <div className="dashboard-header library-header">
+        <div>
+          <p className="dash-section-kicker">Neighbourhood services</p>
+          <h1>Share a househelp request</h1>
+          <p>Let other residents know when you are looking for househelp.</p>
+        </div>
       </div>
 
       {error && (
-        <div className="bg-red-100 text-red-700 p-3 rounded mb-4">
+        <div className="form-message error-message">
           {error}
         </div>
       )}
 
-      <form
-        onSubmit={handleSubmit}
-        className="bg-white border rounded-lg shadow-sm p-6 space-y-5"
-      >
-        <div>
-          <label className="block text-sm font-medium mb-1">
-            Resident Name
-          </label>
+      <form onSubmit={handleSubmit} className="panel-card househelp-form">
+        <div className="househelp-form-heading">
+          <h2>Posting details</h2>
+          <p>Include clear contact information and the hours you need help.</p>
+        </div>
+
+        <div className="househelp-form-field">
+          <label htmlFor="househelp-resident-name">Resident name</label>
 
           <input
+            id="househelp-resident-name"
             type="text"
             name="residentName"
             value={formData.residentName}
             onChange={handleChange}
             required
-            className="w-full border rounded px-3 py-2"
             placeholder="Enter your name"
           />
         </div>
 
-        <div>
-          <label className="block text-sm font-medium mb-1">
-            Flat Number
-          </label>
+        <div className="househelp-form-field">
+          <label htmlFor="househelp-flat-number">Flat number</label>
 
           <input
+            id="househelp-flat-number"
             type="text"
             name="flatNumber"
             value={formData.flatNumber}
             onChange={handleChange}
             required
-            className="w-full border rounded px-3 py-2"
-            placeholder="e.g. 5A"
+            placeholder="e.g. 5-A"
           />
         </div>
 
-        <div>
-          <label className="block text-sm font-medium mb-1">
-            Preferred Hours
-          </label>
+        <div className="househelp-form-field">
+          <label htmlFor="househelp-hours">Preferred hours</label>
 
           <input
+            id="househelp-hours"
             type="text"
             name="hours"
             value={formData.hours}
             onChange={handleChange}
             required
-            className="w-full border rounded px-3 py-2"
             placeholder="e.g. 8 AM - 12 PM"
           />
         </div>
 
-        <div>
-          <label className="block text-sm font-medium mb-1">
-            Mobile Number
-          </label>
+        <div className="househelp-form-field">
+          <label htmlFor="househelp-mobile">Mobile number</label>
 
           <input
+            id="househelp-mobile"
             type="tel"
             name="mobileNumber"
             value={formData.mobileNumber}
             onChange={handleChange}
             required
-            className="w-full border rounded px-3 py-2"
             placeholder="Enter mobile number"
           />
         </div>
 
-        <div className="flex gap-3 pt-2">
+        <div className="househelp-form-actions">
           <button
             type="button"
             onClick={() => navigate("/househelp")}
-            className="flex-1 border border-gray-300 py-2 rounded hover:bg-gray-50"
+            className="secondary"
           >
             Cancel
           </button>
@@ -143,9 +134,8 @@ function CreateHousehelpPosting() {
           <button
             type="submit"
             disabled={loading}
-            className="flex-1 bg-blue-600 text-white py-2 rounded hover:bg-blue-700 disabled:opacity-50"
           >
-            {loading ? "Posting..." : "Create Posting"}
+            {loading ? "Posting..." : "Create posting"}
           </button>
         </div>
       </form>
