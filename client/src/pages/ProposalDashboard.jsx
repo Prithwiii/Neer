@@ -56,12 +56,14 @@ function ProposalDashboard({ token, role }) {
     });
 
     const data = await response.json();
-    setMessage(JSON.stringify(data, null, 2));
 
     if (response.ok) {
+      setMessage("Proposal created successfully.");
       setTitle("");
       setDescription("");
       loadProposals();
+    } else {
+      setMessage(data.message || "Unable to create proposal.");
     }
   };
 
@@ -76,15 +78,17 @@ function ProposalDashboard({ token, role }) {
     });
 
     const data = await response.json();
-    setMessage(JSON.stringify(data, null, 2));
 
     if (response.ok) {
+      setMessage("Your vote has been recorded.");
       setChangingVoteId(null);
       setProposals((prev) =>
         prev.map((proposal) =>
           proposal._id === data._id ? data : proposal
         )
       );
+    } else {
+      setMessage(data.message || "Unable to record your vote.");
     }
   };
 
